@@ -20,7 +20,7 @@ namespace Poke.Activities
             if (convertView == null)
             {
                 convertView = LayoutInflater.From(Context)
-                    .Inflate(Resource.Layout.DeviceRow, parent, false);
+                    .Inflate(Resource.Layout.DeviceRow, parent, false);                
             }
 
             convertView.FindViewById<TextView>(Resource.Id.DeviceName).Text = device.Name;

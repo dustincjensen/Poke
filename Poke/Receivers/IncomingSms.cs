@@ -5,6 +5,7 @@ using Android.Content;
 using Android.Provider;
 using Android.Telephony;
 using Android.Widget;
+using Poke.Models;
 using Poke.Util;
 
 namespace Poke.Receivers
@@ -15,6 +16,11 @@ namespace Poke.Receivers
     {
         public override void OnReceive(Context context, Intent intent)
         {
+            // Get the device and check if it is null.
+            // If it is, then we aren't going to be sending anything.
+            var device = ApplicationRuntime.Device;
+            if (device == null) return;
+
             // Retrieves a map of extended data from the intent.
             var bundle = intent.Extras;
 
@@ -40,11 +46,9 @@ namespace Poke.Receivers
 
                         Task.Run(async () =>
                         {
-                            await Sms.SendToListeningDevice("192.168.1.12", 8971, toastText);
+                            await Sms.SendToListeningDevice(
+                                device.IpAddress, device.Port, toastText);
                         });
-
-                        // Show the toast
-                        Toast.MakeText(context, toastText, ToastLength.Long).Show();
                     }
                 }
             }

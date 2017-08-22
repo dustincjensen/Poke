@@ -3,6 +3,7 @@
   <string name="ApplicationName">Poke</string>
   <string name="SendTestMessage">Send Test Message</string>
   <string name="Devices">Devices</string>
+  <string name="DeviceSelected">Device Selected</string>
   <string name="NoDevicesListening">No Devices Currently Listening</string>
   <string name="Port">Port</string>
   <string name="IpAddress">IP Address</string>
