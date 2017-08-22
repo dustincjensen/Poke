@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+  <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/Icon"/>
+  
+  <LinearLayout
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1">
+    <TextView
+      android:id="@+id/DeviceName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Device Name"
+      android:textSize="24sp"/>
+
+    <TextView
+      android:id="@+id/DeviceIpAddress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Device IpAddress"
+      android:textSize="18sp"/>
+
+    <TextView
+      android:id="@+id/DevicePort"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Device Port"
+      android:textSize="18sp"/>
+  </LinearLayout>
+
+</LinearLayout>

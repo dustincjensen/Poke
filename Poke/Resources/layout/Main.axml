@@ -2,12 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-<Button  
-    android:id="@+id/MyButton"
-    android:layout_width="match_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/Hello"
-    />
+    android:layout_height="match_parent">
+
+  <Button
+    android:id="@+id/SendTestMessageButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/SendTestMessage"/>
+
+  <!-- Header for the list view -->
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/Devices"
+    android:gravity="center"
+    android:padding="8dp"
+    android:textAllCaps="true"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textColor="#FFF"
+    android:textStyle="bold"
+    android:background="@color/Crimson"/>
+  
+  <!-- List of possible devices to connect -->
+  <!-- and send messages to. -->
+  <ListView
+    android:id="@+id/PossibleListenerDevices"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+  <!-- A view that only becomes visible if the list -->
+  <!-- view above is completely empty. -->
+  <TextView
+    android:id="@+id/EmptyListenerDevices"    
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:text="@string/NoDevicesListening"/>
+
 </LinearLayout>

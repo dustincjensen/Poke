@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Hello">Hello World, Click Me!</string>
-    <string name="ApplicationName">Poke</string>
+  <string name="ApplicationName">Poke</string>
+  <string name="SendTestMessage">Send Test Message</string>
+  <string name="Devices">Devices</string>
+  <string name="NoDevicesListening">No Devices Currently Listening</string>
+  <string name="Port">Port</string>
+  <string name="IpAddress">IP Address</string>
 </resources>
