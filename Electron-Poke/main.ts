@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -59,18 +59,26 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+let keepSocket: net.Socket = null;
+
 // Attempt to create tcp server.
 let server = net.createServer((socket) => {
     console.log('Client Connected');
     let body = '';
     socket.on('data', (data) => {
         body += data;
-    });
-    socket.on('end', () => {
         console.log(body);
-        win.webContents.send('new-message', body);
+
+        if (body.indexOf('<EOF>')) {
+            win.webContents.send('new-message', body);
+            body = '';
+        }
     });
+
+    keepSocket = socket;
 });
+
+
 
 let networkInterfaces = os.networkInterfaces();
 let address: string = null;
@@ -90,3 +98,19 @@ for (let iface in networkInterfaces) {
 
 console.log('Listening on Address', address);
 server.listen(8971, address);
+
+
+// This is the message from the dom back to the electron
+// main process and we can use this to push to the socket.
+ipcMain.on('newMessageForAndroid', (event, arg) => {
+    if (keepSocket) {
+        keepSocket.write(arg);
+    }
+});
+
+// TODO maybe use this to keep the socket alive?
+// setInterval(() => {
+//     if (keepSocket) {
+//         keepSocket.write('Hello World');
+//     }
+// }, 5000);

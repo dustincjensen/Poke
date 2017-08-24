@@ -36,4 +36,20 @@
     </ul>
 </div>
 
+<div>
+    <input type="text" id="msgToAndroid" />
+    <button id="submitButton">Submit</button>
+</div>
+
+<script>
+        var submitButton = document.getElementById('submitButton');
+        var textBox = document.getElementById('msgToAndroid');
+        submitButton.onclick = function () {
+            var text = textBox.value;
+            textBox.value = '';
+            ipcRenderer.send('newMessageForAndroid', text);
+        }
+
+</script>
+
 </html>

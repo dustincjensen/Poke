@@ -3,3 +3,4 @@ obj
 .vs
 node_modules
 main.js
+npm-debug.log
