@@ -16,10 +16,9 @@ namespace Poke.Receivers
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            // Get the device and check if it is null.
-            // If it is, then we aren't going to be sending anything.
-            var device = ApplicationRuntime.Device;
-            if (device == null) return;
+            // If we don't have a connection we aren't storing messages
+            // to send at a later date, so just jump out.
+            if (!TcpHandler.HasTcpConnection) return;
 
             // Retrieves a map of extended data from the intent.
             var bundle = intent.Extras;
@@ -40,14 +39,17 @@ namespace Poke.Receivers
                         var contacts = Contact.FindContact(phoneNumber, context);
 
                         // If we only have 1 contact show that name.
-                        var toastText = contacts.Count == 1
-                            ? $"Contact: {contacts[0].Name} - Message: {message}"
-                            : $"Number: {phoneNumber} - Message: {message}";
+                        var tcpPayload = new TcpPayload
+                        {
+                            Contact = contacts.Count >= 1
+                                ? contacts[0]
+                                : new ContactInfo {ID = "-1", PhoneNumber = phoneNumber, Name = null},
+                            Message = message
+                        };
 
                         Task.Run(async () =>
                         {
-                            await Sms.SendToListeningDevice(
-                                device.IpAddress, device.Port, toastText);
+                            await TcpHandler.SendToListeningDevice(tcpPayload);
                         });
                     }
                 }

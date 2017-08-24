@@ -41,7 +41,8 @@ namespace Poke.Util
                         contactInfo.Add(new ContactInfo
                         {
                             ID = cursor.GetString(cursor.GetColumnIndexOrThrow(projection[0])),
-                            Name = cursor.GetString(cursor.GetColumnIndexOrThrow(projection[1]))
+                            Name = cursor.GetString(cursor.GetColumnIndexOrThrow(projection[1])),
+                            PhoneNumber = phoneNumber
                         });
                     } while (cursor.MoveToNext());
                 }

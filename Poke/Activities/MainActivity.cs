@@ -7,6 +7,7 @@ using Android.Database;
 using Android.Widget;
 using Android.OS;
 using Poke.Models;
+using Poke.Util;
 
 namespace Poke.Activities
 {
@@ -47,7 +48,7 @@ namespace Poke.Activities
 
         private void _HandleButtonClick(object sender, EventArgs args)
         {
-            Util.Sms.SendToSelf("FILL_IN_TO_DEBUG", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
+            Util.Sms.SendTo("FILL_IN_TO_DEBUG", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
         }
 
         private void _HandleListClick(object sender, AdapterView.ItemClickEventArgs args)
@@ -55,7 +56,10 @@ namespace Poke.Activities
             var position = args.Position;
             var item = ((DeviceRowAdapter)_possibleListenerDevices.Adapter).GetItem(position);
 
-            ApplicationRuntime.Device = item;
+            // Set the Tcp Connection up. That way you don't actually need to wait
+            // for a message to be sent to start sending messages from the "server".
+            TcpHandler.SetupTcpConnection(item.IpAddress, item.Port);
+
             Toast.MakeText(
                 Application.Context, 
                 Application.Context.GetString(Resource.String.DeviceSelected), 

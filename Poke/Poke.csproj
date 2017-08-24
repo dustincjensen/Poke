@@ -53,14 +53,15 @@
   <ItemGroup>
     <Compile Include="Activities\DeviceRowAdapter.cs" />
     <Compile Include="Activities\MainActivity.cs" />
-    <Compile Include="Models\ApplicationRuntime.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\ContactInfo.cs" />
+    <Compile Include="Models\TcpPayload.cs" />
     <Compile Include="Receivers\IncomingSms.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Contact.cs" />
     <Compile Include="Util\Sms.cs" />
+    <Compile Include="Util\TcpHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
