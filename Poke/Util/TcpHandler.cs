@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Org.Json;
 using Poke.Models;
 
 namespace Poke.Util
@@ -46,8 +47,19 @@ namespace Poke.Util
 
                 // Get the message and send it to....
                 // Send message to the person...
-                var outputString = System.Text.Encoding.ASCII.GetString(recData);                
-                Sms.SendTo("FILL_IN_TO_DEBUG", outputString);
+                var jsonString = System.Text.Encoding.ASCII.GetString(recData);
+                var payload = TcpPayload.FromJson(new JSONObject(jsonString));
+
+                if (!string.IsNullOrWhiteSpace(payload.Contact.PhoneNumber) &&
+                    !string.IsNullOrWhiteSpace(payload.Message))
+                {
+                    Sms.SendTo(payload.Contact.PhoneNumber, payload.Message);
+                }
+                else
+                {
+                    // TODO maybe this shouldn't be thrown? Maybe it is a ping to keep the socket alive.
+                    throw new NotImplementedException("Did not receive a phone number or message.");
+                }
 
                 // Start receiving again
                 Tcp.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length, 

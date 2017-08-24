@@ -70,7 +70,7 @@ let server = net.createServer((socket) => {
         console.log(body);
 
         if (body.indexOf('<EOF>')) {
-            win.webContents.send('new-message', body);
+            win.webContents.send('new-message', body.replace('<EOF>', ''));
             body = '';
         }
     });

@@ -16,5 +16,22 @@ namespace Poke.Models
             json.Put("name", Name);
             return json;
         }
+
+        public static ContactInfo FromJson(JSONObject obj)
+        {
+            var contactInfo = new ContactInfo();
+            try
+            {
+                contactInfo.PhoneNumber = obj.GetString("phoneNumber");
+                contactInfo.ID = obj.GetString("id");
+                contactInfo.Name = obj.GetString("name");
+            }
+            catch (JSONException)
+            {
+                // Purposefully ignoring it...
+                // As long as we get a phone number we are ok...
+            }
+            return contactInfo;
+        }
     }
 }

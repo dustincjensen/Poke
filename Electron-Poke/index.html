@@ -23,9 +23,10 @@
         let ipcRenderer = require('electron').ipcRenderer;
         ipcRenderer.on('new-message', (event, args) => {
             console.log('New Message', args);
+            let obj = JSON.parse(args);
             let messages = document.getElementById('messages');
             let li = document.createElement('li');
-            li.appendChild(document.createTextNode(args));
+            li.appendChild(document.createTextNode(`${obj.contact.name} :: ${obj.contact.phoneNumber} :: ${obj.message}`));
             messages.appendChild(li);
         });
     </script>
@@ -42,13 +43,18 @@
 </div>
 
 <script>
-        var submitButton = document.getElementById('submitButton');
-        var textBox = document.getElementById('msgToAndroid');
+        let submitButton = document.getElementById('submitButton');
+        let textBox = document.getElementById('msgToAndroid');
         submitButton.onclick = function () {
-            var text = textBox.value;
+            let obj = {
+                contact: {
+                    phoneNumber: 'FILL_IN_TO_SEND_DEBUG_MESSAGE'
+                },
+                message: textBox.value
+            };
             textBox.value = '';
-            ipcRenderer.send('newMessageForAndroid', text);
-        }
+            ipcRenderer.send('newMessageForAndroid', JSON.stringify(obj));
+        };
 
 </script>
 

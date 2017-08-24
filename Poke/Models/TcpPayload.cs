@@ -14,5 +14,15 @@ namespace Poke.Models
             jo.Put("message", Message);
             return jo;
         }
+
+        public static TcpPayload FromJson(JSONObject obj)
+        {
+            var payload = new TcpPayload
+            {
+                Contact = ContactInfo.FromJson(obj.GetJSONObject("contact")),
+                Message = obj.GetString("message")
+            };
+            return payload;
+        }
     }
 }
