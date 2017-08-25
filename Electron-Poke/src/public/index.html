@@ -9,53 +9,18 @@
 <body>
     <h1>Hello World!</h1>
     We are using node
-    <script>
-        document.write(process.versions.node)
-    </script>, Chrome
-    <script>
-        document.write(process.versions.chrome)
-    </script>, and Electron
-    <script>
-        document.write(process.versions.electron)
-    </script>.
-
-    <script>
-        let ipcRenderer = require('electron').ipcRenderer;
-        ipcRenderer.on('new-message', (event, args) => {
-            console.log('New Message', args);
-            let obj = JSON.parse(args);
-            let messages = document.getElementById('messages');
-            let li = document.createElement('li');
-            li.appendChild(document.createTextNode(`${obj.contact.name} :: ${obj.contact.phoneNumber} :: ${obj.message}`));
-            messages.appendChild(li);
-        });
-    </script>
+    <span id="nodeVersion"></span>, Chrome
+    <span id="chromeVersion"></span>, and Electron
+    <span id="electronVersion"></span>.
+    <div>
+        <ul id="messages">
+        </ul>
+    </div>
+    <div>
+        <input type="text" id="msgToAndroid" />
+        <button id="submitButton">Submit</button>
+    </div>
 </body>
-
-<div>
-    <ul id="messages">
-    </ul>
-</div>
-
-<div>
-    <input type="text" id="msgToAndroid" />
-    <button id="submitButton">Submit</button>
-</div>
-
-<script>
-        let submitButton = document.getElementById('submitButton');
-        let textBox = document.getElementById('msgToAndroid');
-        submitButton.onclick = function () {
-            let obj = {
-                contact: {
-                    phoneNumber: 'FILL_IN_TO_SEND_DEBUG_MESSAGE'
-                },
-                message: textBox.value
-            };
-            textBox.value = '';
-            ipcRenderer.send('newMessageForAndroid', JSON.stringify(obj));
-        };
-
-</script>
+<script src="temp.js"></script>
 
 </html>
