@@ -4,3 +4,5 @@ obj
 node_modules
 main.js
 npm-debug.log
+.tscache
+dist

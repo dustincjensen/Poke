@@ -4,12 +4,22 @@
   "description": "Desktop client for listening to messages from Android devices.",
   "main": "main.js",
   "scripts": {
-    "dev": "tsc && electron main.js"
+    "dev": "SET NODE_ENV=development && electron ./dist/private/main.js",
+    "grunt": "grunt"
   },
   "author": "Dustin Jensen",
-  "license": "ISC",
   "devDependencies": {
     "electron": "1.7.5",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^3.0.0",
+    "grunt-sass": "^2.0.0",
+    "grunt-ts": "^6.0.0-beta.16",
     "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "electron": "^1.7.5"
   }
 }
