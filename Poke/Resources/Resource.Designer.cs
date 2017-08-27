@@ -559,23 +559,32 @@ namespace Poke
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f060001
-			public const int DeviceIpAddress = 2131099649;
+			// aapt resource value: 0x7f070000
+			public const int DeviceAuthenticationInstructions = 2131165184;
 			
-			// aapt resource value: 0x7f060000
-			public const int DeviceName = 2131099648;
+			// aapt resource value: 0x7f070001
+			public const int DeviceAuthenticationPassword = 2131165185;
 			
-			// aapt resource value: 0x7f060002
-			public const int DevicePort = 2131099650;
+			// aapt resource value: 0x7f070002
+			public const int DeviceAuthenticationTimeLimit = 2131165186;
 			
-			// aapt resource value: 0x7f060005
-			public const int EmptyListenerDevices = 2131099653;
+			// aapt resource value: 0x7f070004
+			public const int DeviceIpAddress = 2131165188;
 			
-			// aapt resource value: 0x7f060004
-			public const int PossibleListenerDevices = 2131099652;
+			// aapt resource value: 0x7f070003
+			public const int DeviceName = 2131165187;
 			
-			// aapt resource value: 0x7f060003
-			public const int SendTestMessageButton = 2131099651;
+			// aapt resource value: 0x7f070005
+			public const int DevicePort = 2131165189;
+			
+			// aapt resource value: 0x7f070008
+			public const int EmptyListenerDevices = 2131165192;
+			
+			// aapt resource value: 0x7f070007
+			public const int PossibleListenerDevices = 2131165191;
+			
+			// aapt resource value: 0x7f070006
+			public const int SendTestMessageButton = 2131165190;
 			
 			static Id()
 			{
@@ -587,14 +596,33 @@ namespace Poke
 			}
 		}
 		
+		public partial class Integer
+		{
+			
+			// aapt resource value: 0x7f050000
+			public const int DeviceAuthenticationTimeoutSeconds = 2131034112;
+			
+			static Integer()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Integer()
+			{
+			}
+		}
+		
 		public partial class Layout
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int DeviceRow = 2130903040;
+			public const int DeviceAuthenticationModal = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int Main = 2130903041;
+			public const int DeviceRow = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public const int Main = 2130903042;
 			
 			static Layout()
 			{
@@ -609,26 +637,38 @@ namespace Poke
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f050000
-			public const int ApplicationName = 2131034112;
+			// aapt resource value: 0x7f060000
+			public const int ApplicationName = 2131099648;
 			
-			// aapt resource value: 0x7f050003
-			public const int DeviceSelected = 2131034115;
+			// aapt resource value: 0x7f06000a
+			public const int Cancel = 2131099658;
 			
-			// aapt resource value: 0x7f050002
-			public const int Devices = 2131034114;
+			// aapt resource value: 0x7f060007
+			public const int DeviceAuthenticationInstructions = 2131099655;
 			
-			// aapt resource value: 0x7f050006
-			public const int IpAddress = 2131034118;
+			// aapt resource value: 0x7f060008
+			public const int DeviceAuthenticationInstructionsTimedOut = 2131099656;
 			
-			// aapt resource value: 0x7f050004
-			public const int NoDevicesListening = 2131034116;
+			// aapt resource value: 0x7f060009
+			public const int DeviceAuthenticationPasswordTimedOut = 2131099657;
 			
-			// aapt resource value: 0x7f050005
-			public const int Port = 2131034117;
+			// aapt resource value: 0x7f060003
+			public const int DeviceSelected = 2131099651;
 			
-			// aapt resource value: 0x7f050001
-			public const int SendTestMessage = 2131034113;
+			// aapt resource value: 0x7f060002
+			public const int Devices = 2131099650;
+			
+			// aapt resource value: 0x7f060006
+			public const int IpAddress = 2131099654;
+			
+			// aapt resource value: 0x7f060004
+			public const int NoDevicesListening = 2131099652;
+			
+			// aapt resource value: 0x7f060005
+			public const int Port = 2131099653;
+			
+			// aapt resource value: 0x7f060001
+			public const int TestButton = 2131099649;
 			
 			static String()
 			{

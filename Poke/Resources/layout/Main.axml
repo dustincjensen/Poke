@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+  <!-- Debug button for sen -->
   <Button
     android:id="@+id/SendTestMessageButton"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/SendTestMessage"/>
+    android:text="@string/TestButton"/>
 
   <!-- Header for the list view -->
   <TextView

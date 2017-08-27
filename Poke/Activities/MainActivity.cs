@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
 using Android.App;
+using Android.Content.PM;
 using Android.Database;
 using Android.Widget;
 using Android.OS;
@@ -17,10 +18,15 @@ namespace Poke.Activities
         private Button _sendtestMessageButton;
         private ListView _possibleListenerDevices;
         private TextView _emptyListenerDevices;
+        private DeviceAuthenticationModalFragment _deviceAuthenticationModalFragment;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            // TODO this solves orientation problems resetting progress bars and stuff
+            // TODO remove and handle orientation properly.
+            RequestedOrientation = ScreenOrientation.Portrait;
             _SetupActivity();
         }
 
@@ -48,7 +54,8 @@ namespace Poke.Activities
 
         private void _HandleButtonClick(object sender, EventArgs args)
         {
-            Util.Sms.SendTo("FILL_IN_TO_DEBUG", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
+            //Util.Sms.SendTo("FILL_IN_TO_DEBUG", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
+            //_ShowModalWithPassword();
         }
 
         private void _HandleListClick(object sender, AdapterView.ItemClickEventArgs args)
@@ -64,6 +71,28 @@ namespace Poke.Activities
                 Application.Context, 
                 Application.Context.GetString(Resource.String.DeviceSelected), 
                 ToastLength.Long).Show();
+        }
+
+        private void _ShowModalWithPassword()
+        {
+            // Gets a password to use
+            var password = Crypto.CreateUniquePasswordForIdentifyingConnectedDevice(5);
+
+            // Show the UI for the modal and add device authentication modal
+            // fragment to the modal with the password.
+            var transaction = FragmentManager.BeginTransaction();
+            var previous = FragmentManager.FindFragmentByTag("deviceAuthenticationModal");
+            if (previous != null)
+            {
+                transaction.Remove(previous);
+            }
+            transaction.AddToBackStack(null);
+
+            _deviceAuthenticationModalFragment = new DeviceAuthenticationModalFragment
+            {
+                DeviceAuthenicationPassword = password
+            };
+            _deviceAuthenticationModalFragment.Show(transaction, "deviceAuthenticationModal");
         }
 
         private void _SetupDebugDevice()

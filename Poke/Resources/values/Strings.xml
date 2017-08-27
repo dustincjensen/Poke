@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="ApplicationName">Poke</string>
-  <string name="SendTestMessage">Send Test Message</string>
+  <string name="TestButton">Test</string>
   <string name="Devices">Devices</string>
   <string name="DeviceSelected">Device Selected</string>
   <string name="NoDevicesListening">No Devices Currently Listening</string>
   <string name="Port">Port</string>
   <string name="IpAddress">IP Address</string>
+
+  <string name="DeviceAuthenticationInstructions">Enter the code on the device you are connecting to.</string>
+  <string name="DeviceAuthenticationInstructionsTimedOut">The authentication code is no longer valid. Reconnect to get a new code.</string>
+  <string name="DeviceAuthenticationPasswordTimedOut">-----</string>
+  <string name="Cancel">Cancel</string>
 </resources>

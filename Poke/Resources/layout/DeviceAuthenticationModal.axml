@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+  <!-- We freeze the text because it is set dynamically and rotating will clear it. -->
+  <TextView
+    android:id="@+id/DeviceAuthenticationInstructions"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:textSize="18sp"
+    android:text="@string/DeviceAuthenticationInstructions"
+    android:freezesText="true"/>
+  
+  <!-- We freeze the text because it is set dynamically and rotating will clear it. -->
+  <TextView
+    android:id="@+id/DeviceAuthenticationPassword"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:freezesText="true"
+    android:gravity="center"
+    android:textSize="72sp"/>
+
+  <ProgressBar
+    android:id="@+id/DeviceAuthenticationTimeLimit"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:indeterminate="false"
+    android:max="@integer/DeviceAuthenticationTimeoutSeconds"
+    android:progress="@integer/DeviceAuthenticationTimeoutSeconds"/>
+
+</LinearLayout>
