@@ -10,32 +10,32 @@ export class TcpServer {
     private static _port: number;
 
     public static createServer(): void {
-        this._setupServer();
-        this._determineServerConnectionDetails();
-        this._server.listen(this._port, this._address);
+        TcpServer._setupServer();
+        TcpServer._determineServerConnectionDetails();
+        TcpServer._server.listen(TcpServer._port, TcpServer._address);
     }
 
     public static hasOpenSocket(): boolean {
-        return this._openSocket != null;
+        return TcpServer._openSocket != null;
     }
 
     public static writeOnOpenSocket(msg: string): void {
-        this._openSocket.write(msg);
+        TcpServer._openSocket.write(msg);
     }
 
     private static _setupServer(): void {
-        this._server = net.createServer(socket => {
+        TcpServer._server = net.createServer(socket => {
             console.log('Client Connected');
 
             // Receive the data on the socket
-            socket.on('data', this._receiveDataOnSocket);
+            socket.on('data', TcpServer._receiveDataOnSocket);
 
             // Keep a reference to the socket.
-            if (this._openSocket) {
+            if (TcpServer._openSocket) {
                 console.log('Closing Old Socket');
-                this._openSocket.end();
+                TcpServer._openSocket.end();
             }
-            this._openSocket = socket;
+            TcpServer._openSocket = socket;
         });
     }
 
@@ -47,8 +47,8 @@ export class TcpServer {
             for (let i = 0; i < x.length; i++) {
                 let element = x[i];
                 if (element.address.startsWith('192')) {
-                    this._address = element.address;
-                    this._port = 8971;
+                    TcpServer._address = element.address;
+                    TcpServer._port = 8971;
                     addressFound = true;
                     break;
                 }

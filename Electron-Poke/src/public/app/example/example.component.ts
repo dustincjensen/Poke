@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { ipcRenderer } from 'electron';
 
 @Component({
     moduleId: module.id,
@@ -14,7 +15,9 @@ export class ExampleComponent {
     messages: string[];
     messageToAndroid: string;
 
-    constructor() {
+    constructor(
+        private ref: ChangeDetectorRef
+    ) {
     }
 
     private async ngOnInit() {
@@ -23,11 +26,17 @@ export class ExampleComponent {
         this.chromeVersion = process.versions.chrome;
         this.electronVersion = process.versions.electron;
 
-        // ipcRenderer.on('new-message', (event, args) => {
-        //     console.log('New Message', args);
-        //     let obj = JSON.parse(args);
-        //     this.messages.push(`${obj.contact.name} :: ${obj.contact.phoneNumber} :: ${obj.message}`);
-        // });
+        this.messages = [];
+
+        // Because this method happens in something that isn't controlled by angular
+        // we need to tell angular about the change.
+        // TODO re-investigate ngx-electron so we don't have to do this.
+        ipcRenderer.on('new-message', (event, args) => {
+            console.log('New Message', args);
+            let obj = JSON.parse(args);
+            this.messages.push(`${obj.contact.name} :: ${obj.contact.phoneNumber} :: ${obj.message}`);
+            this.ref.detectChanges();
+        });
     }
 
     public async onSubmitClicked() {
@@ -38,6 +47,6 @@ export class ExampleComponent {
             message: this.messageToAndroid
         };
         this.messageToAndroid = '';
-        //ipcRenderer.send('newMessageForAndroid', JSON.stringify(obj));
+        ipcRenderer.send('newMessageForAndroid', JSON.stringify(obj));
     }
 }

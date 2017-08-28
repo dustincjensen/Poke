@@ -13,7 +13,7 @@ export class MainElectron {
     private static _win: Electron.BrowserWindow;
 
     public static start() {
-        this._initializeElectron();
+        MainElectron._initializeElectron();
         TcpServer.createServer();
         Intercommunication.setupListeners();
     }
@@ -22,20 +22,20 @@ export class MainElectron {
         // This method will be called when Electron has finished
         // initialization and is ready to create browser windows.
         // Some APIs can only be used after this event occurs.
-        app.on('ready', this._createWindow);
+        app.on('ready', MainElectron._createWindow);
 
         // This handles window activation, like in macOS.
-        app.on('activate', this._windowActivate);
+        app.on('activate', MainElectron._windowActivate);
 
         // Quit when all windows are closed
-        app.on('window-all-closed', this._allWindowsClosed);
+        app.on('window-all-closed', MainElectron._allWindowsClosed);
     }
 
     private static _windowActivate(): void {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
-        if (this._win === null) {
-            this._createWindow();
+        if (MainElectron._win === null) {
+            MainElectron._createWindow();
         }
     }
 
@@ -49,31 +49,31 @@ export class MainElectron {
 
     private static _createWindow(): void {
         // Create the browser window
-        this._win = new BrowserWindow({
+        MainElectron._win = new BrowserWindow({
             darkTheme: true,
             width: 800,
             height: 600
         });
 
         // and load the index.html of the app.
-        this._win.loadURL(url.format({
+        MainElectron._win.loadURL(url.format({
             pathname: path.join(__dirname, '../public/index.html'),
             protocol: 'file:',
             slashes: true
         }));
 
         // Open the DevTools.
-        this._win.webContents.openDevTools();
+        MainElectron._win.webContents.openDevTools();
 
         // Emitted when the window is closed.
-        this._win.on('closed', () => {
+        MainElectron._win.on('closed', () => {
             // Dereference the window object.
-            this._win = null;
+            MainElectron._win = null;
         });
     }
 
     public static sendMessageToMainContents(type: string, msg: string): void {
-        this._win.webContents.send(type, msg);
+        MainElectron._win.webContents.send(type, msg);
     }
 }
 

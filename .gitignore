@@ -6,3 +6,4 @@ main.js
 npm-debug.log
 .tscache
 dist
+tscommand*.txt

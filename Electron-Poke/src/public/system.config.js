@@ -48,5 +48,9 @@
         map: map,
         packages: packages
     };
+
+    // TODO remove if we do ngx-electron
+    System.set('electron', System.newModule(require('electron')));
+
     System.config(config);
 })(this);
