@@ -1,0 +1,16 @@
+<div>
+    {{ title }}
+</div>
+
+<div>
+    We are using node {{nodeVersion}}, Chrome {{chromeVersion}}, and Electron {{electronVersion}}.
+    <div>
+        <ul *ngFor="let message of messages">
+            <li>{{ message }}</li>
+        </ul>
+    </div>
+    <div>
+        <input type="text" [(ngModel)]="messageToAndroid" />
+        <button id="submitButton" (click)="onSubmitClicked()">Submit</button>
+    </div>
+</div>
