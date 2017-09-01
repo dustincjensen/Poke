@@ -51,8 +51,8 @@ export class MainElectron {
         // Create the browser window
         MainElectron._win = new BrowserWindow({
             darkTheme: true,
-            width: 800,
-            height: 600
+            width: 1600,
+            height: 900
         });
 
         // and load the index.html of the app.
