@@ -4,12 +4,14 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { WaitingComponent } from './waiting/waiting.component';
 import { ExampleComponent } from './example/example.component';
 
 const appRoutes = RouterModule.forRoot(
     [
+        { path: 'waiting', component: WaitingComponent },
         { path: 'example', component: ExampleComponent },
-        { path: '', redirectTo: 'example', pathMatch: 'full' }
+        { path: '', redirectTo: 'waiting', pathMatch: 'full' }
     ],
     {
         useHash: true,
@@ -27,7 +29,8 @@ const appRoutes = RouterModule.forRoot(
     ],
     declarations: [
         AppComponent,
-        ExampleComponent
+        WaitingComponent,
+        ExampleComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],

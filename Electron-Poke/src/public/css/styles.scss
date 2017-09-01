@@ -9,7 +9,17 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     color: $primaryTextColor;
-    background: $secondaryColor; 
+    background: $secondaryColor;
+    height: 100%;
+}
+
+.waiting-for-connection-watermark {
+    color: $primaryTextColor;
+    font-size: 24px;
 }
