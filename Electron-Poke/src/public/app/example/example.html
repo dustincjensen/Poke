@@ -9,8 +9,22 @@
             <li>{{ message }}</li>
         </ul>
     </div>
-    <div>
-        <input type="text" [(ngModel)]="messageToAndroid" />
-        <button id="submitButton" (click)="onSubmitClicked()">Submit</button>
+    <div class="grid margin-10">
+        <div class="grid-columns-stack-when-responsive">
+            <div class="col-star-1 margin-right-10-responsive-0 margin-bottom-0-responsive-10">
+                <input type="text" class="form-control-input" [(ngModel)]="messageToAndroid" />
+            </div>
+            <div class="grid-columns grid-columns-align-right-horizontally">
+                <button class="btn btn-primary" (click)="onSubmitClicked()">Send</button>
+            </div>
+        </div>
     </div>
+
+    <div class="grid margin-10">
+        <div class="grid-columns grid-columns-center-horizontally">
+            <!-- Spinner -->
+            <div class="spinner-primary"></div>
+        </div>
+    </div>
+
 </div>

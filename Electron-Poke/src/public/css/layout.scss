@@ -1,0 +1,135 @@
+$sides-list: '' '-left' '-right' '-top' '-bottom';
+
+// Creates margin and padding from 10 through 50
+@for $i from 1 through 5 {
+    $value: 10 * $i;
+
+    // Loop through the sides of the list    
+    @each $side in $sides-list {
+
+        // Create pad with -left, -right, -top, -bottom
+        .pad#{$side} { 
+
+            // pad-left-10
+            &-#{$value} {
+                padding#{$side}: unquote($value + 'px');
+
+                // pad-left-10-responsive-0
+                @for $k from 0 through 5 {
+                    @if $k != $i {
+                        $responsivePadding: 10 * $k;
+                        &-responsive-#{$responsivePadding} {
+                            @extend .pad#{$side}-#{$value};
+                            @media only screen and (max-width: $responsive) {
+                                padding#{$side}: unquote($responsivePadding + 'px');
+                            }
+                        }
+                    }
+                }
+            }
+
+            // pad-left-0-responsive-10
+            &-#{0}-responsive-#{$value} {
+                padding#{$side}: 0;
+                @media only screen and (max-width: $responsive) {
+                    padding#{$side}: unquote($value + 'px');
+                }
+            }
+        }
+
+        // Create margin with -left, -right, -top, -bottom
+        .margin#{$side} {
+
+            // margin-left-10
+            &-#{$value} {
+                margin#{$side}: unquote($value + 'px');
+
+                // margin-left-10-responsive-0
+                @for $k from 0 through 5 {
+                    @if $k != $i {
+                        $responsiveMargin: 10 * $k;
+                        &-responsive-#{$responsiveMargin} {
+                            @extend .margin#{$side}-#{$value};
+                            @media only screen and (max-width: $responsive) {
+                                margin#{$side}: unquote($responsiveMargin + 'px');
+                            }
+                        }
+                    }
+                }
+            }
+
+            // margin-left-0-responsive-10
+            &-#{0}-responsive-#{$value} {
+                margin#{$side}: 0;
+                @media only screen and (max-width: $responsive) {
+                    margin#{$side}: unquote($value + 'px');
+                }
+            }
+        }
+    }
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-columns {
+    display: flex;
+    flex-direction: row;
+
+    &-stack-when-responsive {
+        @extend .grid-columns;
+        @media only screen and (max-width: $responsive) {
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+    }
+
+    &-center-horizontally {
+        justify-content: center;
+    }
+
+    &-align-left-horizontally {
+        justify-content: flex-start;
+    }
+
+    &-align-right-horizontally {
+        justify-content: flex-end;
+    }
+
+    &-space-evenly-horizontally {
+        justify-content: space-around;    
+    }
+
+    &-space-between {
+        justify-content: space-between;
+    }
+
+    &-vertically-align-center {
+        align-items: center;
+    }
+}
+
+@for $i from 1 through 8 {
+    .col-star-#{$i} { flex-grow: $i; }    
+}
+
+
+$percentage-list: 25 33 50 66 75;
+@each $percentage in $percentage-list {
+    .col-#{$percentage} {
+        flex-basis: unquote($percentage + '%');
+    }
+
+    .col-#{$percentage}-stack-when-responsive {
+        flex-basis: unquote($percentage + '%');
+
+        // This is here because if they are stacking when responsive,
+        // if the flex-basis is not zero they will have lots of space
+        // between the items vertically.
+        @media only screen and (max-width: $responsive) {
+            flex-basis: 0;
+        }
+    }
+}

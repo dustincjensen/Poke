@@ -1,0 +1,50 @@
+
+.form-control {
+    &-input {
+        border: none;
+        width: 100%;
+        height: 40px;
+        font-size: 18px;
+        color: $secondaryTextColor;
+    }
+}
+
+.btn {
+    border: none;
+    height: 40px;
+    font-size: 18px;
+    width: 100px;
+
+    &-primary {
+        background: $primaryColor;
+        color: $primaryTextColor;
+    }
+}
+
+// Spinner
+$spinnerBorderPixelWidth: 5px;
+$spinnerBorderType: solid;
+$spinnerWidthAndHeight: 50px;
+$spinnerAnimationDuration: 1.5s;
+
+.spinner {
+    border: $spinnerBorderPixelWidth $spinnerBorderType #fff;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 50%;
+    width: $spinnerWidthAndHeight;
+    height: $spinnerWidthAndHeight;
+    animation: spin $spinnerAnimationDuration linear infinite;
+
+    &-primary {
+        @extend .spinner;
+        border: $spinnerBorderPixelWidth $spinnerBorderType $primaryColor; 
+        border-left-color: transparent;
+        border-right-color: transparent;
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
