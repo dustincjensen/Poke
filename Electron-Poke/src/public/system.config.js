@@ -7,13 +7,15 @@
     var map = {
         'app': '.', // 'dist',
         '@angular': 'lib/@angular',
-        'rxjs': 'lib/rxjs'
+        'rxjs': 'lib/rxjs',
+        'ngx-electron': 'lib/ngx-electron'
     };
 
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {
         'app': { main: 'app/main.js', defaultExtension: 'js' },
-        'rxjs': { defaultExtension: 'js' }
+        'rxjs': { defaultExtension: 'js' },
+        'ngx-electron': { main: 'bundles/core.umd.js', defaultExtension: 'js' }
     };
 
     var ngPackageNames = [
@@ -48,9 +50,6 @@
         map: map,
         packages: packages
     };
-
-    // TODO remove if we do ngx-electron
-    System.set('electron', System.newModule(require('electron')));
 
     System.config(config);
 })(this);

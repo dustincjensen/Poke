@@ -25,7 +25,11 @@ export class TcpServer {
 
     private static _setupServer(): void {
         TcpServer._server = net.createServer(socket => {
+            // A new connection was received...
+            // Let the UI know about it.
             console.log('Client Connected');
+            MainElectron.sendMessageToMainContents(
+                'tcp-connected', true);
 
             // Receive the data on the socket
             socket.on('data', TcpServer._receiveDataOnSocket);

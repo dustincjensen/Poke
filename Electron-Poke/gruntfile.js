@@ -106,6 +106,7 @@ module.exports = function (grunt) {
                             "@angular/http/bundles/http.umd.js*",
                             "@angular/forms/bundles/forms.umd.js*",
                             "@angular/router/bundles/router.umd.js*",
+                            "ngx-electron/bundles/core.umd.js",
                             "systemjs/dist/system.src.js*",
                         ],
                         dest: "./dist/public/lib"

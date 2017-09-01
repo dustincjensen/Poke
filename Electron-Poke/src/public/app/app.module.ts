@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { NgxElectronModule } from 'ngx-electron';
 import { AppComponent } from './app.component';
 import { WaitingComponent } from './waiting/waiting.component';
 import { ExampleComponent } from './example/example.component';
@@ -25,7 +26,8 @@ const appRoutes = RouterModule.forRoot(
         BrowserModule,
         HttpModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgxElectronModule
     ],
     declarations: [
         AppComponent,

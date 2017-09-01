@@ -72,8 +72,8 @@ export class MainElectron {
         });
     }
 
-    public static sendMessageToMainContents(type: string, msg: string): void {
-        MainElectron._win.webContents.send(type, msg);
+    public static sendMessageToMainContents(type: string, obj: any): void {
+        MainElectron._win.webContents.send(type, obj);
     }
 }
 
