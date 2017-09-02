@@ -1,29 +1,31 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
+import { ElectronComponent } from '../base/electron.component';
 
 @Component({
     moduleId: module.id,
     selector: 'waiting',
     templateUrl: 'waiting.html'
 })
-export class WaitingComponent {
+export class WaitingComponent extends ElectronComponent implements OnInit {
 
     constructor(
-        private _electron: ElectronService,
-        private _ngZone: NgZone,
-        private _router: Router
+        private _router: Router,
+        electron: ElectronService,
+        ngZone: NgZone
     ) {
+        super(electron, ngZone);
+        this.registerIpcRendererMethod('tcp-connected', this._handleTcpConnected)
     }
 
-    private async ngOnInit() {
-        this._electron.ipcRenderer.on('tcp-connected', (event, args) => {
+    public async ngOnInit() {
+    }
+
+    private _handleTcpConnected(event, args) {
+        if (args) {
             console.log('New TCP connection.');
-            if (args) {
-                this._ngZone.run(() => {
-                    this._router.navigateByUrl('example');
-                });
-            }
-        });
+            this._router.navigateByUrl('example');
+        }
     }
 }

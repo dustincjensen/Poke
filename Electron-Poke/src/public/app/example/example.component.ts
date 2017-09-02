@@ -1,12 +1,13 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
+import { ElectronComponent } from '../base/electron.component';
 
 @Component({
     moduleId: module.id,
     selector: 'example',
     templateUrl: 'example.html'
 })
-export class ExampleComponent implements OnInit {
+export class ExampleComponent extends ElectronComponent implements OnInit {
 
     title: string;
     nodeVersion: string;
@@ -16,9 +17,10 @@ export class ExampleComponent implements OnInit {
     messageToAndroid: string;
 
     constructor(
-        private _electron: ElectronService,
-        private _ngZone: NgZone
+        electron: ElectronService,
+        ngZone: NgZone
     ) {
+        super(electron, ngZone);
     }
 
     public async ngOnInit() {
@@ -28,13 +30,13 @@ export class ExampleComponent implements OnInit {
         this.electronVersion = process.versions.electron;
         this.messages = [];
 
-        this._electron.ipcRenderer.on('new-message', (event, args) => {
-            this._ngZone.run(() => {
-                console.log('New Message', args);
-                let obj = JSON.parse(args);
-                this.messages.push(`${obj.contact.name} :: ${obj.contact.phoneNumber} :: ${obj.message}`);
-            });
-        });
+        this.registerIpcRendererMethod('new-message', this._handleNewMessage);
+    }
+
+    private _handleNewMessage(event, args) {
+        console.log('New Message', args);
+        let obj = JSON.parse(args);
+        this.messages.push(`${obj.contact.name} :: ${obj.contact.phoneNumber} :: ${obj.message}`);
     }
 
     public async onSubmitClicked() {
