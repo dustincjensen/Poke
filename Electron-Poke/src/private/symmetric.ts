@@ -2,15 +2,23 @@ import * as crypto from 'crypto';
 
 export class Symmetric {
     private static ALGORITHM = 'aes-256-cbc';
+    private static PASSWORD_SALT = 'RandomSaltForThePassword';
 
     /**
-     * Encrypt the text with the password.
+     * Encrypt the text with the password. This converts the password
+     * into a pbfkd2 password and creates a key and iv from it. The
+     * key and iv should match what the Android Device was able to
+     * create itself.
      * @param text the text to encrypt.
      * @param password the password to use.
      */
     public static encrypt(text: string, password: string): string {
-        let cipher = crypto.createCipher(Symmetric.ALGORITHM, password);
-        return Symmetric._encrypt(text, cipher);
+        // We have to use sha1 because rfc2898derived bytes on the C#
+        // side is not configurable.
+        let pbfkd2 = crypto.pbkdf2Sync(password, Symmetric.PASSWORD_SALT, 10000, 48, 'sha1');
+        let key = pbfkd2.slice(0, 32).toString('hex');
+        let iv = pbfkd2.slice(32).toString('hex');
+        return Symmetric.encryptIV(text, key, iv);;
     }
 
     /**
@@ -33,13 +41,20 @@ export class Symmetric {
     }
 
     /**
-     * Decrypt the string using the password.
+     * Decrypt the string using the password. This converts the password
+     * into a pbfkd2 password and creates a key and iv from it. The
+     * key and iv should match what the Android Device was able to
+     * create itself.
      * @param encryptedString the encrypted string.
      * @param password the password to use.
      */
     public static decrypt(encryptedString: string, password: string): string {
-        let decipher = crypto.createDecipher(Symmetric.ALGORITHM, password);
-        return Symmetric._decrypt(encryptedString, decipher);
+        // We have to use sha1 because rfc2898derived bytes on the C#
+        // side is not configurable.
+        let pbfkd2 = crypto.pbkdf2Sync(password, Symmetric.PASSWORD_SALT, 10000, 48, 'sha1');
+        let key = pbfkd2.slice(0, 32).toString('hex');
+        let iv = pbfkd2.slice(32).toString('hex');
+        return Symmetric.decryptIV(encryptedString, key, iv);
     }
 
     /**

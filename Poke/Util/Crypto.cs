@@ -9,6 +9,7 @@ namespace Poke.Util
     public static class Crypto
     {
         private const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private const string PASSWORD_SALT = "RandomSaltForThePassword";
 
         /// <summary>
         /// Creates a unique password that should be easily human readable
@@ -43,13 +44,38 @@ namespace Poke.Util
             {
                 Mode = CipherMode.CBC
             };
-            aes.GenerateIV();
-            aes.GenerateKey();
 
-            return new AesKeyIV { 
+            return new AesKeyIV
+            { 
                 Key = aes.Key,
                 IV = aes.IV
             };
+        }
+
+        /// <summary>
+        /// Create an AesManaged Key and Initialization Vector.
+        /// </summary>
+        /// <param name="passcode"></param>
+        /// <returns></returns>
+        public static AesKeyIV CreateAesKeyIV(string passcode)
+        {
+            var salt = Encoding.UTF8.GetBytes(PASSWORD_SALT);
+
+            using (var derived = new Rfc2898DeriveBytes(passcode, salt, 10000))
+            {
+                var aes = new AesManaged
+                {
+                    Mode = CipherMode.CBC,
+                    Key = derived.GetBytes(32),
+                    IV = derived.GetBytes(16)
+                };
+
+                return new AesKeyIV
+                {
+                    Key = aes.Key,
+                    IV = aes.IV
+                };
+            }
         }
 
         /// <summary>

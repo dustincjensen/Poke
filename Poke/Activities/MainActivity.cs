@@ -56,6 +56,10 @@ namespace Poke.Activities
         {
             //Util.Sms.SendTo("FILL_IN_TO_DEBUG", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
             //_ShowModalWithPassword();
+
+            //var passcode = Crypto.CreateUniquePasswordForIdentifyingConnectedDevice(5);
+            //var aes = Crypto.CreateAesKeyIV(passcode);
+            //var encrypted = Crypto.EncryptWithAesKeyIV("We are awesome!", aes);
         }
 
         private void _HandleListClick(object sender, AdapterView.ItemClickEventArgs args)
