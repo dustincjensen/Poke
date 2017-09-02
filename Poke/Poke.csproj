@@ -54,6 +54,7 @@
     <Compile Include="Activities\DeviceAuthenticationModalFragment.cs" />
     <Compile Include="Activities\DeviceRowAdapter.cs" />
     <Compile Include="Activities\MainActivity.cs" />
+    <Compile Include="Models\AesKeyIV.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\ContactInfo.cs" />
     <Compile Include="Models\TcpPayload.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Util\Contact.cs" />
     <Compile Include="Util\Crypto.cs" />
     <Compile Include="Util\DeviceAuthenticationTimer.cs" />
+    <Compile Include="Util\Hex.cs" />
     <Compile Include="Util\Sms.cs" />
     <Compile Include="Util\TcpHandler.cs" />
   </ItemGroup>
