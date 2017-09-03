@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 
@@ -7,11 +7,15 @@ import { ElectronComponent } from '../base/electron.component';
     selector: 'example',
     templateUrl: 'example.html'
 })
-export class ExampleComponent extends ElectronComponent implements OnInit {
+export class ExampleComponent extends ElectronComponent implements OnInit, AfterViewChecked {
+
+    @ViewChild('scrollConversation')
+    private _scrollContainer: ElementRef;
 
     displayName: string;
-    messages: any[];
     messageToAndroid: string;
+    messages: any[];
+    private _oldMessageCount: number;
 
     constructor(
         electron: ElectronService,
@@ -83,20 +87,68 @@ export class ExampleComponent extends ElectronComponent implements OnInit {
         this.registerIpcRendererMethod('new-message', this._handleNewMessage);
     }
 
+    /**
+     * Called after any ng-model is changed.
+     * This will compare the messages to the old message count
+     * and if they do not equal, means we have a new message in
+     * our queue and we should scroll to the bottom of the view.
+     */
+    public ngAfterViewChecked() {
+        if (this._oldMessageCount !== this.messages.length) {
+            this._oldMessageCount = this.messages.length;
+            this._scrollToBottom();
+        }
+    }
+
+    /**
+     * Scroll to the bottom of the view.
+     */
+    private _scrollToBottom(): void {
+        try {
+            this._scrollContainer.nativeElement.scrollTop =
+                this._scrollContainer.nativeElement.scrollHeight;
+        } catch (err) { }
+    }
+
     private _handleNewMessage(event, args) {
         console.log('New Message', args);
         let obj = JSON.parse(args);
         this.messages.push(obj);
     }
 
-    public async onSubmitClicked() {
-        let obj = {
+
+    public async onMessageEntered() {
+        // The message needs to be valid and not empty.
+        let message = this.messageToAndroid;
+        if (message === null || message === undefined) {
+            return;
+        }
+        message = message.trim();
+        if (message === '') {
+            return;
+        }
+
+        // This is the object to save to our conversation.
+        let saveHere = {
+            contact: {
+                id: 0,
+                phoneNumber: null,
+                name: 'Me',
+                isSelf: true
+            },
+            message: message,
+            time: Date.now()
+        };
+        this.messages.push(saveHere);
+        this.messageToAndroid = '';
+
+        // TODO uncomment when we want to send back to android
+        let sendMessage = {
             contact: {
                 phoneNumber: 'FILL_IN_TO_DEBUG'
             },
-            message: this.messageToAndroid
+            message: message
         };
-        this.messageToAndroid = '';
-        this._electron.ipcRenderer.send('newMessageForAndroid', JSON.stringify(obj));
+        this._electron.ipcRenderer.send('newMessageForAndroid', JSON.stringify(sendMessage));
     }
 }

@@ -2,7 +2,7 @@
     <div class="conversation-header pad-20">
         {{ displayName }}
     </div>
-    <div class="conversation-content">
+    <div #scrollConversation class="conversation-content">
         <ul>
             <li *ngFor="let message of messages" class="grid margin-10">
                 <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.contact.isSelf, 'grid-columns-align-left-horizontally': !message.contact.isSelf}">
@@ -21,10 +21,11 @@
     <div class="conversation-footer pad-10">
         <div class="grid-columns">
             <div class="col-star-1 margin-right-10">
-                <input type="text" class="form-control-input" [(ngModel)]="messageToAndroid" placeholder="Enter message..." />
+                <input type="text" class="form-control-input" (keyup.enter)="onMessageEntered()" [(ngModel)]="messageToAndroid" placeholder="Enter message..."
+                />
             </div>
             <div>
-                <button class="btn btn-primary" (click)="onSubmitClicked()">Send</button>
+                <button class="btn btn-primary" (click)="onMessageEntered()">Send</button>
             </div>
         </div>
     </div>
