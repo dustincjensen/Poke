@@ -1,25 +1,31 @@
-<div>
-    {{ title }}
-</div>
-
-<div>
-    We are using node {{nodeVersion}}, Chrome {{chromeVersion}}, and Electron {{electronVersion}}.
-    <div>
-        <ul *ngFor="let message of messages">
-            <li>{{ message }}</li>
+<div class="grid">
+    <div class="conversation-header pad-20">
+        {{ displayName }}
+    </div>
+    <div class="conversation-content">
+        <ul>
+            <li *ngFor="let message of messages" class="grid margin-10">
+                <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.contact.isSelf, 'grid-columns-align-left-horizontally': !message.contact.isSelf}">
+                    <div class="message-bubble">
+                        <div [ngClass]="{'message-bubble-user': message.contact.isSelf, 'message-bubble-other': !message.contact.isSelf}" class="pad-10">
+                            {{ message.message }}
+                        </div>
+                        <div [ngClass]="{'message-bubble-time-user': message.contact.isSelf, 'message-bubble-time-other': !message.contact.isSelf}">
+                            {{ message.time | date:'EEE h:mm a' }}
+                        </div>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
-    <div class="grid margin-10">
-        <div class="grid-columns-stack-when-responsive">
-            <div class="col-star-1 margin-right-10-responsive-0 margin-bottom-0-responsive-10">
-                <input type="text" class="form-control-input" [(ngModel)]="messageToAndroid" />
+    <div class="conversation-footer pad-10">
+        <div class="grid-columns">
+            <div class="col-star-1 margin-right-10">
+                <input type="text" class="form-control-input" [(ngModel)]="messageToAndroid" placeholder="Enter message..." />
             </div>
-            <div class="grid-columns grid-columns-align-right-horizontally">
+            <div>
                 <button class="btn btn-primary" (click)="onSubmitClicked()">Send</button>
             </div>
         </div>
     </div>
-
-
-
 </div>
