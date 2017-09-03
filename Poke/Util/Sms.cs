@@ -7,10 +7,17 @@ namespace Poke.Util
 {
     public class Sms
     {
+        /// <summary>
+        /// This can now handle larger messages that need to be split into parts.
+        /// However the TCP buffer still limits the size of message we can send.
+        /// </summary>
+        /// <param name="phoneNumber">The phone number to send the message to.</param>
+        /// <param name="message">The message to send.</param>
         public static void SendTo(string phoneNumber, string message)
         {
             var smsManager = SmsManager.Default;
-            smsManager.SendTextMessage(phoneNumber, null, message, null, null);
+            var messages = smsManager.DivideMessage(message);
+            smsManager.SendMultipartTextMessage(phoneNumber, null, messages, null, null);
         }
     }
 }

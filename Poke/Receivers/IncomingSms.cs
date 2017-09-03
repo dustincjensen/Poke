@@ -14,6 +14,9 @@ namespace Poke.Receivers
     [IntentFilter(new[] { Telephony.Sms.Intents.SmsReceivedAction })]
     public class IncomingSms : BroadcastReceiver
     {
+        // TODO investigate and ensure that a single receive will
+        // only ever come from 1 source and not multiple sources like
+        // the pdusObj might suggest.
         public override void OnReceive(Context context, Intent intent)
         {
             // If we don't have a connection we aren't storing messages
@@ -28,29 +31,56 @@ namespace Poke.Receivers
                 if (bundle != null)
                 {
                     var pdusObj = (Java.Lang.Object[])bundle.Get("pdus");
+                    var tcpPayload = new TcpPayload
+                    {
+                        Contact = new ContactInfo { ID = "-1", PhoneNumber = null, Name = null },
+                        Message = ""
+                    };
+
                     foreach (var t in pdusObj)
                     {
                         var currentMessage = SmsMessage.CreateFromPdu((byte[])t, bundle.GetString("format"));
                         var phoneNumber = currentMessage.DisplayOriginatingAddress;
                         var message = currentMessage.DisplayMessageBody;
 
-                        // We possibly could find multiple contacts with the same
-                        // phone number. The app does nothing to stop this.
-                        var contacts = Contact.FindContact(phoneNumber, context);
-
-                        // If we only have 1 contact show that name.
-                        var tcpPayload = new TcpPayload
+                        if (tcpPayload.Contact.PhoneNumber != null)
                         {
-                            Contact = contacts.Count >= 1
-                                ? contacts[0]
-                                : new ContactInfo {ID = "-1", PhoneNumber = phoneNumber, Name = null},
-                            Message = message
-                        };
+                            // We already have the phone number so just append the message.
+                            tcpPayload.Message += message;
+                        }
+                        else
+                        {
+                            // We possibly could find multiple contacts with the same
+                            // phone number. The app does nothing to stop this.
+                            var contacts = Contact.FindContact(phoneNumber, context);
 
+
+                            if (contacts.Count >= 1)
+                            {
+                                // If we only have 1 contact show that name.
+                                tcpPayload.Contact = contacts[0];
+                            }
+                            else
+                            {
+                                // Otherwise we no contact so just put the phone number in.
+                                tcpPayload.Contact.PhoneNumber = phoneNumber;
+                            }
+
+                            tcpPayload.Message = message;
+                        }
+                    }
+
+                    if (tcpPayload.Contact.PhoneNumber != null &&
+                        !string.IsNullOrWhiteSpace(tcpPayload.Message))
+                    {
                         Task.Run(async () =>
                         {
                             await TcpHandler.SendToListeningDevice(tcpPayload);
                         });
+                    }
+                    else
+                    {
+                        throw new Exception($"We parsed the message, but something when wrong. Phone Number: {tcpPayload.Contact.PhoneNumber}. Message: {tcpPayload.Message}.");
                     }
                 }
             }

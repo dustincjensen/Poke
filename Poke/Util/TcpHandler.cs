@@ -10,6 +10,8 @@ namespace Poke.Util
     {
         public static TcpClient Tcp;
         public static bool HasTcpConnection => Tcp != null && Tcp.Connected;
+
+        // TODO handle messages larger than buffer.
         private static readonly byte[] ReceiveBuffer = new byte[4096];
 
         public static void SetupTcpConnection(string ipAddress, int portNumber)
