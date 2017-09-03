@@ -51,7 +51,16 @@ body {
 .conversation-content {
     flex: 1 1 auto;
     position: relative;
-    overflow-y: auto;    
+    overflow-y: auto;
+}
+
+.conversation-no-messages-watermark {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    align-items: center;
+    color: $primaryTextColor;
+    font-size: 24px;
 }
 
 .conversation-footer {
