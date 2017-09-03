@@ -25,7 +25,7 @@ export class WaitingComponent extends ElectronComponent implements OnInit {
     private _handleTcpConnected(event, args) {
         if (args) {
             console.log('New TCP connection.');
-            this._router.navigateByUrl('example');
+            this._router.navigateByUrl('conversation');
         }
     }
 }

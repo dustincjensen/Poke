@@ -4,10 +4,10 @@ import { ElectronComponent } from '../base/electron.component';
 
 @Component({
     moduleId: module.id,
-    selector: 'example',
-    templateUrl: 'example.html'
+    selector: 'conversation',
+    templateUrl: 'conversation.html'
 })
-export class ExampleComponent extends ElectronComponent implements OnInit, AfterViewChecked {
+export class ConversationComponent extends ElectronComponent implements OnInit, AfterViewChecked {
 
     @ViewChild('scrollConversation')
     private _scrollContainer: ElementRef;
