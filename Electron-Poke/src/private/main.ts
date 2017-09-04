@@ -5,6 +5,9 @@ import * as url from 'url';
 import { TcpServer } from './tcpServer';
 import { Intercommunication } from './intercommunication';
 
+// TMP
+import { Conversations } from './conversations';
+
 export class MainElectron {
 
     // Keep a reference to the window object, if you don't, the 
@@ -16,6 +19,7 @@ export class MainElectron {
         MainElectron._initializeElectron();
         TcpServer.createServer();
         Intercommunication.setupListeners();
+        Conversations.setupConversations();
     }
 
     private static _initializeElectron(): void {

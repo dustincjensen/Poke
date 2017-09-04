@@ -8,6 +8,8 @@ import { ElectronComponent } from '../base/electron.component';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
+import { IConversation, IMessage } from '../../../shared/interfaces';
+
 @Component({
     moduleId: module.id,
     selector: 'conversation',
@@ -20,7 +22,7 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
     private _subscriptionCountAskedFor = 0;
     private _oldMessageCount: number;
 
-    conversation: any;
+    conversation: IConversation;
     messageToAndroid: string;
 
     constructor(
@@ -82,8 +84,8 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
 
     private _handleNewMessage(event, args) {
         console.log('New Message', args);
-        if (this.conversation && args.contact.id === this.conversation.id) {
-            this.conversation.messages.push(args);
+        if (this.conversation && args.conversationId === this.conversation.id) {
+            this.conversation.messages.push(args.message);
         }
     }
 
@@ -101,12 +103,7 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
 
         // This is the object to save to our conversation.
         let saveHere = {
-            contact: {
-                id: 0,
-                phoneNumber: null,
-                name: 'Me',
-                isSelf: true
-            },
+            isSelf: true,
             message: message,
             time: Date.now()
         };

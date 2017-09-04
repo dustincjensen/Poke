@@ -7,12 +7,12 @@
     <div *ngIf="conversation?.messages.length > 0" #scrollConversation class="conversation-content">
         <ul>
             <li *ngFor="let message of conversation.messages" class="grid margin-10">
-                <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.contact.isSelf, 'grid-columns-align-left-horizontally': !message.contact.isSelf}">
+                <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.isSelf, 'grid-columns-align-left-horizontally': !message.isSelf}">
                     <div class="message-bubble">
-                        <div [ngClass]="{'message-bubble-user': message.contact.isSelf, 'message-bubble-other': !message.contact.isSelf}" class="pad-10">
+                        <div [ngClass]="{'message-bubble-user': message.isSelf, 'message-bubble-other': !message.isSelf}" class="pad-10">
                             {{ message.message }}
                         </div>
-                        <div [ngClass]="{'message-bubble-time-user': message.contact.isSelf, 'message-bubble-time-other': !message.contact.isSelf}">
+                        <div [ngClass]="{'message-bubble-time-user': message.isSelf, 'message-bubble-time-other': !message.isSelf}">
                             {{ message.time | date:'EEE h:mm a' }}
                         </div>
                     </div>

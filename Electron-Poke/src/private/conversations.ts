@@ -1,8 +1,9 @@
 import { MainElectron } from './main';
+import { IConversation, IMessage } from '../shared/interfaces';
 
 export class Conversations {
 
-    public static conversations: any[];
+    public static conversations: IConversation[] = [];
 
     public static setupConversations() {
         Conversations.conversations = [
@@ -13,63 +14,38 @@ export class Conversations {
                 display: 'DG',
                 messages: [
                     {
-                        contact: {
-                            id: 784,
-                            phoneNumber: '+19695553215',
-                            name: 'Dave Grohl',
-                            isSelf: false
-                        },
+                        isSelf: false,
                         message: 'Hey, how are you doing today friend?',
                         time: Date.now() - (36 * 60 * 1000)
                     },
                     {
-                        contact: {
-                            id: 784,
-                            phoneNumber: '+19695553215',
-                            name: 'Dave Grohl',
-                            isSelf: false
-                        },
+                        isSelf: false,
                         message: 'I was wondering what you are up to today?',
                         time: Date.now() - (35 * 60 * 1000)
                     },
                     {
-                        contact: {
-                            id: 0,
-                            phoneNumber: null,
-                            name: 'Me',
-                            isSelf: true
-                        },
+                        isSelf: true,
                         message: 'Hey Dave. I\'m doing pretty well, thanks for asking',
                         time: Date.now() - (30 * 60 * 1000)
                     },
                     {
-                        contact: {
-                            id: 0,
-                            phoneNumber: null,
-                            name: 'Me',
-                            isSelf: true
-                        },
+                        isSelf: true,
                         message: 'I\'m not up to much, did you have something in mind? I would totally be up for some food or something.',
                         time: Date.now() - (30 * 60 * 1000)
                     },
                     {
-                        contact: {
-                            id: 784,
-                            phoneNumber: '+19695553215',
-                            name: 'Dave Grohl',
-                            isSelf: false
-                        },
+                        isSelf: false,
                         message: 'How about we get together and jam?',
                         time: Date.now() - (29 * 60 * 1000)
                     }
-                ]
+                ] as IMessage[]
             },
             {
                 id: 10001,
                 phoneNumber: '+17775553112',
                 name: 'Taylor Hawkins',
                 display: 'TH',
-                messages: []
+                messages: [] as IMessage[]
             }
         ];
     }
@@ -83,37 +59,31 @@ export class Conversations {
         // conversation.
         if (index >= 0) {
             let newMessage = {
-                contact: {
-                    id: obj.contact.id,
-                    phoneNumber: obj.contact.phoneNumber,
-                    name: obj.contact.name,
-                    isSelf: false
-                },
+                isSelf: false,
                 message: obj.message,
                 time: Date.now()
             };
             Conversations.conversations[index].messages.push(newMessage);
 
             // Since we might be on the conversation send a new message
-            MainElectron.sendMessageToMainContents('new-message', newMessage);
+            let contactMessage = {
+                conversationId: obj.contact.id,
+                message: newMessage
+            };
+            MainElectron.sendMessageToMainContents('new-message', contactMessage);
         } else {
-            let conversation = {
+            let conversation: IConversation = {
                 id: obj.contact.id,
                 phoneNumber: obj.contact.phoneNumber,
                 name: obj.contact.name,
                 display: Conversations._determineDisplayName(obj.contact.name),
                 messages: [
                     {
-                        contact: {
-                            id: obj.contact.id,
-                            phoneNumber: obj.contact.phoneNumber,
-                            name: obj.contact.name,
-                            isSelf: false
-                        },
+                        isSelf: false,
                         message: obj.message,
                         time: Date.now()
                     }
-                ]
+                ] as IMessage[]
             };
             Conversations.conversations.push(conversation);
 
@@ -133,8 +103,6 @@ export class Conversations {
     }
 
     public static getConversationList(): any[] {
-        Conversations.setupConversations();
-
         return Conversations.conversations.map(value => {
             return {
                 id: value.id,
