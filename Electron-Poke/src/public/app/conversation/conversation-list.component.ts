@@ -21,20 +21,12 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     }
 
     public async ngOnInit() {
-        this.conversations = [
-            {
-                id: 784,
-                phoneNumber: '+19695553215',
-                name: 'Dave Grohl',
-                display: 'DG'
-            },
-            {
-                id: 785,
-                phoneNumber: '+17775553112',
-                name: 'Taylor Hawkins',
-                display: 'TH'
-            }
-        ];
+        this.registerIpcRendererMethod('conversationListRetrieved', this._handleConversationsLoaded)
+        this._electron.ipcRenderer.send('getConversationList');
+    }
+
+    private _handleConversationsLoaded(event, args) {
+        this.conversations = args;
     }
 
     public selectConversation(conversation: any): void {

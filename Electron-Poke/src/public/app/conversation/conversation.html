@@ -1,12 +1,12 @@
 <div class="grid">
 
     <div class="conversation-header pad-20">
-        {{ displayName }}
+        {{ conversation?.name }}
     </div>
 
-    <div *ngIf="messages.length > 0" #scrollConversation class="conversation-content">
+    <div *ngIf="conversation?.messages.length > 0" #scrollConversation class="conversation-content">
         <ul>
-            <li *ngFor="let message of messages" class="grid margin-10">
+            <li *ngFor="let message of conversation.messages" class="grid margin-10">
                 <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.contact.isSelf, 'grid-columns-align-left-horizontally': !message.contact.isSelf}">
                     <div class="message-bubble">
                         <div [ngClass]="{'message-bubble-user': message.contact.isSelf, 'message-bubble-other': !message.contact.isSelf}" class="pad-10">
@@ -21,7 +21,7 @@
         </ul>
     </div>
 
-    <div *ngIf="messages.length === 0" class="conversation-no-messages-watermark">
+    <div *ngIf="conversation?.messages.length === 0" class="conversation-no-messages-watermark">
         No Messages
     </div>
 

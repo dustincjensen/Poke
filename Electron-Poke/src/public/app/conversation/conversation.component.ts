@@ -17,13 +17,11 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
 
     @ViewChild('scrollConversation')
     private _scrollContainer: ElementRef;
-
-    id: number;
-    displayName: string;
-    messageToAndroid: string;
-    messages: any[];
+    private _subscriptionCountAskedFor = 0;
     private _oldMessageCount: number;
-    private _subscriptionToRouteParams: any;
+
+    conversation: any;
+    messageToAndroid: string;
 
     constructor(
         private _route: ActivatedRoute,
@@ -34,87 +32,27 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
     }
 
     public async ngOnInit() {
-        this._route.paramMap
-            .switchMap((params: ParamMap) => this._loadConversation(+params.get('id')))
-            .subscribe((conversation: any) => {
-                this.id = conversation.id;
-                if (conversation.id === 784) {
-                    this.displayName = 'Dave Grohl';
-                    this.messages = conversation.messages;
-                } else if (conversation.id === 785) {
-                    this.displayName = 'Taylor Hawkins';
-                    this.messages = conversation.messages;
-                }
-            });
-
+        this.registerIpcRendererMethod('conversationRetrieved', this._handleConversationRetrieved);
         this.registerIpcRendererMethod('new-message', this._handleNewMessage);
+
+        this._route.params.subscribe(params => {
+            this._subscriptionCountAskedFor++;
+            this._electron.ipcRenderer.send('getConversation', {
+                id: +params.id,
+                subscriptionCount: this._subscriptionCountAskedFor
+            });
+        });
     }
 
-    private _loadConversation(id: number): Observable<any> {
-        let obj = {
-            id: id,
-            messages: []
-        };
-
-        if (id === 784) {
-            obj.messages = [
-                {
-                    contact: {
-                        id: 784,
-                        phoneNumber: '+19695553215',
-                        name: 'Dave Grohl',
-                        isSelf: false
-                    },
-                    message: 'Hey, how are you doing today friend?',
-                    time: Date.now() - (36 * 60 * 1000)
-                },
-                {
-                    contact: {
-                        id: 784,
-                        phoneNumber: '+19695553215',
-                        name: 'Dave Grohl',
-                        isSelf: false
-                    },
-                    message: 'I was wondering what you are up to today?',
-                    time: Date.now() - (35 * 60 * 1000)
-                },
-                {
-                    contact: {
-                        id: 0,
-                        phoneNumber: null,
-                        name: 'Me',
-                        isSelf: true
-                    },
-                    message: 'Hey Dave. I\'m doing pretty well, thanks for asking',
-                    time: Date.now() - (30 * 60 * 1000)
-                },
-                {
-                    contact: {
-                        id: 0,
-                        phoneNumber: null,
-                        name: 'Me',
-                        isSelf: true
-                    },
-                    message: 'I\'m not up to much, did you have something in mind? I would totally be up for some food or something.',
-                    time: Date.now() - (30 * 60 * 1000)
-                },
-                {
-                    contact: {
-                        id: 784,
-                        phoneNumber: '+19695553215',
-                        name: 'Dave Grohl',
-                        isSelf: false
-                    },
-                    message: 'How about we get together and jam?',
-                    time: Date.now() - (29 * 60 * 1000)
-                }
-            ];
+    /**
+     * If the subscription count of the record we asked for,
+     * still matches the record we are waiting for, go ahead
+     * and update the conversation.
+     */
+    private _handleConversationRetrieved(event, args) {
+        if (args.subscriptionCount === this._subscriptionCountAskedFor) {
+            this.conversation = args.conversation;
         }
-
-        return new Observable(observer => {
-            observer.next(obj);
-            observer.complete();
-        });
     }
 
     /**
@@ -124,8 +62,10 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
      * our queue and we should scroll to the bottom of the view.
      */
     public ngAfterViewChecked() {
-        if (this._oldMessageCount !== this.messages.length) {
-            this._oldMessageCount = this.messages.length;
+        if (!this.conversation) return;
+
+        if (this._oldMessageCount !== this.conversation.messages.length) {
+            this._oldMessageCount = this.conversation.messages.length;
             this._scrollToBottom();
         }
     }
@@ -143,7 +83,7 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
     private _handleNewMessage(event, args) {
         console.log('New Message', args);
         let obj = JSON.parse(args);
-        this.messages.push(obj);
+        this.conversation.messages.push(obj);
     }
 
 
@@ -169,7 +109,7 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
             message: message,
             time: Date.now()
         };
-        this.messages.push(saveHere);
+        this.conversation.messages.push(saveHere);
         this.messageToAndroid = '';
 
         // TODO uncomment when we want to send back to android
