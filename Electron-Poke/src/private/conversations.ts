@@ -1,4 +1,5 @@
 import { MainElectron } from './main';
+import { TcpServer } from './tcpServer';
 import { IConversation, IMessage } from '../shared/interfaces';
 
 export class Conversations {
@@ -50,6 +51,32 @@ export class Conversations {
         ];
     }
 
+    public static handleOutgoingMessage(obj: any): any {
+        let index = Conversations.conversations.findIndex(value => {
+            return value.id === obj.contact.id;
+        });
+
+        // Error... ?
+        // TODO what to do?
+        if (index < 0) {
+            console.log('No conversation to add to...');
+            return;
+        }
+
+        // Add to the conversation and send it to the open socket.
+        let conversation = Conversations.conversations[index];
+        conversation.messages.push(obj.message);
+
+        // Update the message headed out with a phone number
+        TcpServer.writeOnOpenSocket(JSON.stringify({
+            contact: {
+                id: obj.contact.id,
+                phoneNumber: conversation.phoneNumber
+            },
+            message: obj.message.message
+        }));
+    }
+
     public static handleIncomingMessage(obj: any): any {
         let index = Conversations.conversations.findIndex(value => {
             return value.id === obj.contact.id;
@@ -85,7 +112,7 @@ export class Conversations {
                     }
                 ] as IMessage[]
             };
-            Conversations.conversations.push(conversation);
+            Conversations.conversations.unshift(conversation);
 
             // Since we have a new conversation...
             MainElectron.sendMessageToMainContents('newConversationReceived', conversation);

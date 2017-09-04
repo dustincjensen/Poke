@@ -102,21 +102,20 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
         }
 
         // This is the object to save to our conversation.
-        let saveHere = {
+        let messageObj = {
             isSelf: true,
             message: message,
             time: Date.now()
         };
-        this.conversation.messages.push(saveHere);
+        this.conversation.messages.push(messageObj);
         this.messageToAndroid = '';
 
-        // TODO uncomment when we want to send back to android
         let sendMessage = {
             contact: {
-                phoneNumber: this.conversation.phoneNumber
+                id: this.conversation.id
             },
-            message: message
+            message: messageObj
         };
-        this._electron.ipcRenderer.send('newMessageForAndroid', JSON.stringify(sendMessage));
+        this._electron.ipcRenderer.send('newMessageForAndroid', sendMessage);
     }
 }
