@@ -12,6 +12,7 @@ import { IConversation } from '../../../shared/interfaces';
 export class ConversationListComponent extends ElectronComponent implements OnInit {
 
     conversations: IConversation[];
+    hasSelectedConversation: boolean;
 
     constructor(
         private _router: Router,
@@ -36,6 +37,11 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     }
 
     public selectConversation(conversation: IConversation): void {
+        this.hasSelectedConversation = true;
         this._router.navigate(['/conversationList', { outlets: { 'conversationListOutlet': [conversation.id] } }]);
+    }
+
+    public loadContacts(): void {
+
     }
 }

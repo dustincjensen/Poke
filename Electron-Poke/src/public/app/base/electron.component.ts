@@ -1,6 +1,7 @@
 import { NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
+// TODO if we are navigating to a new component we need to make sure that our ipcRenderer.on events are nullified.
 export abstract class ElectronComponent {
     constructor(
         protected _electron: ElectronService,
