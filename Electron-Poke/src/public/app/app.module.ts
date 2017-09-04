@@ -6,12 +6,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgxElectronModule } from 'ngx-electron';
 import { AppComponent } from './app.component';
 import { WaitingComponent } from './waiting/waiting.component';
+import { ConversationListComponent } from './conversation/conversation-list.component';
 import { ConversationComponent } from './conversation/conversation.component';
 
 const appRoutes = RouterModule.forRoot(
     [
         { path: 'waiting', component: WaitingComponent },
-        { path: 'conversation', component: ConversationComponent },
+        {
+            path: 'conversationList',
+            component: ConversationListComponent,
+            children: [
+                { path: ':id', component: ConversationComponent, outlet: 'conversationListOutlet' }
+            ]
+        },
         { path: '', redirectTo: 'waiting', pathMatch: 'full' }
     ],
     {
@@ -32,7 +39,8 @@ const appRoutes = RouterModule.forRoot(
     declarations: [
         AppComponent,
         WaitingComponent,
-        ConversationComponent,
+        ConversationListComponent,
+        ConversationComponent
     ],
     providers: [],
     bootstrap: [AppComponent],

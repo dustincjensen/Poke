@@ -1,0 +1,14 @@
+<div class="grid-columns">
+    <div class="conversation-list-column">
+        <ul style="margin:5px;">
+            <li *ngFor="let conversation of conversations" class="conversation-list-item margin-top-10 margin-bottom-10">
+                <button (click)="selectConversation(conversation)" class="conversation-list-button">
+                    {{ conversation.display }}
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="col-star-1">
+        <router-outlet name="conversationListOutlet"></router-outlet>
+    </div>
+</div>

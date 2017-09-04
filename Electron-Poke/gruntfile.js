@@ -92,6 +92,8 @@ module.exports = function (grunt) {
                             "rxjs/operator/concatAll.js*",
                             "rxjs/operator/filter.js*",
                             "rxjs/operator/observeOn.js*",
+                            "rxjs/operator/switchMap*",
+                            "rxjs/add/operator/switchMap*",
                             "rxjs/util/EmptyError.js*",
                             "rxjs/observable/FromObservable.js*",
                             "rxjs/observable/IteratorObservable.js*",

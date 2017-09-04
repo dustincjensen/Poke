@@ -1,6 +1,12 @@
-import { Component, OnInit, AfterViewChecked, NgZone, ElementRef, ViewChild } from '@angular/core';
+import {
+    Component, OnInit, OnDestroy, AfterViewChecked,
+    NgZone, ElementRef, ViewChild
+} from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
     moduleId: module.id,
@@ -12,12 +18,15 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
     @ViewChild('scrollConversation')
     private _scrollContainer: ElementRef;
 
+    id: number;
     displayName: string;
     messageToAndroid: string;
     messages: any[];
     private _oldMessageCount: number;
+    private _subscriptionToRouteParams: any;
 
     constructor(
+        private _route: ActivatedRoute,
         electron: ElectronService,
         ngZone: NgZone
     ) {
@@ -25,66 +34,87 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
     }
 
     public async ngOnInit() {
-        this.displayName = '';
-        this.messages = [];
-
-        // TMP
-        this.displayName = 'Dave Grohl';
-        // this.messages.push(
-        //     {
-        //         contact: {
-        //             id: 784,
-        //             phoneNumber: '+19695553215',
-        //             name: 'Dave Grohl',
-        //             isSelf: false
-        //         },
-        //         message: 'Hey, how are you doing today friend?',
-        //         time: Date.now() - (36 * 60 * 1000)
-        //     },
-        //     {
-        //         contact: {
-        //             id: 784,
-        //             phoneNumber: '+19695553215',
-        //             name: 'Dave Grohl',
-        //             isSelf: false
-        //         },
-        //         message: 'I was wondering what you are up to today?',
-        //         time: Date.now() - (35 * 60 * 1000)
-        //     },
-        //     {
-        //         contact: {
-        //             id: 0,
-        //             phoneNumber: null,
-        //             name: 'Me',
-        //             isSelf: true
-        //         },
-        //         message: 'Hey Dave. I\'m doing pretty well, thanks for asking',
-        //         time: Date.now() - (30 * 60 * 1000)
-        //     },
-        //     {
-        //         contact: {
-        //             id: 0,
-        //             phoneNumber: null,
-        //             name: 'Me',
-        //             isSelf: true
-        //         },
-        //         message: 'I\'m not up to much, did you have something in mind? I would totally be up for some food or something.',
-        //         time: Date.now() - (30 * 60 * 1000)
-        //     },
-        //     {
-        //         contact: {
-        //             id: 784,
-        //             phoneNumber: '+19695553215',
-        //             name: 'Dave Grohl',
-        //             isSelf: false
-        //         },
-        //         message: 'How about we get together and jam?',
-        //         time: Date.now() - (29 * 60 * 1000)
-        //     }
-        // );
-        // TMP
+        this._route.paramMap
+            .switchMap((params: ParamMap) => this._loadConversation(+params.get('id')))
+            .subscribe((conversation: any) => {
+                this.id = conversation.id;
+                if (conversation.id === 784) {
+                    this.displayName = 'Dave Grohl';
+                    this.messages = conversation.messages;
+                } else if (conversation.id === 785) {
+                    this.displayName = 'Taylor Hawkins';
+                    this.messages = conversation.messages;
+                }
+            });
 
         this.registerIpcRendererMethod('new-message', this._handleNewMessage);
+    }
+
+    private _loadConversation(id: number): Observable<any> {
+        let obj = {
+            id: id,
+            messages: []
+        };
+
+        if (id === 784) {
+            obj.messages = [
+                {
+                    contact: {
+                        id: 784,
+                        phoneNumber: '+19695553215',
+                        name: 'Dave Grohl',
+                        isSelf: false
+                    },
+                    message: 'Hey, how are you doing today friend?',
+                    time: Date.now() - (36 * 60 * 1000)
+                },
+                {
+                    contact: {
+                        id: 784,
+                        phoneNumber: '+19695553215',
+                        name: 'Dave Grohl',
+                        isSelf: false
+                    },
+                    message: 'I was wondering what you are up to today?',
+                    time: Date.now() - (35 * 60 * 1000)
+                },
+                {
+                    contact: {
+                        id: 0,
+                        phoneNumber: null,
+                        name: 'Me',
+                        isSelf: true
+                    },
+                    message: 'Hey Dave. I\'m doing pretty well, thanks for asking',
+                    time: Date.now() - (30 * 60 * 1000)
+                },
+                {
+                    contact: {
+                        id: 0,
+                        phoneNumber: null,
+                        name: 'Me',
+                        isSelf: true
+                    },
+                    message: 'I\'m not up to much, did you have something in mind? I would totally be up for some food or something.',
+                    time: Date.now() - (30 * 60 * 1000)
+                },
+                {
+                    contact: {
+                        id: 784,
+                        phoneNumber: '+19695553215',
+                        name: 'Dave Grohl',
+                        isSelf: false
+                    },
+                    message: 'How about we get together and jam?',
+                    time: Date.now() - (29 * 60 * 1000)
+                }
+            ];
+        }
+
+        return new Observable(observer => {
+            observer.next(obj);
+            observer.complete();
+        });
     }
 
     /**
