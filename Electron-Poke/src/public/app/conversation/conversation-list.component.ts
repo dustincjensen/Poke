@@ -21,12 +21,17 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     }
 
     public async ngOnInit() {
-        this.registerIpcRendererMethod('conversationListRetrieved', this._handleConversationsLoaded)
+        this.registerIpcRendererMethod('conversationListRetrieved', this._handleConversationsLoaded);
+        this.registerIpcRendererMethod('newConversationReceived', this._handleNewConversationReceived);
         this._electron.ipcRenderer.send('getConversationList');
     }
 
     private _handleConversationsLoaded(event, args) {
         this.conversations = args;
+    }
+
+    private _handleNewConversationReceived(event, args) {
+        this.conversations.unshift(args);
     }
 
     public selectConversation(conversation: any): void {

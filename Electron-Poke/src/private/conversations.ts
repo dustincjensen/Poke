@@ -1,3 +1,5 @@
+import { MainElectron } from './main';
+
 export class Conversations {
 
     public static conversations: any[];
@@ -70,6 +72,64 @@ export class Conversations {
                 messages: []
             }
         ];
+    }
+
+    public static handleIncomingMessage(obj: any): any {
+        let index = Conversations.conversations.findIndex(value => {
+            return value.id === obj.contact.id;
+        });
+
+        // If there is a conversation go ahead and add to the existing
+        // conversation.
+        if (index >= 0) {
+            let newMessage = {
+                contact: {
+                    id: obj.contact.id,
+                    phoneNumber: obj.contact.phoneNumber,
+                    name: obj.contact.name,
+                    isSelf: false
+                },
+                message: obj.message,
+                time: Date.now()
+            };
+            Conversations.conversations[index].messages.push(newMessage);
+
+            // Since we might be on the conversation send a new message
+            MainElectron.sendMessageToMainContents('new-message', newMessage);
+        } else {
+            let conversation = {
+                id: obj.contact.id,
+                phoneNumber: obj.contact.phoneNumber,
+                name: obj.contact.name,
+                display: Conversations._determineDisplayName(obj.contact.name),
+                messages: [
+                    {
+                        contact: {
+                            id: obj.contact.id,
+                            phoneNumber: obj.contact.phoneNumber,
+                            name: obj.contact.name,
+                            isSelf: false
+                        },
+                        message: obj.message,
+                        time: Date.now()
+                    }
+                ]
+            };
+            Conversations.conversations.push(conversation);
+
+            // Since we have a new conversation...
+            MainElectron.sendMessageToMainContents('newConversationReceived', conversation);
+        }
+    }
+
+    private static _determineDisplayName(name: string): string {
+        let split = name.split(' ');
+        if (split.length === 2) {
+            return split[0][0].toUpperCase() + split[1][0].toUpperCase();
+        }
+        else {
+            return '??';
+        }
     }
 
     public static getConversationList(): any[] {

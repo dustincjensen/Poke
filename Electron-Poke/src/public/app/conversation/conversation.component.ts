@@ -82,8 +82,9 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
 
     private _handleNewMessage(event, args) {
         console.log('New Message', args);
-        let obj = JSON.parse(args);
-        this.conversation.messages.push(obj);
+        if (this.conversation && args.contact.id === this.conversation.id) {
+            this.conversation.messages.push(args);
+        }
     }
 
 
@@ -115,7 +116,7 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
         // TODO uncomment when we want to send back to android
         let sendMessage = {
             contact: {
-                phoneNumber: 'FILL_IN_TO_DEBUG'
+                phoneNumber: this.conversation.phoneNumber
             },
             message: message
         };
