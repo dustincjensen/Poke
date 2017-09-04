@@ -83,7 +83,6 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
     }
 
     private _handleNewMessage(event, args) {
-        console.log('New Message', args);
         if (this.conversation && args.conversationId === this.conversation.id) {
             this.conversation.messages.push(args.message);
         }

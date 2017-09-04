@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
+import { IConversation } from '../../../shared/interfaces';
 
 @Component({
     moduleId: module.id,
@@ -10,7 +11,7 @@ import { ElectronComponent } from '../base/electron.component';
 })
 export class ConversationListComponent extends ElectronComponent implements OnInit {
 
-    conversations: any[];
+    conversations: IConversation[];
 
     constructor(
         private _router: Router,
@@ -34,8 +35,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         this.conversations.unshift(args);
     }
 
-    public selectConversation(conversation: any): void {
-        console.log(conversation);
+    public selectConversation(conversation: IConversation): void {
         this._router.navigate(['/conversationList', { outlets: { 'conversationListOutlet': [conversation.id] } }]);
     }
 }
