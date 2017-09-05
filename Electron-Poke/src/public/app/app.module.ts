@@ -8,15 +8,17 @@ import { AppComponent } from './app.component';
 import { WaitingComponent } from './waiting/waiting.component';
 import { ConversationListComponent } from './conversation/conversation-list.component';
 import { ConversationComponent } from './conversation/conversation.component';
+import { ContactSelectorComponent } from './conversation/contact-selector.component';
 
 const appRoutes = RouterModule.forRoot(
     [
         { path: 'waiting', component: WaitingComponent },
         {
-            path: 'conversationList',
+            path: 'conversations',
             component: ConversationListComponent,
             children: [
-                { path: ':id', component: ConversationComponent, outlet: 'conversationListOutlet' }
+                { path: 'conversation/:id', component: ConversationComponent, outlet: 'conversationListOutlet' },
+                { path: 'contacts', component: ContactSelectorComponent, outlet: 'conversationListOutlet' }
             ]
         },
         { path: '', redirectTo: 'waiting', pathMatch: 'full' }
@@ -40,7 +42,8 @@ const appRoutes = RouterModule.forRoot(
         AppComponent,
         WaitingComponent,
         ConversationListComponent,
-        ConversationComponent
+        ConversationComponent,
+        ContactSelectorComponent
     ],
     providers: [],
     bootstrap: [AppComponent],

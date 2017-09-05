@@ -38,10 +38,10 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     public selectConversation(conversation: IConversation): void {
         this.hasSelectedConversation = true;
-        this._router.navigate(['/conversationList', { outlets: { 'conversationListOutlet': [conversation.id] } }]);
+        this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['conversation', conversation.id] } }]);
     }
 
     public loadContacts(): void {
-
+        this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['contacts'] } }]);
     }
 }
