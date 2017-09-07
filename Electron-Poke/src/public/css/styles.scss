@@ -94,7 +94,6 @@ body {
     background: $primaryColor;
     color: $primaryTextColor;
     border-radius: 50%;
-    border: solid 1px $primaryColor;
     width: 50px;
     height: 50px;
     line-height: 50px;
@@ -162,22 +161,17 @@ body {
 .message-bubble {
     max-width: 70%;
 
+    &-default {
+        border-radius: 10px;
+        background: lighten($secondaryColor, 10%);
+    }
+
     &-time-user {
         text-align: right;
     }
 
-    &-user {
-        background: lighten($secondaryColor, 10%);
-        border-radius: 10px;
-    }
-
     &-time-other {
         text-align: left;
-    }
-
-    &-other {
-        background: $primaryColor;
-        border-radius: 10px;
     }
 }
 

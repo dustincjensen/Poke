@@ -1,6 +1,6 @@
 <div class="grid">
 
-    <div class="conversation-header pad-20">
+    <div class="conversation-header pad-20" [style.background]="conversation?.color">
         {{ conversation?.name }}
     </div>
 
@@ -9,9 +9,16 @@
             <li *ngFor="let message of conversation.messages" class="grid margin-10">
                 <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.isSelf, 'grid-columns-align-left-horizontally': !message.isSelf}">
                     <div class="message-bubble">
-                        <div [ngClass]="{'message-bubble-user': message.isSelf, 'message-bubble-other': !message.isSelf}" class="pad-10">
+
+                        <!-- TODO do this better, I can't find documentation on how to leave a default value -->
+                        <div *ngIf="message.isSelf" class="message-bubble-default pad-10">
                             {{ message.message }}
                         </div>
+                        <div *ngIf="!message.isSelf" class="message-bubble-default pad-10" [style.background]="conversation?.color">
+                            {{ message.message }}
+                        </div>
+                        <!-- TODO do this better, I can't find documentation on how to leave a default value -->
+
                         <div [ngClass]="{'message-bubble-time-user': message.isSelf, 'message-bubble-time-other': !message.isSelf}">
                             {{ message.time | date:'EEE h:mm a' }}
                         </div>
@@ -25,7 +32,7 @@
         No Messages
     </div>
 
-    <div class="conversation-footer pad-10">
+    <div class="conversation-footer pad-10" [style.borderColor]="conversation?.color">
         <div class="grid-columns">
             <div class="col-star-1 margin-right-10">
                 <input type="text" class="form-control-input" (keyup.enter)="onMessageEntered()" [(ngModel)]="messageToAndroid" placeholder="Enter message..."

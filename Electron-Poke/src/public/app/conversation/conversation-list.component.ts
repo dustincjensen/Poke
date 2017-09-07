@@ -13,6 +13,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     conversations: IConversation[];
     hasSelectedConversation: boolean;
+    selectedConversation: IConversation;
 
     constructor(
         private _router: Router,
@@ -38,10 +39,12 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     public selectConversation(conversation: IConversation): void {
         this.hasSelectedConversation = true;
+        this.selectedConversation = conversation;
         this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['conversation', conversation.id] } }]);
     }
 
     public loadContacts(): void {
+        this.selectedConversation = null;
         this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['contacts'] } }]);
     }
 }

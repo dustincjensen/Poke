@@ -1,7 +1,4 @@
-import {
-    Component, OnInit, OnDestroy, AfterViewChecked,
-    NgZone, ElementRef, ViewChild
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
@@ -87,7 +84,6 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
             this.conversation.messages.push(args.message);
         }
     }
-
 
     public async onMessageEntered() {
         // The message needs to be valid and not empty.

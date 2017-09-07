@@ -3,6 +3,7 @@ export interface IConversation {
     phoneNumber: string;
     name: string;
     display: string;
+    color: string;
     messages: IMessage[];
 }
 

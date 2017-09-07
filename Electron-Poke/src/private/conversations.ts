@@ -1,6 +1,7 @@
 import { MainElectron } from './main';
 import { TcpServer } from './tcpServer';
 import { IConversation, IMessage } from '../shared/interfaces';
+import { ColorUtil } from './colorUtil';
 
 export class Conversations {
 
@@ -10,9 +11,10 @@ export class Conversations {
         Conversations.conversations = [
             {
                 id: 10000,
-                phoneNumber: '+19695553215',
+                phoneNumber: 'FAKE_NUMBER',
                 name: 'Dave Grohl',
                 display: 'DG',
+                color: ColorUtil.getRandomColor(),
                 messages: [
                     {
                         isSelf: false,
@@ -43,10 +45,23 @@ export class Conversations {
             },
             {
                 id: 10001,
-                phoneNumber: '+17775553112',
+                phoneNumber: 'FAKE_NUMBER',
                 name: 'Taylor Hawkins',
                 display: 'TH',
+                color: ColorUtil.getRandomColor(),
                 messages: [] as IMessage[]
+            },
+            {
+                id: 10002,
+                phoneNumber: 'FAKE_NUMBER',
+                name: 'Chris Shiflett',
+                display: 'CS',
+                color: ColorUtil.getRandomColor(),
+                messages: [{
+                    isSelf: false,
+                    message: 'Hey man I really need my guitar back! Get it to me ASAP.',
+                    time: Date.now() - (92 * 60 * 1000)
+                }] as IMessage[]
             }
         ];
     }
@@ -104,6 +119,7 @@ export class Conversations {
                 phoneNumber: obj.contact.phoneNumber,
                 name: obj.contact.name,
                 display: Conversations._determineDisplayName(obj.contact.name),
+                color: ColorUtil.getRandomColor(),
                 messages: [
                     {
                         isSelf: false,
@@ -134,7 +150,8 @@ export class Conversations {
             return {
                 id: value.id,
                 name: value.name,
-                display: value.display
+                display: value.display,
+                color: value.color
             };
         });
     }

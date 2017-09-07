@@ -1,10 +1,10 @@
 <div class="grid-columns">
-    <div class="conversation-list-column">
+    <div class="conversation-list-column" [style.borderColor]="selectedConversation?.color">
         <ul style="margin:5px;">
             <li class="start-new-conversation-list-item margin-top-10 margin-bottom-10">
                 <button (click)="loadContacts()" class="start-new-conversation-button"></button>
             </li>
-            <li *ngFor="let conversation of conversations" class="conversation-list-item margin-top-10 margin-bottom-10">
+            <li *ngFor="let conversation of conversations" class="conversation-list-item margin-top-10 margin-bottom-10" [style.background]="conversation.color">
                 <button (click)="selectConversation(conversation)" class="conversation-list-button">
                     {{ conversation.display }}
                 </button>
