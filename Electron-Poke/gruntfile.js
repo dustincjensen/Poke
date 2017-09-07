@@ -147,6 +147,7 @@ module.exports = function (grunt) {
         // cleans our output because it has files that shouldn't exist
         // any more.
         clean: {
+            random: ['tscommand-*.tmp.txt', '.tscache'],
             release: ['dist']
         },
         // This supports running tasks whenever one of the events occurs.
