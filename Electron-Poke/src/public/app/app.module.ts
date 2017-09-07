@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, RouteReuseStrategy } from '@angular/router';
 import { NgxElectronModule } from 'ngx-electron';
+import { CustomReuseStrategy } from './router/customReuseStrategy';
 import { AppComponent } from './app.component';
 import { WaitingComponent } from './waiting/waiting.component';
 import { ConversationListComponent } from './conversation/conversation-list.component';
@@ -45,7 +46,13 @@ const appRoutes = RouterModule.forRoot(
         ConversationComponent,
         ContactSelectorComponent
     ],
-    providers: [],
+    providers: [
+        // This uses the custom route strategy and makes it so the
+        // components do not get destroyed on route navigation.
+        // This means we won't run into errors like multiple listeners
+        // or UI issues where variables are not set.
+        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

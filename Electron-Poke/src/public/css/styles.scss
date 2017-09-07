@@ -180,3 +180,12 @@ body {
         border-radius: 10px;
     }
 }
+
+.contacts-header {
+    flex: 0 0 auto;
+    background: $primaryColor;
+    font-size: 24px;
+
+    //box-shadow: 0 8px 6px -6px #222;
+    //z-index: 1000;
+}
