@@ -1,8 +1,19 @@
 <div class="grid">
 
     <div class="contacts-header pad-20">
-        Contacts
+        <div class="grid-columns">
+            <div class="col-star-1">Contacts</div>
+            <button class="close-button" (click)="cancelContactSelection()"></button>
+        </div>
     </div>
 
+    <!-- List of contacts -->
+    <div class="contact-content">
+        <div class="pad-left-20 pad-right-20">
+            <div *ngFor="let contact of contacts" class="contact-row pad-20">
+                {{ contact.name }}
+            </div>
+        </div>
+    </div>
 
 </div>

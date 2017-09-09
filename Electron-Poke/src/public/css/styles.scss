@@ -180,6 +180,71 @@ body {
     background: $primaryColor;
     font-size: 24px;
 
-    //box-shadow: 0 8px 6px -6px #222;
-    //z-index: 1000;
+    box-shadow: 0 8px 6px -6px #222;
+    z-index: 1000;
+}
+
+.contact-content {
+    flex: 1 1 auto;
+    position: relative;
+    overflow-y: auto;
+}
+
+.contact-row {
+    border-bottom: solid 1px $primaryColor;
+    font-size: 20px;
+
+    &:hover {
+        background: lighten($secondaryColor, 10%);
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+// Creates a + button
+.close-button {
+
+    position: relative;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    outline: none;    
+    background: transparent;
+
+    &::after {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: $primaryTextColor;
+        height: 2px;
+        transform: translateY(-50%) rotateZ(45deg);
+        top: 50%;
+        left: 4px;
+        right: 4px;
+    }
+
+    &:hover::after {
+        background-color: darken($primaryTextColor, 25%);
+    }
+
+    &::before {
+        content: " ";
+        position: absolute;
+        display: block;
+        background-color: $primaryTextColor;
+        width: 2px;
+        transform: translateX(-50%) rotateZ(45deg);
+        left: 50%;
+        top: 4px;
+        bottom: 4px;
+    }
+
+    &:hover::before {
+        background-color: darken($primaryTextColor, 25%);
+    }
 }

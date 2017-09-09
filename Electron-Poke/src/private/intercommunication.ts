@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
 import { MainElectron } from './main';
 import { TcpServer } from './tcpServer';
+import { Contacts } from './contacts';
 import { Conversations } from './conversations';
 
 export class Intercommunication {
@@ -26,6 +27,12 @@ export class Intercommunication {
                 conversation: conversation,
                 subscriptionCount: args.subscriptionCount
             });
+        });
+
+        // Retrieve the contact list
+        ipcMain.on('getContactList', (event, args) => {
+            let contactList = Contacts.getContactList();
+            MainElectron.sendMessageToMainContents('contactListRetrieved', contactList);
         });
     }
 }

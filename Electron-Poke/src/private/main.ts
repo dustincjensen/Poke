@@ -6,6 +6,7 @@ import { TcpServer } from './tcpServer';
 import { Intercommunication } from './intercommunication';
 
 // TMP
+import { Contacts } from './contacts';
 import { Conversations } from './conversations';
 
 export class MainElectron {
@@ -19,6 +20,9 @@ export class MainElectron {
         MainElectron._initializeElectron();
         TcpServer.createServer();
         Intercommunication.setupListeners();
+
+        // Temp? Just for test data.
+        Contacts.setupContacts();
         Conversations.setupConversations();
     }
 

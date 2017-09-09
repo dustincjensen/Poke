@@ -12,3 +12,9 @@ export interface IMessage {
     message: string;
     time: number;
 }
+
+export interface IContact {
+    id: number;
+    name: string;
+    display: string;
+}

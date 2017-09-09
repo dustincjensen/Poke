@@ -15,18 +15,11 @@
         <router-outlet name="conversationListOutlet"></router-outlet>
 
         <!-- If there are no conversations this will be shown... -->
-        <div *ngIf="!conversations || conversations.length === 0" class="grid">
+        <div class="grid">
             <div class="conversation-list-no-conversations-watermark">
                 <div class="grid margin-10">
-                    No Conversations
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="!hasSelectedConversation" class="grid">
-            <div class="conversation-list-no-conversations-watermark">
-                <div class="grid margin-10">
-                    No Conversation Selected
+                    <span *ngIf="!conversations || conversations.length === 0">No Conversations</span>
+                    <span *ngIf="conversations && conversations.length > 0">No Conversation Selected</span>
                 </div>
             </div>
         </div>
