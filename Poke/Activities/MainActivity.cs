@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content.PM;
 using Android.Database;
 using Android.Widget;
 using Android.OS;
+using Org.Json;
 using Poke.Models;
 using Poke.Util;
 
@@ -19,6 +22,8 @@ namespace Poke.Activities
         private ListView _possibleListenerDevices;
         private TextView _emptyListenerDevices;
         private DeviceAuthenticationModalFragment _deviceAuthenticationModalFragment;
+
+        public static RSAParameters _privateKey;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -70,6 +75,18 @@ namespace Poke.Activities
             // Set the Tcp Connection up. That way you don't actually need to wait
             // for a message to be sent to start sending messages from the "server".
             TcpHandler.SetupTcpConnection(item.IpAddress, item.Port);
+
+            // Communicate your public key...
+            var publicPrivate = Crypto.GetPublicPrivateKey();
+            _privateKey = publicPrivate[1];
+            var publicKey = new JSONObject();
+            publicKey.Put("n", Convert.ToBase64String(publicPrivate[0].Modulus));
+            publicKey.Put("e", Convert.ToBase64String(publicPrivate[0].Exponent));
+
+            var aes = Crypto.CreateAesKeyIV("GAMMA");
+            var encrypted = Crypto.EncryptWithAesKeyIV(publicKey.ToString(), aes);
+
+            Task.Run(async () => await TcpHandler.StartConversation(encrypted + "<BEG>"));
 
             Toast.MakeText(
                 Application.Context, 

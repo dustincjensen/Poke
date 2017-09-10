@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,8 +32,23 @@ namespace Poke.Util
                     res.Append(ALPHABET[(int)(num % (uint)ALPHABET.Length)]);
                 }
             }
-
             return res.ToString();
+        }
+
+        public static List<RSAParameters> GetPublicPrivateKey()
+        {
+            var rsa = new RSACryptoServiceProvider(2048);
+            var publicKey = rsa.ExportParameters(false);
+            var privateKey = rsa.ExportParameters(true);
+            return new List<RSAParameters> { publicKey, privateKey };
+        }
+
+        public static byte[] EncryptWithPublicKey(RSAParameters publicKey, byte[] value)
+        {
+            var rsa = new RSACryptoServiceProvider();
+            rsa.ImportParameters(publicKey);
+            var encryptedBytes = rsa.Encrypt(value, true);
+            return encryptedBytes;
         }
 
         /// <summary>

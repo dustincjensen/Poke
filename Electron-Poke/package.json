@@ -9,6 +9,7 @@
   },
   "author": "Dustin Jensen",
   "devDependencies": {
+    "@types/node-rsa": "^0.4.0",
     "concurrently": "^3.5.0",
     "electron": "1.7.5",
     "grunt": "^1.0.1",
@@ -33,6 +34,7 @@
     "core-js": "^2.5.0",
     "electron": "^1.7.5",
     "ngx-electron": "^1.0.3",
+    "node-rsa": "^0.4.2",
     "rxjs": "^5.4.3",
     "systemjs": "^0.20.18",
     "zone.js": "^0.8.17"

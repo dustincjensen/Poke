@@ -1,1 +1,3 @@
 // TODO learn more about component parent/child data relationships in Angular 2
+// TODO Create message contract so encryption/keep alive/messages can be passed between the 2 devices.
+// TODO Hook up 5 digit pin handshake on Android and Electron

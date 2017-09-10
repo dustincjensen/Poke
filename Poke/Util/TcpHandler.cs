@@ -2,6 +2,7 @@ using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Org.Json;
+using Poke.Activities;
 using Poke.Models;
 
 namespace Poke.Util
@@ -12,7 +13,8 @@ namespace Poke.Util
         public static bool HasTcpConnection => Tcp != null && Tcp.Connected;
 
         // TODO handle messages larger than buffer.
-        private static readonly byte[] ReceiveBuffer = new byte[4096];
+        private static readonly byte[] ReceiveBuffer = new byte[8192];
+        private static string WholeMessage = null;
 
         public static void SetupTcpConnection(string ipAddress, int portNumber)
         {
@@ -32,6 +34,12 @@ namespace Poke.Util
             await Tcp.Client.SendAsync(new ArraySegment<byte>(msg), SocketFlags.None);
         }
 
+        public static async Task StartConversation(string encryptedMessage)
+        {
+            var msgBytes = System.Text.Encoding.UTF8.GetBytes(encryptedMessage);
+            await Tcp.Client.SendAsync(new ArraySegment<byte>(msgBytes), SocketFlags.None);
+        }
+
         public static void ReceiveCallback(IAsyncResult result)
         {
             try
@@ -49,18 +57,40 @@ namespace Poke.Util
 
                 // Get the message and send it to....
                 // Send message to the person...
-                var jsonString = System.Text.Encoding.ASCII.GetString(recData);
-                var payload = TcpPayload.FromJson(new JSONObject(jsonString));
+                //var jsonString = System.Text.Encoding.ASCII.GetString(recData);
+                //var payload = TcpPayload.FromJson(new JSONObject(jsonString));
 
-                if (!string.IsNullOrWhiteSpace(payload.Contact.PhoneNumber) &&
-                    !string.IsNullOrWhiteSpace(payload.Message))
+                //if (!string.IsNullOrWhiteSpace(payload.Contact.PhoneNumber) &&
+                //    !string.IsNullOrWhiteSpace(payload.Message))
+                //{
+                //    Sms.SendTo(payload.Contact.PhoneNumber, payload.Message);
+                //}
+                //else
+                //{
+                //    // TODO maybe this shouldn't be thrown? Maybe it is a ping to keep the socket alive.
+                //    throw new NotImplementedException("Did not receive a phone number or message.");
+                //}
+
+                var encryptedString = System.Text.Encoding.UTF8.GetString(recData);
+
+                WholeMessage = string.IsNullOrWhiteSpace(WholeMessage)
+                        ? encryptedString
+                        : WholeMessage + encryptedString;
+
+                if (WholeMessage.EndsWith("<BEG>"))
                 {
-                    Sms.SendTo(payload.Contact.PhoneNumber, payload.Message);
-                }
-                else
-                {
-                    // TODO maybe this shouldn't be thrown? Maybe it is a ping to keep the socket alive.
-                    throw new NotImplementedException("Did not receive a phone number or message.");
+                    WholeMessage = WholeMessage.Replace("<BEG>", "");
+                    var decryptedString = Crypto.DecryptWithAesKeyIV(WholeMessage, Crypto.CreateAesKeyIV("GAMMA"));
+                    var publicKey = PublicKey.FromJson(new JSONObject(decryptedString));
+
+                    // Send a new AES Symmetric key for using!
+                    var aes = Crypto.CreateAesKeyIV();
+                    var encryptedWithTheirPublicKey = Crypto.EncryptWithPublicKey(
+                        publicKey.ToRsaParameters(), System.Text.Encoding.UTF8.GetBytes(aes.ToJson().ToString()));
+                    Android.Util.Log.Info("GAMMA", Hex.FromByteArray(encryptedWithTheirPublicKey));
+                    Task.Run(async () => await StartConversation(Convert.ToBase64String(encryptedWithTheirPublicKey) + "<END>"));
+
+                    WholeMessage = null;
                 }
 
                 // Start receiving again

@@ -57,6 +57,7 @@
     <Compile Include="Models\AesKeyIV.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\ContactInfo.cs" />
+    <Compile Include="Models\PublicKey.cs" />
     <Compile Include="Models\TcpPayload.cs" />
     <Compile Include="Receivers\IncomingSms.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
