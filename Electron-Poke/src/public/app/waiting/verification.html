@@ -1,0 +1,16 @@
+<div class="grid">
+    <div class="grid-columns grid-columns-vertically-align-center grid-columns-center-horizontally margin-10">
+        <div>
+            <p class="waiting-for-connection-watermark">
+                <span *ngIf="!verifyingPassword">Enter the code from the device to authenticate.</span>
+                <span *ngIf="verifyingPassword">Authenticating...</span>
+            </p>
+            <!-- If we start verifying the password -->
+            <!-- The code-input will be replaced by a spinner. -->
+            <div class="grid-columns grid-columns-center-horizontally pad-top-20">
+                <code-input *ngIf="!verifyingPassword" [passwordLength]="5" (finalPassword)="passwordChanged($event)"></code-input>
+                <div *ngIf="verifyingPassword" class="spinner-primary"></div>
+            </div>
+        </div>
+    </div>
+</div>

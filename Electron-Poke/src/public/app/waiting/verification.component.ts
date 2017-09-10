@@ -5,10 +5,13 @@ import { ElectronComponent } from '../base/electron.component';
 
 @Component({
     moduleId: module.id,
-    selector: 'waiting',
-    templateUrl: 'waiting.html'
+    selector: 'verification',
+    templateUrl: 'verification.html'
 })
-export class WaitingComponent extends ElectronComponent implements OnInit {
+export class VerificationComponent extends ElectronComponent implements OnInit {
+
+    private _password: string;
+    verifyingPassword: boolean;
 
     constructor(
         private _router: Router,
@@ -19,12 +22,12 @@ export class WaitingComponent extends ElectronComponent implements OnInit {
     }
 
     public async ngOnInit() {
-        this.registerIpcRendererMethod('tcp-connected', this._handleTcpConnected)
     }
 
-    private _handleTcpConnected(event, args) {
-        if (args) {
-            this._router.navigateByUrl('verification');
-        }
+    public passwordChanged(newPassword: string) {
+        this._password = newPassword;
+
+        console.log(this._password);
+        this.verifyingPassword = true;
     }
 }

@@ -248,3 +248,42 @@ body {
         background-color: darken($primaryTextColor, 25%);
     }
 }
+
+.code-input-wrapper {
+    font-size: 0;
+}
+
+.code-input-single-box {
+    color: $secondaryTextColor;
+    font-size: 42px;
+    width: 54px;
+    height: 64px;
+    border: none;
+    outline: none;
+    text-align: center;
+
+    &:last-of-type {
+        padding-right: 5px;
+    }
+}
+
+.code-input-accept-button {
+    width: 64px;
+    height: 64px;
+    background: $successColor;
+    border: none;
+    outline: none;
+    vertical-align: bottom;
+
+    &:hover {
+        background: lighten($successColor, 10%);
+    }
+
+    &-disabled {
+        background: $disabledColor;
+
+        &:hover {
+            background: $disabledColor;
+        }
+    }
+}

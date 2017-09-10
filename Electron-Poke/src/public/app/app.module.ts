@@ -6,7 +6,9 @@ import { RouterModule, Routes, RouteReuseStrategy } from '@angular/router';
 import { NgxElectronModule } from 'ngx-electron';
 import { CustomReuseStrategy } from './router/customReuseStrategy';
 import { AppComponent } from './app.component';
+import { CodeInputComponent } from './waiting/code-input.component';
 import { WaitingComponent } from './waiting/waiting.component';
+import { VerificationComponent } from './waiting/verification.component';
 import { ConversationListComponent } from './conversation/conversation-list.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { ContactSelectorComponent } from './conversation/contact-selector.component';
@@ -14,6 +16,7 @@ import { ContactSelectorComponent } from './conversation/contact-selector.compon
 const appRoutes = RouterModule.forRoot(
     [
         { path: 'waiting', component: WaitingComponent },
+        { path: 'verification', component: VerificationComponent },
         {
             path: 'conversations',
             component: ConversationListComponent,
@@ -22,7 +25,8 @@ const appRoutes = RouterModule.forRoot(
                 { path: 'contacts', component: ContactSelectorComponent, outlet: 'conversationListOutlet' }
             ]
         },
-        { path: '', redirectTo: 'waiting', pathMatch: 'full' }
+        // TODO change back to waiting.
+        { path: '', redirectTo: 'verification', pathMatch: 'full' }
     ],
     {
         useHash: true,
@@ -41,7 +45,9 @@ const appRoutes = RouterModule.forRoot(
     ],
     declarations: [
         AppComponent,
+        CodeInputComponent,
         WaitingComponent,
+        VerificationComponent,
         ConversationListComponent,
         ConversationComponent,
         ContactSelectorComponent
