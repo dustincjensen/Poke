@@ -33,9 +33,13 @@ export class TcpServer {
 
     private static _setupServer(): void {
         TcpServer._server = net.createServer(socket => {
+            // We can get who connected to us using remoteAddress
+            // The remote address will be useful to see if we know about
+            // the connection from previous times.            
+            console.log('Client Connected', socket.remoteAddress, socket.remotePort);
+
             // A new connection was received...
             // Let the UI know about it.
-            console.log('Client Connected');
             MainElectron.sendMessageToMainContents(
                 'tcp-connected', true);
 

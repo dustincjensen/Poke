@@ -4,3 +4,83 @@
 //  - What does the 2nd handshake look like?
 // TODO Hook up 5 digit pin handshake on Android and Electron
 // TODO udp broadcast to discover devices.
+
+
+
+Connection Scenarios
+============================================================================
+A) Unknown client / Unknown server
+1 - Android Phone chooses to connect to the Electron TCP server.
+2 - Electron TCP server receives the connection.
+3 - Android sends it's public key encrypted with a 5 digit/character 
+    code that is stretched using Rfc Derive Bytes then used to create an 
+    AES Managed Key.
+4 - Electron receives the encrypted key.
+5 - Android displays a 5 digit code in a modal with a countdown. 
+6 - At the same time, Electron notifies the UI that it needs a 5 digit code.
+7 - The USER must then type the 5 digit code they see on the Android Phone
+    into the Electron app.
+8 - Failure Case
+    If they type in the wrong code they are notified and they can try again
+    until they run out of time (How do they know how much time is left on the 
+    Electron side?).
+8 - Failure Case
+    If they run out of time, the Android will disconnect from the 
+    Electron app.
+8 - Success
+    The user enters the correct code (we know this because Electron is able
+    to decrypt the payload).
+9* - Electron app stores the public key it was sent from the Android.
+10* - Electron app creates it's own public/private key and stores them.
+11* - Electron app writes back on the socket it's public key encrypted with
+      the same 5 digit code, stretched with Rfc Derive Bytes and turned into
+      an AES Managed Key.
+* These steps still must be done before the Android decides to close the 
+  connection to the Electron TCP Server.
+12 - Android receives the encrypted key.
+13 - Android decrypts the server's public key using the same 5 digit code it
+     held onto while waiting.
+14 - Android stores the public key of the Electron App.
+CONTINUED IN B) Known Client / Known Server
+
+============================================================================
+B) Known Client / Known Server
+1 - If the Android Phone is not connected to the Electron TCP Server, it
+    connects to the server and Electron accepts the connection. Otherwise
+    start at step 2.
+2 - Android reads the server's public key for which it is connected and uses
+    that to encrypt an Aes Managed Key/IV and sends it.
+? - Do we first need to encrypt it with our private key so the server knows
+    that it is indeed coming from the right client? If we don't, couldn't
+    any device send an encrypted Key/IV and start the communication with the
+    server? We wouldn't want that to happen and for us to send messages from
+    the server to a random device we didn't trust.
+3 - Electron receives the encrypted Aes Managed Key/IV.
+4 - Electron knows the client who connected so it accesses it's relevant
+    private key (the one that matches the connection details).
+5 - Electron uses the private key to decrypt the Aes Managed Key/IV.
+6 - Electron holds onto the Key/IV pairing in internal memory because it will
+    only be used until they change keys or they disconnect, at which time
+    they will exchange new keys.
+** - Android and Electron send and receive messages encrypted with the
+     Key/IV pairing.
+
+============================================================================
+C) Key Exchange (TODO flesh out)
+- After X seconds/minutes the Android Phone should send a new Aes Key/IV 
+  encrypted with the public key of the server.
+? Also encrypted with private key?
+
+============================================================================
+D) Known Client / Unknown Server (TODO flesh out)
+- In the event that the server knows who the client is, but the client sends
+  a message with the "Purpose" of public/private key negotiation, then the
+  server will forget the details about the client and prompt for the 5 digit
+  code.
+
+============================================================================
+E) Unknown Client / Known Server (TODO flesh out)
+- In the event that the server forgets the details about the client and no
+  longer has a record of the client, it will ping back a message stating
+  that they need to re-negotiate public/private keys.
+
