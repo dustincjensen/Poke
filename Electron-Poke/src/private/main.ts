@@ -58,11 +58,11 @@ export class MainElectron {
     private static _createWindow(): void {
         // Create the browser window
         MainElectron._win = new BrowserWindow({
-            darkTheme: true,
             width: 1600,
             minWidth: 300,
             height: 900,
-            minHeight: 300
+            minHeight: 300,
+            backgroundColor: '#333333'
         });
 
         // and load the index.html of the app.
