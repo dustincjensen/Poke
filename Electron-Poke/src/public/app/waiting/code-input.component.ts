@@ -1,6 +1,5 @@
 import {
-    Component, OnInit, DoCheck, Input,
-    Output, ViewChildren, QueryList, EventEmitter
+    Component, OnInit, DoCheck, Input, Output, EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -23,11 +22,6 @@ export class CodeInputComponent implements OnInit, DoCheck {
     @Output() finalPassword = new EventEmitter<string>();
 
     /**
-     * The list of input elements. This is auto set for us.
-     */
-    @ViewChildren('passwordsParts') parts: QueryList<any>;
-
-    /**
      * Will disable the submit button until all text boxes have
      * been filled.
      */
@@ -38,30 +32,30 @@ export class CodeInputComponent implements OnInit, DoCheck {
      * an input * the number that is specified in passwordLength.
      * This allows the control to be dynamic.
      */
-    numbers: number[];
+    indexes: number[];
+
+    /**
+     * This is the list of characters for the password. It needs
+     * to be manually managed because we prevent default on the
+     * text boxes.
+     */
+    private _passwordArray: string[];
 
     constructor() {
     }
 
     public async ngOnInit() {
         this.submitDisabled = true;
-        this.numbers = Array(this.passwordLength).fill(0).map((x, i) => i);
+        this.indexes = Array(this.passwordLength).fill(0).map((x, i) => i);
+        this._passwordArray = Array(this.passwordLength).fill(0).map((x, i) => '');
     }
 
     /**
-     * TODO has a bug where if you backspace
-     * off of the submit button then it will
-     * still think the value is in the parts array
-     * and it will think the submit button doesn't
-     * need to be disabled.
+     * Disables and enables the submit button.
      */
     public async ngDoCheck() {
-        if (!this.parts) return;
-
-        let parts = this.parts.toArray();
-        for (let i = 0; i < parts.length; i++) {
-            let element = parts[i];
-            if (!element.nativeElement.value) {
+        for (let i = 0; i < this._passwordArray.length; i++) {
+            if (!this._passwordArray[i]) {
                 this.submitDisabled = true;
                 return;
             }
@@ -107,15 +101,15 @@ export class CodeInputComponent implements OnInit, DoCheck {
     /**
      * Handle the key presses ourself.
      */
-    public onKeyPress(event: any) {
+    public onKeyPress(event: any, index: number) {
         // Immediately prevent default because
         // we don't need it putting in characters 
         // for us.
         event.preventDefault();
 
         // We must match a number or letter.
-        const pattern = /[0-9a-zA-Z]/;
-        let inputChar = String.fromCharCode(event.charCode);
+        const pattern = /[0-9A-Z]/;
+        let inputChar = String.fromCharCode(event.charCode).toUpperCase();
 
         if (!pattern.test(inputChar) && event.charCode != '0') {
             // If the character doesn't match the pattern
@@ -124,7 +118,8 @@ export class CodeInputComponent implements OnInit, DoCheck {
             return;
         } else {
             // Always make sure the character is uppercase.
-            event.currentTarget.value = inputChar.toUpperCase();
+            event.currentTarget.value = inputChar;
+            this._passwordArray[index] = inputChar;
         }
 
         // Then we check if we have another sibling ahead of us
@@ -143,7 +138,7 @@ export class CodeInputComponent implements OnInit, DoCheck {
      * to mess up on the last character, but still clear
      * their last character without having to use the mouse.
      */
-    public onBackspace(event: any) {
+    public onBackspace(event: any, index: number) {
         // Clear the current spot before we leave.
         // If we do have to clear it, then we prevent default
         // so that after we focus to the previous element it
@@ -152,6 +147,7 @@ export class CodeInputComponent implements OnInit, DoCheck {
         // to begin with.
         let src = event.srcElement;
         if (src.value) {
+            this._passwordArray[index] = '';
             src.value = '';
             event.preventDefault();
         }
@@ -161,6 +157,11 @@ export class CodeInputComponent implements OnInit, DoCheck {
         // can be deleted next!
         let element = event.srcElement.previousElementSibling;
         if (element) {
+            // We need to clear out the value we store for this
+            // since we are leaving and won't know the index.
+            if (index > 0) {
+                this._passwordArray[index - 1] = '';
+            }
             element.focus();
         }
     }
@@ -172,10 +173,8 @@ export class CodeInputComponent implements OnInit, DoCheck {
      */
     public finish(): void {
         let code = '';
-        let parts = this.parts.toArray();
-        for (let i = 0; i < parts.length; i++) {
-            let element = parts[i];
-            code += element.nativeElement.value;
+        for (let i = 0; i < this._passwordArray.length; i++) {
+            code += this._passwordArray[i];
         }
 
         // Only if the code is valid can we emit it.

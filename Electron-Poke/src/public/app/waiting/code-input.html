@@ -1,5 +1,12 @@
 <div class="code-input-wrapper">
-    <input #passwordsParts *ngFor="let number of numbers" type="text" (keypress)="onKeyPress($event)" (focus)="onFocus($event)"
-        (paste)="onPaste($event)" (keydown.backspace)="onBackspace($event)" class="code-input-single-box">
-    <button (click)="finish()" (keydown.backspace)="onBackspace($event)" class="code-input-accept-button" [ngClass]="{'code-input-accept-button-disabled': submitDisabled}"></button>
+    <input *ngFor="let index of indexes" type="text"
+        class="code-input-single-box"         
+        (focus)="onFocus($event)" 
+        (paste)="onPaste($event)"
+        (keypress)="onKeyPress($event, index)"
+        (keydown.backspace)="onBackspace($event, index)">
+    <button (click)="finish()" 
+        (keydown.backspace)="onBackspace($event, passwordLength)"
+        class="code-input-accept-button"
+        [ngClass]="{'code-input-accept-button-disabled': submitDisabled}"></button>
 </div>
