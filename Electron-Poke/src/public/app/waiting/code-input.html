@@ -8,5 +8,8 @@
     <button (click)="finish()" 
         (keydown.backspace)="onBackspace($event, passwordLength)"
         class="code-input-accept-button"
-        [ngClass]="{'code-input-accept-button-disabled': submitDisabled}"></button>
+        [attr.sudo-disabled]="submitDisabled">
+        <span class="code-input-accept-button-arrow-wings" 
+            [attr.sudo-disabled]="submitDisabled"></span>
+    </button>
 </div>

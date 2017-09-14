@@ -23,7 +23,7 @@ body {
 ::-webkit-scrollbar {
     width: 12px;
 }
- 
+
 ::-webkit-scrollbar-thumb {
   background-color: lighten($secondaryColor, 10%);
   outline: 1px solid lighten($secondaryColor, 5%);
@@ -203,9 +203,32 @@ body {
     }
 }
 
-// Creates a + button
-.close-button {
+@mixin x-cross-left-bottom($width, $top, $bottom, $color) {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: $color;
+    width: $width;
+    transform: translateX(-50%) rotateZ(45deg);
+    left: 50%;
+    top: $top;
+    bottom: $bottom;
+}
 
+@mixin x-cross-left-top($height, $left, $right, $color) {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: $color;
+    height: $height;
+    transform: translateY(-50%) rotateZ(45deg);
+    top: 50%;
+    left: $left;
+    right: $right;
+}
+
+// Creates an X button
+.close-button {
     position: relative;
     width: 32px;
     height: 32px;
@@ -213,38 +236,22 @@ body {
     text-align: center;
     vertical-align: middle;
     border: none;
-    outline: none;    
+    outline: none;
     background: transparent;
 
-    &::after {
-        content: " ";
-        position: absolute;
-        display: block;
-        background-color: $primaryTextColor;
-        height: 2px;
-        transform: translateY(-50%) rotateZ(45deg);
-        top: 50%;
-        left: 4px;
-        right: 4px;
-    }
-
-    &:hover::after {
-        background-color: darken($primaryTextColor, 25%);
-    }
-
     &::before {
-        content: " ";
-        position: absolute;
-        display: block;
-        background-color: $primaryTextColor;
-        width: 2px;
-        transform: translateX(-50%) rotateZ(45deg);
-        left: 50%;
-        top: 4px;
-        bottom: 4px;
+        @include x-cross-left-bottom(2px, 4px, 4px, $primaryTextColor);
     }
 
     &:hover::before {
+        background-color: darken($primaryTextColor, 25%);
+    }
+
+    &::after {
+        @include x-cross-left-top(2px, 4px, 4px, $primaryTextColor);
+    }
+
+    &:hover::after {
         background-color: darken($primaryTextColor, 25%);
     }
 }
@@ -267,23 +274,94 @@ body {
     }
 }
 
+$crossTransitionSpeed: 0.1s;
+$arrowWingsTransitionSpeed: 0.1s;
+
+// Uses so we don't have 2 sets of this for each definition
+// of an arrow wing base.
+@mixin arrow-wing {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: transparent;
+    height: 6px;
+    transform-origin: 92.5% 50%;
+    transform: translateY(-50%);
+    top: 50%;
+    left: 28px;
+    right: 11px;
+    border-right: 3px solid transparent;
+    border-radius: 0 25% 25% 0;
+    // prop, duration, function, delay
+    transition:
+        transform $arrowWingsTransitionSpeed ease,
+        background-color 0s ease $arrowWingsTransitionSpeed,
+        border-color 0s ease $arrowWingsTransitionSpeed;
+}
+
+// Use this mixin to transition to this state.
+// This should be used on hover, disabled etc.
+@mixin arrow-wing-transformed($degrees) {
+    transform: translateY(-50%) rotateZ($degrees);
+    background-color: $primaryTextColor;
+    border-color: $primaryTextColor;
+    transition:
+        transform $arrowWingsTransitionSpeed ease $crossTransitionSpeed,
+        background-color 0s ease $crossTransitionSpeed,
+        border-color 0s ease $crossTransitionSpeed;
+}
+
 .code-input-accept-button {
+    position: relative;
     width: 64px;
     height: 64px;
-    background: $successColor;
+    background: $primaryColor;
     border: none;
     outline: none;
     vertical-align: bottom;
 
     &:hover {
-        background: lighten($successColor, 10%);
+        background: lighten($primaryColor, 10%);
     }
 
-    &-disabled {
-        background: $disabledColor;
+    &[sudo-disabled=true] {
+        background: lighten($secondaryColor, 10%);
+    }
 
-        &:hover {
-            background: $disabledColor;
+    &::before {
+        @include x-cross-left-bottom(6px, 12px, 12px, $primaryTextColor);
+        transition: transform $crossTransitionSpeed ease $arrowWingsTransitionSpeed;
+    }
+
+    &[sudo-disabled=false]::before {
+        transform: translateX(-50%) rotateZ(90deg);
+        transition: transform $crossTransitionSpeed ease;
+    }
+
+    &::after {
+        @include x-cross-left-top(6px, 12px, 12px, $primaryTextColor);
+        transition: transform $crossTransitionSpeed ease $arrowWingsTransitionSpeed;
+    }
+
+    &[sudo-disabled=false]::after {
+        transform: translateY(-50%);
+        transition: transform $crossTransitionSpeed ease;
+    }
+
+    &-arrow-wings {
+        &::before {
+            @include arrow-wing;
         }
+        &::after {
+            @include arrow-wing;
+        }
+    }
+
+    &-arrow-wings[sudo-disabled=false]::before {
+        @include arrow-wing-transformed(45deg);
+    }
+
+    &-arrow-wings[sudo-disabled=false]::after {
+        @include arrow-wing-transformed(-45deg);
     }
 }
