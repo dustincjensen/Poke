@@ -39,7 +39,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     }
 
     public async ngOnDestroy() {
-        this._newConversationSubscription.dispose();
+        this._newConversationSubscription.unsubscribe();
     }
 
     private _handleNewConversation(id: number): void {
