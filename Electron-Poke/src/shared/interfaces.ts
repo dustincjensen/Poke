@@ -15,6 +15,7 @@ export interface IMessage {
 
 export interface IContact {
     id: number;
+    phoneNumber: string;
     name: string;
     display: string;
 }

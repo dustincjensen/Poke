@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
+import { ConversationService } from './conversation.service';
 import { IContact } from '../../../shared/interfaces';
 
 @Component({
@@ -15,6 +16,7 @@ export class ContactSelectorComponent extends ElectronComponent implements OnIni
 
     constructor(
         private _router: Router,
+        private _internal: ConversationService,
         electron: ElectronService,
         ngZone: NgZone
     ) {
@@ -40,6 +42,10 @@ export class ContactSelectorComponent extends ElectronComponent implements OnIni
         if (x.name > y.name) return 1;
         if (x.name < y.name) return -1;
         return 0;
+    }
+
+    public contactSelected(contact: IContact): void {
+        this._internal.startNewConversation(contact.id);
     }
 
     /**

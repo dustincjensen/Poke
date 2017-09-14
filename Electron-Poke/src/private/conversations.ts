@@ -1,6 +1,7 @@
 import { MainElectron } from './main';
 import { TcpServer } from './tcpServer';
-import { IConversation, IMessage } from '../shared/interfaces';
+import { IConversation, IMessage, IContact } from '../shared/interfaces';
+import { Contacts } from './contacts';
 import { ColorUtil } from './colorUtil';
 
 export class Conversations {
@@ -157,8 +158,36 @@ export class Conversations {
     }
 
     public static getConversation(id: number): any {
-        return Conversations.conversations.filter(value => {
+        let possibleConversations = Conversations.conversations.filter(value => {
             return value.id == id;
-        })[0];
+        });
+
+        // Is more than 1 a possibility?
+        if (possibleConversations && possibleConversations.length > 0) {
+            return possibleConversations[0];
+        }
+
+        // Didn't find a conversation, check the contacts...
+        let contact = Contacts.getContact(id);
+
+        let conversation: IConversation = {
+            id: contact.id,
+            phoneNumber: contact.phoneNumber,
+            name: contact.name,
+            display: Conversations._determineDisplayName(contact.name),
+            color: ColorUtil.getRandomColor(),
+            messages: [] as IMessage[]
+        };
+
+        // Add it so the server knows...
+        Conversations.conversations.unshift(conversation);
+
+        // Since the component asking for this likely doesn't know that this is 
+        // "technically" a new conversation we need to let the conversation list
+        // know.
+        MainElectron.sendMessageToMainContents('newConversationStarted', conversation);
+
+        // Return the conversation that we just created.
+        return conversation;
     }
 }

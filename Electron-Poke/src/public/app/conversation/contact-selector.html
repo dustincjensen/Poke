@@ -10,7 +10,7 @@
     <!-- List of contacts -->
     <div class="contact-content">
         <div class="pad-left-20 pad-right-20">
-            <div *ngFor="let contact of contacts" class="contact-row pad-20">
+            <div *ngFor="let contact of contacts" class="contact-row pad-20" (click)="contactSelected(contact)">
                 {{ contact.name }}
             </div>
         </div>

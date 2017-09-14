@@ -12,6 +12,7 @@ import { VerificationComponent } from './waiting/verification.component';
 import { ConversationListComponent } from './conversation/conversation-list.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { ContactSelectorComponent } from './conversation/contact-selector.component';
+import { ConversationService } from './conversation/conversation.service';
 
 const appRoutes = RouterModule.forRoot(
     [
@@ -57,7 +58,8 @@ const appRoutes = RouterModule.forRoot(
         // components do not get destroyed on route navigation.
         // This means we won't run into errors like multiple listeners
         // or UI issues where variables are not set.
-        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
+        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
+        ConversationService
     ],
     bootstrap: [AppComponent],
 })
