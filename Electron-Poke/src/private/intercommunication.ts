@@ -6,11 +6,27 @@ import { Conversations } from './conversations';
 
 export class Intercommunication {
     public static setupListeners(): void {
+        // Passcode Entered
+        ipcMain.on('passcodeEntered', async (event, arg) => {
+            let passcode = arg;
+
+            setTimeout(() => {
+                if (passcode !== 'GAMMA') {
+                    MainElectron.sendMessageToMainContents('passcodeError', null);
+                }
+                else {
+                    MainElectron.sendMessageToMainContents('passcodeSuccess', null);
+                }
+            }, 2000);
+        });
+
         // This is the message from the dom back to the electron
         // main process and we can use this to push to the socket.
         ipcMain.on('newMessageForAndroid', (event, args) => {
             if (TcpServer.hasOpenSocket()) {
                 Conversations.handleOutgoingMessage(args);
+            } else {
+                console.log('TODO: Error Not Connected to TCP Socket.');
             }
         });
 

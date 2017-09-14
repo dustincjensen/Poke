@@ -4,6 +4,9 @@
 //  - What does the 2nd handshake look like?
 // TODO Hook up 5 digit pin handshake on Android and Electron
 // TODO udp broadcast to discover devices.
+// TODO Privacy Mode
+// TODO Emoji's?
+// TODO Get Contact List
 
 
 

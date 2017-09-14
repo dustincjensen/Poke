@@ -2,7 +2,8 @@
     <div class="grid-columns grid-columns-vertically-align-center grid-columns-center-horizontally margin-10">
         <div>
             <p class="waiting-for-connection-watermark">
-                <span *ngIf="!verifyingPassword">Enter the code from the device to authenticate.</span>
+                <span *ngIf="!verifyingPassword && !passcodeError">Enter the code from the device to authenticate.</span>
+                <span *ngIf="!verifyingPassword && passcodeError">The code was incorrect. Please try again.</span>
                 <span *ngIf="verifyingPassword">Authenticating...</span>
             </p>
             <!-- If we start verifying the password -->

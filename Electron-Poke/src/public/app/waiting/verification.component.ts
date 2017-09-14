@@ -12,6 +12,7 @@ export class VerificationComponent extends ElectronComponent implements OnInit {
 
     private _password: string;
     verifyingPassword: boolean;
+    passcodeError: boolean;
 
     constructor(
         private _router: Router,
@@ -21,13 +22,31 @@ export class VerificationComponent extends ElectronComponent implements OnInit {
         super(electron, ngZone);
     }
 
+    // TODO handle client disconnected error.
     public async ngOnInit() {
+        this.registerIpcRendererMethod('passcodeError', this._handlePasscodeError);
+        this.registerIpcRendererMethod('passcodeSuccess', this._handlePasscodeSuccess);
     }
 
+    private _handlePasscodeError(event, args) {
+        this.passcodeError = true;
+        this.verifyingPassword = false;
+    }
+
+    private _handlePasscodeSuccess(event, args) {
+        this._router.navigateByUrl('conversations');
+    }
+
+    /**
+     * Is fired when the code-input completes the password.
+     * @param newPassword the password.
+     */
     public passwordChanged(newPassword: string) {
         this._password = newPassword;
-
-        console.log(this._password);
         this.verifyingPassword = true;
+        this.passcodeError = false;
+
+        // Ask Electron Main to do some work.
+        this._electron.ipcRenderer.send('passcodeEntered', this._password);
     }
 }
