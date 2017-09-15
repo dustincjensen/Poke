@@ -4,6 +4,7 @@ export interface IConversation {
     name: string;
     display: string;
     color: string;
+    newMessages: boolean;
     messages: IMessage[];
 }
 

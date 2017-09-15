@@ -16,6 +16,7 @@ export class Conversations {
                 name: 'Dave Grohl',
                 display: 'DG',
                 color: ColorUtil.getRandomColor(),
+                newMessages: false,
                 messages: [
                     {
                         isSelf: false,
@@ -50,6 +51,7 @@ export class Conversations {
                 name: 'Taylor Hawkins',
                 display: 'TH',
                 color: ColorUtil.getRandomColor(),
+                newMessages: false,
                 messages: [] as IMessage[]
             },
             {
@@ -58,6 +60,7 @@ export class Conversations {
                 name: 'Chris Shiflett',
                 display: 'CS',
                 color: ColorUtil.getRandomColor(),
+                newMessages: true,
                 messages: [{
                     isSelf: false,
                     message: 'Hey man I really need my guitar back! Get it to me ASAP.',
@@ -83,6 +86,14 @@ export class Conversations {
         let conversation = Conversations.conversations[index];
         conversation.messages.push(obj.message);
 
+        // The conversation you are pushing to shouldn't have any
+        // new messages at this point. We also need to let the front
+        // end know that we don't have new messages on the object
+        // any longer.
+        conversation.newMessages = false;
+        MainElectron.sendMessageToMainContents('conversationRead', conversation.id);
+
+
         // Update the message headed out with a phone number
         TcpServer.writeOnOpenSocket(JSON.stringify({
             contact: {
@@ -107,13 +118,14 @@ export class Conversations {
                 time: Date.now()
             };
             Conversations.conversations[index].messages.push(newMessage);
+            Conversations.conversations[index].newMessages = true;
 
             // Since we might be on the conversation send a new message
             let contactMessage = {
                 conversationId: obj.contact.id,
                 message: newMessage
             };
-            MainElectron.sendMessageToMainContents('new-message', contactMessage);
+            MainElectron.sendMessageToMainContents('newMessageReceived', contactMessage);
         } else {
             let conversation: IConversation = {
                 id: obj.contact.id,
@@ -121,6 +133,7 @@ export class Conversations {
                 name: obj.contact.name,
                 display: Conversations._determineDisplayName(obj.contact.name),
                 color: ColorUtil.getRandomColor(),
+                newMessages: true,
                 messages: [
                     {
                         isSelf: false,
@@ -152,19 +165,26 @@ export class Conversations {
                 id: value.id,
                 name: value.name,
                 display: value.display,
-                color: value.color
+                color: value.color,
+                newMessages: value.newMessages
             };
         });
     }
 
     public static getConversation(id: number): any {
-        let possibleConversations = Conversations.conversations.filter(value => {
-            return value.id == id;
+        let index = Conversations.conversations.findIndex(value => {
+            return value.id === id;
         });
 
         // Is more than 1 a possibility?
-        if (possibleConversations && possibleConversations.length > 0) {
-            return possibleConversations[0];
+        if (index >= 0) {
+            let conversation = Conversations.conversations[index];
+            conversation.newMessages = false;
+
+            // Let the listing know we selected this so it can toggle off
+            // the dirty marker.
+            MainElectron.sendMessageToMainContents('conversationRead', conversation.id);
+            return conversation;
         }
 
         // Didn't find a conversation, check the contacts...
@@ -176,6 +196,7 @@ export class Conversations {
             name: contact.name,
             display: Conversations._determineDisplayName(contact.name),
             color: ColorUtil.getRandomColor(),
+            newMessages: false,
             messages: [] as IMessage[]
         };
 

@@ -91,6 +91,7 @@ body {
 }
 
 .conversation-list-item {
+    position: relative;
     background: $primaryColor;
     color: $primaryTextColor;
     border-radius: 50%;
@@ -99,6 +100,17 @@ body {
     line-height: 50px;
     text-align: center;
     vertical-align: middle;
+
+    &[sudo-attention=true]::after {
+        content: " ";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 15px;
+        height: 15px;
+        background: $primaryTextColor;
+        border-radius: 50%;
+    }
 }
 
 .conversation-list-button {

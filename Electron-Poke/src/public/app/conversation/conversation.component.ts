@@ -32,7 +32,7 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
 
     public async ngOnInit() {
         this.registerIpcRendererMethod('conversationRetrieved', this._handleConversationRetrieved);
-        this.registerIpcRendererMethod('new-message', this._handleNewMessage);
+        this.registerIpcRendererMethod('newMessageReceived', this._handleNewMessage);
 
         this._route.params.subscribe(params => {
             this._subscriptionCountAskedFor++;

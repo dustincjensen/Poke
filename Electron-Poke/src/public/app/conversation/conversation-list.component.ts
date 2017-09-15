@@ -34,7 +34,9 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         // Register methods to handle events from the backend of Electron.
         this.registerIpcRendererMethod('conversationListRetrieved', this._handleConversationsLoaded);
         this.registerIpcRendererMethod('newConversationReceived', this._handleNewConversationReceived);
+        this.registerIpcRendererMethod('newMessageReceived', this._handleNewMessageReceived);
         this.registerIpcRendererMethod('newConversationStarted', this._handleNewConversationStarted);
+        this.registerIpcRendererMethod('conversationRead', this._handleConversationRead);
         this._electron.ipcRenderer.send('getConversationList');
     }
 
@@ -50,12 +52,25 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['conversation', id] } }]);
     }
 
-    private _handleConversationsLoaded(event, args) {
-        this.conversations = args;
+    private _handleConversationsLoaded(event, conversations) {
+        this.conversations = conversations;
     }
 
-    private _handleNewConversationReceived(event, args) {
-        this.conversations.unshift(args);
+    private _handleNewConversationReceived(event, conversation) {
+        this.conversations.unshift(conversation);
+    }
+
+    private _handleNewMessageReceived(event, conversation) {
+        let index = this.conversations.findIndex(value => {
+            return value.id === conversation.conversationId;
+        });
+
+        if (index >= 0) {
+            let conversation = this.conversations[index];
+            conversation.newMessages = true;
+
+            // TODO consider not making the messages unread if you are in the conversation.
+        }
     }
 
     /**
@@ -64,11 +79,27 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
      * out from the same event as _handleNewConversationReceived because
      * there may be differences in the future.
      */
-    private _handleNewConversationStarted(event, args) {
-        this.conversations.unshift(args);
+    private _handleNewConversationStarted(event, conversation) {
+        this.conversations.unshift(conversation);
 
         // Set the selected conversation because we are likely on it...
-        this.selectedConversation = args;
+        this.selectedConversation = conversation;
+    }
+
+    /**
+     * This will be fired when the backend receives the getConversation
+     * call from the conversation component. When we find an existing
+     * conversation we mark it as read.
+     */
+    private _handleConversationRead(event, id) {
+        let index = this.conversations.findIndex(value => {
+            return value.id === id;
+        });
+
+        if (index >= 0) {
+            let conversation = this.conversations[index];
+            conversation.newMessages = false;
+        }
     }
 
     public selectConversation(conversation: IConversation): void {
