@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -88,6 +88,20 @@ export class MainElectron {
             // Dereference the window object.
             MainElectron._win = null;
         });
+    }
+
+    public static newNotification(name: string, message: string): void {
+        let notification = new Notification({
+            title: name,
+            body: message,
+            icon: path.join(__dirname, '../../../Icons/Stick.png')
+        } as any);
+
+        notification.addListener('click', (event) => {
+            MainElectron._win.focus();
+        });
+
+        notification.show();
     }
 
     public static sendMessageToMainContents(type: string, obj: any): void {
