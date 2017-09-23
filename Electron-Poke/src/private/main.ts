@@ -58,11 +58,13 @@ export class MainElectron {
     private static _createWindow(): void {
         // Create the browser window
         MainElectron._win = new BrowserWindow({
+            title: 'Poke',
             width: 1600,
             minWidth: 300,
             height: 900,
             minHeight: 300,
-            backgroundColor: '#333333'
+            backgroundColor: '#333333',
+            icon: path.join(__dirname, '../../../Icons/Stick.png')
         });
 
         // and load the index.html of the app.
@@ -74,6 +76,12 @@ export class MainElectron {
 
         // Open the DevTools.
         MainElectron._win.webContents.openDevTools();
+
+        // Stop the window from changing it's title
+        // TODO remove when we have a custom title bar.
+        MainElectron._win.on('page-title-updated', (event) => {
+            event.preventDefault();
+        });
 
         // Emitted when the window is closed.
         MainElectron._win.on('closed', () => {
