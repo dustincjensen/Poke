@@ -56,8 +56,7 @@ export class MainElectron {
     }
 
     private static _createWindow(): void {
-        // Create the browser window
-        MainElectron._win = new BrowserWindow({
+        let windowOptions: Electron.BrowserWindowConstructorOptions = {
             title: 'Poke',
             width: 1600,
             minWidth: 300,
@@ -65,7 +64,16 @@ export class MainElectron {
             minHeight: 300,
             backgroundColor: '#333333',
             icon: path.join(__dirname, '../../../Icons/Stick.png')
-        });
+        };
+
+        // if (MainElectron.__DARWIN__) {
+        //     windowOptions.titleBarStyle = 'hidden';
+        // } else if (MainElectron.__WIN32__) {
+        //     windowOptions.frame = false;
+        // }
+
+        // Create the browser window
+        MainElectron._win = new BrowserWindow(windowOptions);
 
         // and load the index.html of the app.
         MainElectron._win.loadURL(url.format({
@@ -89,6 +97,12 @@ export class MainElectron {
             MainElectron._win = null;
         });
     }
+
+    // public static __DARWIN__ = process.platform === 'darwin';
+    // public static __WIN32__ = process.platform === 'win32';
+    // public static __LINUX__ = process.platform === 'linux';
+    // public static __FREEBSD__ = process.platform === 'freebsd';
+    // public static __SUNOS__ = process.platform === 'sunos';
 
     public static newNotification(name: string, message: string): void {
         let notification = new Notification({

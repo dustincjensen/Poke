@@ -173,7 +173,8 @@ export class Conversations {
 
     public static getConversation(id: number): any {
         let index = Conversations.conversations.findIndex(value => {
-            return value.id === id;
+            // Sometimes the id is a string so... triple equals would fail.
+            return value.id == id;
         });
 
         // Is more than 1 a possibility?

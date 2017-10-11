@@ -26,8 +26,7 @@ const appRoutes = RouterModule.forRoot(
                 { path: 'contacts', component: ContactSelectorComponent, outlet: 'conversationListOutlet' }
             ]
         },
-        // TODO change back to waiting.
-        { path: '', redirectTo: 'verification', pathMatch: 'full' }
+        { path: '', redirectTo: 'waiting', pathMatch: 'full' }
     ],
     {
         useHash: true,
