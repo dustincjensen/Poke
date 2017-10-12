@@ -13,9 +13,12 @@ export class TcpServer {
     private static _port: number;
 
     // TMP
+    // Need to find a better way to handle this.
     private static _otherPublic: any;
     private static _ourPublic: any;
     private static _ourPrivate: any;
+    private static _encryptedStartMessage: string;
+    private static _sharedSymmetricKey: any;
 
     public static createServer(): void {
         TcpServer._setupServer();
@@ -29,6 +32,13 @@ export class TcpServer {
 
     public static writeOnOpenSocket(msg: string): void {
         TcpServer._openSocket.write(msg);
+    }
+
+    public static writeEncryptedOnOpenSocket(msg: string): void {
+        let encrypted = Symmetric.encryptIV(
+            msg, TcpServer._sharedSymmetricKey.key,
+            TcpServer._sharedSymmetricKey.iv);
+        TcpServer._openSocket.write(encrypted + '<EOF>');
     }
 
     private static _setupServer(): void {
@@ -77,15 +87,34 @@ export class TcpServer {
         let body: string = '';
         body += data;
 
+        // This is a message that is encrypted
+        // This will fail if we don't have a symmetric key.
         if (body.endsWith('<EOF>')) {
-            let obj = JSON.parse(body.replace('<EOF>', ''));
+            let decrypted = Symmetric.decryptIV(body.replace('<EOF>', ''),
+                TcpServer._sharedSymmetricKey.key, TcpServer._sharedSymmetricKey.iv);
+            let obj = JSON.parse(decrypted);
             Conversations.handleIncomingMessage(obj);
             body = '';
         }
 
+        // This is the start of the passcode / public / private key exchange
         if (body.endsWith('<BEG>')) {
             let encrypted = body.replace('<BEG>', '');
-            let decrypted = Symmetric.decrypt(encrypted, 'GAMMA');
+            TcpServer._encryptedStartMessage = encrypted;
+        }
+
+        // This is the end of the passcode / public / private key exchange.
+        // We are receiving the shared symmetric key we will be encrypting with.
+        if (body.endsWith('<END>')) {
+            let encrypted = body.replace('<END>', '');
+            TcpServer._sharedSymmetricKey = JSON.parse(
+                PublicPrivate.decryptWithPrivateKey(TcpServer._ourPrivate, encrypted));
+        }
+    }
+
+    public static handlePasscodeEntered(passcode: string) {
+        try {
+            let decrypted = Symmetric.decrypt(TcpServer._encryptedStartMessage, passcode);
             let obj = JSON.parse(decrypted);
 
             // Store their public key...
@@ -103,25 +132,12 @@ export class TcpServer {
                 e: Buffer.from(PublicPrivate.getExponentForCSharp(ourPublicKey.e)).toString('base64')
             };
 
-            let writeBack = Symmetric.encrypt(JSON.stringify(publicKeyObj), 'GAMMA');
+            let writeBack = Symmetric.encrypt(JSON.stringify(publicKeyObj), passcode);
             TcpServer.writeOnOpenSocket(writeBack + '<BEG>');
-        }
 
-        if (body.endsWith('<END>')) {
-            let encrypted = body.replace('<END>', '');
-            let decrypted = PublicPrivate.decryptWithPrivateKey(TcpServer._ourPrivate, encrypted);
-            console.log(decrypted);
+            MainElectron.sendMessageToMainContents('passcodeSuccess', null);
+        } catch (error) {
+            MainElectron.sendMessageToMainContents('passcodeError', null);
         }
     }
 }
-
-/*
-
-// TODO maybe use this to keep the socket alive?
-// setInterval(() => {
-//     if (keepSocket) {
-//         keepSocket.write('Hello World');
-//     }
-// }, 5000);
-
-*/

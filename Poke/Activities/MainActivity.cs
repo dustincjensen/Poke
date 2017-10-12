@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content.PM;
-using Android.Database;
 using Android.Widget;
 using Android.OS;
 using Org.Json;
@@ -15,7 +14,7 @@ using Poke.Util;
 
 namespace Poke.Activities
 {
-    [Activity(Label = "Poke", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Poke", MainLauncher = true, Icon = "@drawable/stick")]
     public class MainActivity : Activity
     {
         private Button _sendtestMessageButton;
@@ -23,6 +22,7 @@ namespace Poke.Activities
         private TextView _emptyListenerDevices;
         private DeviceAuthenticationModalFragment _deviceAuthenticationModalFragment;
 
+        // TODO this needs to stored somewhere else...
         public static RSAParameters _privateKey;
 
         protected override void OnCreate(Bundle bundle)
@@ -79,26 +79,22 @@ namespace Poke.Activities
             // Communicate your public key...
             var publicPrivate = Crypto.GetPublicPrivateKey();
             _privateKey = publicPrivate[1];
-            var publicKey = new JSONObject();
-            publicKey.Put("n", Convert.ToBase64String(publicPrivate[0].Modulus));
-            publicKey.Put("e", Convert.ToBase64String(publicPrivate[0].Exponent));
+            var publicKey = PublicKey.FromRsaParameters(publicPrivate[0]);
 
-            var aes = Crypto.CreateAesKeyIV("GAMMA");
-            var encrypted = Crypto.EncryptWithAesKeyIV(publicKey.ToString(), aes);
-
-            Task.Run(async () => await TcpHandler.StartConversation(encrypted + "<BEG>"));
-
-            Toast.MakeText(
-                Application.Context, 
-                Application.Context.GetString(Resource.String.DeviceSelected), 
-                ToastLength.Long).Show();
-        }
-
-        private void _ShowModalWithPassword()
-        {
             // Gets a password to use
             var password = Crypto.CreateUniquePasswordForIdentifyingConnectedDevice(5);
+            var aes = Crypto.CreateAesKeyIV(password);
+            var encrypted = Crypto.EncryptWithAesKeyIV(publicKey.ToJson(), aes);
 
+            _ShowModalWithPassword(password);
+
+            // Send to the Tcp Handler to let the Desktop know we are doing this!
+            TcpHandler._sharedPasscode = password;
+            Task.Run(async () => await TcpHandler.StartConversation(encrypted + "<BEG>"));           
+        }
+
+        private void _ShowModalWithPassword(string password)
+        {
             // Show the UI for the modal and add device authentication modal
             // fragment to the modal with the password.
             var transaction = FragmentManager.BeginTransaction();
@@ -118,14 +114,22 @@ namespace Poke.Activities
 
         private void _SetupDebugDevice()
         {
-            var device = new Device
-            {
-                Name = "Home",
-                IpAddress = "192.168.1.12",
-                Port = 8971
+            var devices = new List<Device> {
+                new Device
+                {
+                    Name = "PC",
+                    IpAddress = "192.168.1.12",
+                    Port = 8971
+                },
+                new Device
+                {
+                    Name = "Laptop",
+                    IpAddress = "192.168.1.11",
+                    Port = 8971
+                }
             };
 
-            ((DeviceRowAdapter)_possibleListenerDevices.Adapter).Add(device);
+            ((DeviceRowAdapter)_possibleListenerDevices.Adapter).AddAll(devices);
         }
     }
 }

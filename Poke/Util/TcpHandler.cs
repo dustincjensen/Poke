@@ -15,6 +15,8 @@ namespace Poke.Util
         // TODO handle messages larger than buffer.
         private static readonly byte[] ReceiveBuffer = new byte[8192];
         private static string WholeMessage = null;
+        public static string _sharedPasscode = null;
+        private static AesKeyIV _sharedSymmetricKey = null;
 
         public static void SetupTcpConnection(string ipAddress, int portNumber)
         {
@@ -29,8 +31,10 @@ namespace Poke.Util
 
         public static async Task SendToListeningDevice(TcpPayload payload)
         {
+            // We encrypt our messages with the shared sym key.
             var json = payload.ToJson();
-            var msg = System.Text.Encoding.ASCII.GetBytes(json + "<EOF>");
+            var encrypted = Crypto.EncryptWithAesKeyIV(json.ToString(), _sharedSymmetricKey);
+            var msg = System.Text.Encoding.UTF8.GetBytes(encrypted + "<EOF>");
             await Tcp.Client.SendAsync(new ArraySegment<byte>(msg), SocketFlags.None);
         }
 
@@ -77,18 +81,40 @@ namespace Poke.Util
                         ? encryptedString
                         : WholeMessage + encryptedString;
 
+                // This is the reply to the start of the interaction.
+                // If we can decrypt here, then we send back the _sym
+                // key we will be using to encrypt our messages.
                 if (WholeMessage.EndsWith("<BEG>"))
                 {
                     WholeMessage = WholeMessage.Replace("<BEG>", "");
-                    var decryptedString = Crypto.DecryptWithAesKeyIV(WholeMessage, Crypto.CreateAesKeyIV("GAMMA"));
+                    var decryptedString = Crypto.DecryptWithAesKeyIV(WholeMessage, Crypto.CreateAesKeyIV(_sharedPasscode));
                     var publicKey = PublicKey.FromJson(new JSONObject(decryptedString));
 
                     // Send a new AES Symmetric key for using!
-                    var aes = Crypto.CreateAesKeyIV();
+                    _sharedSymmetricKey = Crypto.CreateAesKeyIV();
                     var encryptedWithTheirPublicKey = Crypto.EncryptWithPublicKey(
-                        publicKey.ToRsaParameters(), System.Text.Encoding.UTF8.GetBytes(aes.ToJson().ToString()));
-                    Android.Util.Log.Info("GAMMA", Hex.FromByteArray(encryptedWithTheirPublicKey));
+                        publicKey.ToRsaParameters(), System.Text.Encoding.UTF8.GetBytes(_sharedSymmetricKey.ToJson().ToString()));
                     Task.Run(async () => await StartConversation(Convert.ToBase64String(encryptedWithTheirPublicKey) + "<END>"));
+
+                    WholeMessage = null;
+                }
+                else if (WholeMessage.EndsWith("<EOF>"))
+                {
+                    // This is an encrypted message from the computer.
+                    WholeMessage = WholeMessage.Replace("<EOF>", "");
+                    var decryptedString = Crypto.DecryptWithAesKeyIV(WholeMessage, _sharedSymmetricKey);
+                    var payload = TcpPayload.FromJson(new JSONObject(decryptedString));
+
+                    if (!string.IsNullOrWhiteSpace(payload.Contact.PhoneNumber) &&
+                        !string.IsNullOrWhiteSpace(payload.Message))
+                    {
+                        // TODO Possible send delay so we don't  overload the sms manager?
+                        Sms.SendTo(payload.Contact.PhoneNumber, payload.Message);
+                    }
+                    else
+                    {
+                        // Log an issue...
+                    }
 
                     WholeMessage = null;
                 }
@@ -100,6 +126,13 @@ namespace Poke.Util
             catch (Exception ex)
             {
                 Android.Util.Log.Error("Receive Callback", ex.Message);
+
+                // Clear the whole message
+                WholeMessage = null;
+
+                // Start receiving again
+                Tcp.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length,
+                    SocketFlags.None, ReceiveCallback, null);
             }
         }
     }

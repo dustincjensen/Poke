@@ -9,15 +9,7 @@ export class Intercommunication {
         // Passcode Entered
         ipcMain.on('passcodeEntered', async (event, arg) => {
             let passcode = arg;
-
-            setTimeout(() => {
-                if (passcode !== 'GAMMA') {
-                    MainElectron.sendMessageToMainContents('passcodeError', null);
-                }
-                else {
-                    MainElectron.sendMessageToMainContents('passcodeSuccess', null);
-                }
-            }, 2000);
+            TcpServer.handlePasscodeEntered(passcode);
         });
 
         // This is the message from the dom back to the electron

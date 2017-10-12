@@ -95,7 +95,7 @@ export class Conversations {
 
 
         // Update the message headed out with a phone number
-        TcpServer.writeOnOpenSocket(JSON.stringify({
+        TcpServer.writeEncryptedOnOpenSocket(JSON.stringify({
             contact: {
                 id: obj.contact.id,
                 phoneNumber: conversation.phoneNumber

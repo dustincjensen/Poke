@@ -1,8 +1,6 @@
 using System;
 using System.Security.Cryptography;
-using Java.Math;
 using Org.Json;
-using Poke.Util;
 
 namespace Poke.Models
 {
@@ -18,15 +16,12 @@ namespace Poke.Models
         /// </summary>
         public string Exponent { get; set; }
 
-        public RSAParameters ToRsaParameters()
+        public string ToJson()
         {
-            var exp = Convert.FromBase64String(Exponent);
-
-            return new RSAParameters
-            {
-                Exponent = exp, //new byte[] { 1, 0, 1 }, // TODO need to figure out how to do this?
-                Modulus = Convert.FromBase64String(Modulus)
-            };
+            var publicKey = new JSONObject();
+            publicKey.Put("n", Modulus);
+            publicKey.Put("e", Exponent);
+            return publicKey.ToString();
         }
 
         public static PublicKey FromJson(JSONObject obj)
@@ -37,6 +32,26 @@ namespace Poke.Models
                 Exponent = obj.GetString("e")
             };
             return payload;
+        }
+
+        public RSAParameters ToRsaParameters()
+        {
+            var exp = Convert.FromBase64String(Exponent);
+            return new RSAParameters
+            {
+                Exponent = exp,
+                Modulus = Convert.FromBase64String(Modulus)
+            };
+        }
+
+        public static PublicKey FromRsaParameters(RSAParameters rsa)
+        {
+            var pk = new PublicKey
+            {
+                Modulus = Convert.ToBase64String(rsa.Modulus),
+                Exponent = Convert.ToBase64String(rsa.Exponent)
+            };
+            return pk;
         }
     }
 }

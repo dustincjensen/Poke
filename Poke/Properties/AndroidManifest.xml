@@ -9,5 +9,5 @@
 	<uses-permission android:name="android.permission.WRITE_SMS" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<application android:label="Poke"></application>
+	<application android:label="Poke" android:icon="@drawable/Stick"></application>
 </manifest>

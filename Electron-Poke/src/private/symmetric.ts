@@ -16,9 +16,9 @@ export class Symmetric {
         // We have to use sha1 because rfc2898derived bytes on the C#
         // side is not configurable.
         let pbfkd2 = crypto.pbkdf2Sync(password, Symmetric.PASSWORD_SALT, 10000, 48, 'sha1');
-        let key = pbfkd2.slice(0, 32).toString('hex');
-        let iv = pbfkd2.slice(32).toString('hex');
-        return Symmetric.encryptIV(text, key, iv);;
+        let key = pbfkd2.slice(0, 32).toString('base64');
+        let iv = pbfkd2.slice(32).toString('base64');
+        return Symmetric.encryptIV(text, key, iv);
     }
 
     /**
@@ -28,8 +28,8 @@ export class Symmetric {
      * @param iv the initialization vector to encrypt with.
      */
     public static encryptIV(text: string, key: string, iv: string): string {
-        let translatedKey = new Buffer(key, 'hex');
-        let translatedIV = new Buffer(iv, 'hex');
+        let translatedKey = new Buffer(key, 'base64');
+        let translatedIV = new Buffer(iv, 'base64');
         let cipher = crypto.createCipheriv(Symmetric.ALGORITHM, translatedKey, translatedIV);
         return Symmetric._encrypt(text, cipher);
     }
@@ -52,8 +52,8 @@ export class Symmetric {
         // We have to use sha1 because rfc2898derived bytes on the C#
         // side is not configurable.
         let pbfkd2 = crypto.pbkdf2Sync(password, Symmetric.PASSWORD_SALT, 10000, 48, 'sha1');
-        let key = pbfkd2.slice(0, 32).toString('hex');
-        let iv = pbfkd2.slice(32).toString('hex');
+        let key = pbfkd2.slice(0, 32).toString('base64');
+        let iv = pbfkd2.slice(32).toString('base64');
         return Symmetric.decryptIV(encryptedString, key, iv);
     }
 
@@ -64,8 +64,8 @@ export class Symmetric {
      * @param iv the initialization vector to decrypt with.
      */
     public static decryptIV(encryptedString: string, key: string, iv: string): string {
-        let translatedKey = new Buffer(key, 'hex');
-        let translatedIV = new Buffer(iv, 'hex');
+        let translatedKey = new Buffer(key, 'base64');
+        let translatedIV = new Buffer(iv, 'base64');
         let decipher = crypto.createDecipheriv(Symmetric.ALGORITHM, translatedKey, translatedIV);
         return Symmetric._decrypt(encryptedString, decipher);
     }
