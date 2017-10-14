@@ -1,4 +1,4 @@
-import { MainElectron } from './main';
+import { MainElectron } from '../main';
 import { TcpServer } from './tcpServer';
 import { IConversation, IMessage, IContact } from '../shared/interfaces';
 import { Contacts } from './contacts';

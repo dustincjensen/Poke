@@ -1,3 +1,6 @@
+let electronPackager = require('electron-packager');
+let electronWindowsInstaller = require('electron-winstaller');
+
 module.exports = function (grunt) {
     "use strict";
 
@@ -198,4 +201,42 @@ module.exports = function (grunt) {
     grunt.registerTask("watch-task", [
         "watch"
     ]);
+
+    // Before running this...
+    // npm run grunt full (this creates the project in the dist folder)
+    // copy package.json into dist
+    // run npm install --production in dist
+    // Now run this...
+    // npm run grunt windows-install
+    // Double click Setup.exe when it is done!
+    // TODO write a script/grunt task to handle this.
+    grunt.registerTask("windows-install", "Create installation for windows.", function () {
+        let done = this.async();
+
+        electronPackager({
+            dir: './dist',
+            name: 'Poke',
+            platform: 'win32',
+            arch: 'x64',
+            out: './build'
+        })
+            .then(appPaths => {
+                grunt.log.writeln('Built Packages:', appPaths);
+                return electronWindowsInstaller.createWindowsInstaller({
+                    appDirectory: appPaths[0],
+                    outputDirectory: './build/installer',
+                    authors: 'Dustin Jensen',
+                    exe: 'Poke.exe'
+                });
+            })
+            .then(() => {
+                grunt.log.writeln('Completed creating Windows installer');
+                done(true);
+            })
+            .catch(ex => {
+                grunt.log.writeln('Failed creating Windows installer');
+                grunt.log.writeln(ex);
+                done(false);
+            });
+    });
 };

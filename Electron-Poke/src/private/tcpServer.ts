@@ -1,6 +1,6 @@
 import * as net from 'net';
 import * as os from 'os';
-import { MainElectron } from './main';
+import { MainElectron } from '../main';
 import { PublicPrivate } from './publicPrivate';
 import { Symmetric } from './symmetric';
 import { Conversations } from './conversations';

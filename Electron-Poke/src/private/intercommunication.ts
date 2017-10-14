@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { MainElectron } from './main';
+import { MainElectron } from '../main';
 import { TcpServer } from './tcpServer';
 import { Contacts } from './contacts';
 import { Conversations } from './conversations';

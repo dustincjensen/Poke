@@ -117,6 +117,12 @@ namespace Poke.Activities
             var devices = new List<Device> {
                 new Device
                 {
+                    Name = "Work",
+                    IpAddress = "192.168.3.178",
+                    Port = 7102
+                },
+                new Device
+                {
                     Name = "PC",
                     IpAddress = "192.168.1.12",
                     Port = 8971
