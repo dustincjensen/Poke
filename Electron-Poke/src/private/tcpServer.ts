@@ -53,6 +53,9 @@ export class TcpServer {
             MainElectron.sendMessageToMainContents(
                 'tcp-connected', true);
 
+            // Socket will never timeout
+            socket.setTimeout(0);
+
             // Receive the data on the socket
             socket.on('data', TcpServer._receiveDataOnSocket);
 
