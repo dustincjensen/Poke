@@ -1,5 +1,5 @@
-//import { MainElectron } from '../main';
-//import { TcpServer } from './tcpServer';
+import { ipcRenderer } from 'electron';
+import { TcpServer } from './tcpServer';
 import { IConversation, IMessage, IContact } from '../shared/interfaces';
 import { Contacts } from './contacts';
 import { ColorUtil } from './colorUtil';
@@ -91,17 +91,17 @@ export class Conversations {
         // end know that we don't have new messages on the object
         // any longer.
         conversation.newMessages = false;
-        //MainElectron.sendMessageToMainContents('conversationRead', conversation.id);
+        ipcRenderer.send('background-conversation-read', conversation.id);
 
 
         // Update the message headed out with a phone number
-        // TcpServer.writeEncryptedOnOpenSocket(JSON.stringify({
-        //     contact: {
-        //         id: obj.contact.id,
-        //         phoneNumber: conversation.phoneNumber
-        //     },
-        //     message: obj.message.message
-        // }));
+        TcpServer.writeEncryptedOnOpenSocket(JSON.stringify({
+            contact: {
+                id: obj.contact.id,
+                phoneNumber: conversation.phoneNumber
+            },
+            message: obj.message.message
+        }));
     }
 
     public static handleIncomingMessage(obj: any): any {
@@ -125,7 +125,7 @@ export class Conversations {
                 conversationId: obj.contact.id,
                 message: newMessage
             };
-            //MainElectron.sendMessageToMainContents('newMessageReceived', contactMessage);
+            ipcRenderer.send('background-new-message-received', contactMessage);
         } else {
             let conversation: IConversation = {
                 id: obj.contact.id,
@@ -145,7 +145,7 @@ export class Conversations {
             Conversations.conversations.unshift(conversation);
 
             // Since we have a new conversation...
-            //MainElectron.sendMessageToMainContents('newConversationReceived', conversation);
+            ipcRenderer.send('background-new-conversation-received', conversation);
         }
     }
 
@@ -184,7 +184,7 @@ export class Conversations {
 
             // Let the listing know we selected this so it can toggle off
             // the dirty marker.
-            //MainElectron.sendMessageToMainContents('conversationRead', conversation.id);
+            ipcRenderer.send('background-conversation-read', conversation.id);
             return conversation;
         }
 
@@ -207,7 +207,7 @@ export class Conversations {
         // Since the component asking for this likely doesn't know that this is 
         // "technically" a new conversation we need to let the conversation list
         // know.
-        //MainElectron.sendMessageToMainContents('newConversationStarted', conversation);
+        ipcRenderer.send('background-new-conversation-started', conversation);
 
         // Return the conversation that we just created.
         return conversation;

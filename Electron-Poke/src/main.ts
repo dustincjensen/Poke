@@ -3,9 +3,8 @@ import * as path from 'path';
 import * as url from 'url';
 import * as ChildProcess from 'child_process';
 
-import { Squirrel } from './squirrel';
-import { Intercommunication } from './private/intercommunication';
-
+import { Squirrel } from './ipcMain/squirrel';
+import { Intercommunication } from './ipcMain/intercommunication';
 
 export class MainElectron {
 
