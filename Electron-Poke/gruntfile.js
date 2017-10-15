@@ -31,6 +31,16 @@ module.exports = function (grunt) {
                             "!**/*.scss"
                         ],
                         dest: "./dist/public"
+                    },
+                    {
+                        expand: true,
+                        cwd: "./src/background",
+                        src: [
+                            "**/*",
+                            "!**/*.ts",
+                            "!**/*.scss"
+                        ],
+                        dest: "./dist/background"
                     }
                 ]
             },

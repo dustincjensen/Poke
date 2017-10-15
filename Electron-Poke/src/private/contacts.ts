@@ -1,5 +1,3 @@
-import { MainElectron } from '../main';
-import { TcpServer } from './tcpServer';
 import { IContact } from '../shared/interfaces';
 //import { ColorUtil } from './colorUtil';
 

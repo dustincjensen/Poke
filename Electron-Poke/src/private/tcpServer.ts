@@ -1,6 +1,6 @@
 import * as net from 'net';
 import * as os from 'os';
-import { MainElectron } from '../main';
+import { ipcRenderer } from 'electron';
 import { PublicPrivate } from './publicPrivate';
 import { Symmetric } from './symmetric';
 import { Conversations } from './conversations';
@@ -50,8 +50,7 @@ export class TcpServer {
 
             // A new connection was received...
             // Let the UI know about it.
-            MainElectron.sendMessageToMainContents(
-                'tcp-connected', true);
+            ipcRenderer.send('background-tcp-connected', true);
 
             // Socket will never timeout
             socket.setTimeout(0);
@@ -138,9 +137,9 @@ export class TcpServer {
             let writeBack = Symmetric.encrypt(JSON.stringify(publicKeyObj), passcode);
             TcpServer.writeOnOpenSocket(writeBack + '<BEG>');
 
-            MainElectron.sendMessageToMainContents('passcodeSuccess', null);
+            ipcRenderer.send('background-passcode-success', null);
         } catch (error) {
-            MainElectron.sendMessageToMainContents('passcodeError', null);
+            ipcRenderer.send('background-passcode-error', null);
         }
     }
 }

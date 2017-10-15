@@ -4,12 +4,8 @@ import * as url from 'url';
 import * as ChildProcess from 'child_process';
 
 import { Squirrel } from './squirrel';
-import { TcpServer } from './private/tcpServer';
 import { Intercommunication } from './private/intercommunication';
 
-// TMP
-import { Contacts } from './private/contacts';
-import { Conversations } from './private/conversations';
 
 export class MainElectron {
 
@@ -17,6 +13,7 @@ export class MainElectron {
     // window will be closed automatically when the Javascript
     // object is garbage collected.
     private static _win: Electron.BrowserWindow;
+    public static background: Electron.BrowserWindow;
 
     public static start() {
         if (Squirrel.HandleSquirrelEvent(app)) {
@@ -24,12 +21,7 @@ export class MainElectron {
         }
 
         MainElectron._initializeElectron();
-        TcpServer.createServer();
         Intercommunication.setupListeners();
-
-        // Temp? Just for test data.
-        //Contacts.setupContacts();
-        //Conversations.setupConversations();
     }
 
     private static _initializeElectron(): void {
@@ -101,7 +93,21 @@ export class MainElectron {
         MainElectron._win.on('closed', () => {
             // Dereference the window object.
             MainElectron._win = null;
+
+            // Dereference the background window too.
+            MainElectron.background = null;
         });
+
+
+
+        // Create the background window to handle work for us.
+        MainElectron.background = new BrowserWindow();
+        MainElectron.background.loadURL(url.format({
+            pathname: path.join(__dirname, './background/index.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
+        MainElectron.background.webContents.openDevTools();
     }
 
     // public static __DARWIN__ = process.platform === 'darwin';
