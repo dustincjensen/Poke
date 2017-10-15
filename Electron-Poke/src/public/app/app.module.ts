@@ -13,6 +13,7 @@ import { ConversationListComponent } from './conversation/conversation-list.comp
 import { ConversationComponent } from './conversation/conversation.component';
 import { ContactSelectorComponent } from './conversation/contact-selector.component';
 import { ConversationService } from './conversation/conversation.service';
+import { NotificationService } from './services/notificationService';
 
 const appRoutes = RouterModule.forRoot(
     [
@@ -58,7 +59,8 @@ const appRoutes = RouterModule.forRoot(
         // This means we won't run into errors like multiple listeners
         // or UI issues where variables are not set.
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
-        ConversationService
+        ConversationService,
+        NotificationService
     ],
     bootstrap: [AppComponent],
 })

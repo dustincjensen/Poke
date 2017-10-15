@@ -115,20 +115,6 @@ export class MainElectron {
     // public static __FREEBSD__ = process.platform === 'freebsd';
     // public static __SUNOS__ = process.platform === 'sunos';
 
-    public static newNotification(name: string, message: string): void {
-        let notification = new Notification({
-            title: name,
-            body: message,
-            icon: path.join(__dirname, '../../Icons/Stick.png')
-        } as any);
-
-        notification.addListener('click', (event) => {
-            MainElectron._win.focus();
-        });
-
-        notification.show();
-    }
-
     public static sendMessageToMainContents(type: string, obj: any): void {
         MainElectron._win.webContents.send(type, obj);
     }

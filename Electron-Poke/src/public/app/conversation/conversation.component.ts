@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, NgZone, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, AfterViewChecked, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
@@ -12,7 +12,7 @@ import { IConversation, IMessage } from '../../../shared/interfaces';
     selector: 'conversation',
     templateUrl: 'conversation.html'
 })
-export class ConversationComponent extends ElectronComponent implements OnInit, AfterViewChecked {
+export class ConversationComponent extends ElectronComponent implements AfterViewChecked {
 
     @ViewChild('scrollConversation')
     private _scrollContainer: ElementRef;
@@ -28,9 +28,10 @@ export class ConversationComponent extends ElectronComponent implements OnInit, 
         ngZone: NgZone
     ) {
         super(electron, ngZone);
-    }
 
-    public async ngOnInit() {
+        // TODO investigate whether this is the right choice...
+        // This had to be put into the constructor because ngOnInit
+        // was not firing on the first navigation event from notification clicks.
         this.registerIpcRendererMethod('conversationRetrieved', this._handleConversationRetrieved);
         this.registerIpcRendererMethod('newMessageReceived', this._handleNewMessage);
 

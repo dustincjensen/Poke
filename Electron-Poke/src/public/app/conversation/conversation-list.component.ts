@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 import { ConversationService } from './conversation.service';
+import { NotificationService } from '../services/notificationService';
 import { IConversation } from '../../../shared/interfaces';
 
 @Component({
@@ -19,6 +20,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     constructor(
         private _router: Router,
         private _internal: ConversationService,
+        private _notifications: NotificationService,
         electron: ElectronService,
         ngZone: NgZone
     ) {
@@ -58,18 +60,37 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     private _handleNewConversationReceived(event, conversation) {
         this.conversations.unshift(conversation);
+
+        this._sendNotificationIfNotFocused(
+            conversation.name, conversation.messages[0].message, conversation);
     }
 
-    private _handleNewMessageReceived(event, conversation) {
+    private _handleNewMessageReceived(event, newMessage) {
         let index = this.conversations.findIndex(value => {
-            return value.id === conversation.conversationId;
+            return value.id === newMessage.conversationId;
         });
 
         if (index >= 0) {
             let conversation = this.conversations[index];
             conversation.newMessages = true;
 
+            this._sendNotificationIfNotFocused(
+                conversation.name, newMessage.message.message, conversation);
+
             // TODO consider not making the messages unread if you are in the conversation.
+        }
+    }
+
+    private _sendNotificationIfNotFocused(name: string, message: string, conversation: IConversation): void {
+        if (!document.hasFocus()) {
+            // Send a notification that we received a new message.
+            // We give them a function to call which will select
+            // the conversation if they click on the notification.
+            // TODO the boolean should be based on the privacy flag.
+            this._notifications.sendNewMessageReceivedNotification(
+                name, message, false, () => {
+                    this.selectConversation(conversation);
+                });
         }
     }
 
@@ -92,6 +113,9 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
      * conversation we mark it as read.
      */
     private _handleConversationRead(event, id) {
+        // TODO this only occurs because "getConversation" on the "server" fires on load, and it may beat the list of conversations being retrieved.
+        if (!this.conversations) return;
+
         let index = this.conversations.findIndex(value => {
             return value.id === id;
         });
