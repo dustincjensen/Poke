@@ -22,6 +22,9 @@ namespace Poke.Activities
         private TextView _emptyListenerDevices;
         private DeviceAuthenticationModalFragment _deviceAuthenticationModalFragment;
 
+        private LinearLayout _connectingToDevice;
+        private TextView _connectingText;
+
         // TODO this needs to stored somewhere else...
         public static RSAParameters _privateKey;
 
@@ -40,12 +43,12 @@ namespace Poke.Activities
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            // Add click event to the button
-            _sendtestMessageButton = FindViewById<Button>(Resource.Id.SendTestMessageButton);
-            _sendtestMessageButton.Click += _HandleButtonClick;
-
             // Find the Empty Text View for Listener Devices
             _emptyListenerDevices = FindViewById<TextView>(Resource.Id.EmptyListenerDevices);
+
+            // Find the connecting progress bar section
+            _connectingToDevice = FindViewById<LinearLayout>(Resource.Id.ConnectingLayout);
+            _connectingText = FindViewById<TextView>(Resource.Id.ConnectingText);
 
             // Add Adapter to the Listenr Devices
             _possibleListenerDevices = FindViewById<ListView>(Resource.Id.PossibleListenerDevices);
@@ -57,18 +60,23 @@ namespace Poke.Activities
             _SetupDebugDevice();
         }
 
-        private void _HandleButtonClick(object sender, EventArgs args)
-        {
-            //Util.Sms.SendTo("FILL_IN_TO_DEBUG", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
-            //_ShowModalWithPassword();
-
-            //var passcode = Crypto.CreateUniquePasswordForIdentifyingConnectedDevice(5);
-            //var aes = Crypto.CreateAesKeyIV(passcode);
-            //var encrypted = Crypto.EncryptWithAesKeyIV("We are awesome!", aes);
-        }
-
         private void _HandleListClick(object sender, AdapterView.ItemClickEventArgs args)
         {
+            Task.Run(async () => await _HandleListClickAsync(sender, args));
+        }
+
+        private async Task _HandleListClickAsync(object sender, AdapterView.ItemClickEventArgs args)
+        {
+            RunOnUiThread(() =>
+            {
+                // Show the loading... symbol.
+                _possibleListenerDevices.Visibility = Android.Views.ViewStates.Gone;
+                _emptyListenerDevices.Visibility = Android.Views.ViewStates.Gone;
+                _connectingToDevice.Visibility = Android.Views.ViewStates.Visible;
+                _connectingText.Text = "Connecting to device...";
+            });            
+
+            // Select the device
             var position = args.Position;
             var item = ((DeviceRowAdapter)_possibleListenerDevices.Adapter).GetItem(position);
 
@@ -76,7 +84,13 @@ namespace Poke.Activities
             // for a message to be sent to start sending messages from the "server".
             TcpHandler.SetupTcpConnection(item.IpAddress, item.Port);
 
-            // Communicate your public key...
+
+            RunOnUiThread(() =>
+            {
+                // Communicate your public key...
+                _connectingText.Text = "Generating Public/Private Key...";
+            });
+
             var publicPrivate = Crypto.GetPublicPrivateKey();
             _privateKey = publicPrivate[1];
             var publicKey = PublicKey.FromRsaParameters(publicPrivate[0]);
@@ -86,11 +100,20 @@ namespace Poke.Activities
             var aes = Crypto.CreateAesKeyIV(password);
             var encrypted = Crypto.EncryptWithAesKeyIV(publicKey.ToJson(), aes);
 
-            _ShowModalWithPassword(password);
+            RunOnUiThread(() =>
+            {
+                _ShowModalWithPassword(password);
+
+                // Turn off the loading... symbol.
+                _possibleListenerDevices.Visibility = Android.Views.ViewStates.Visible;
+                _emptyListenerDevices.Visibility = Android.Views.ViewStates.Visible;
+                _connectingToDevice.Visibility = Android.Views.ViewStates.Gone;
+                _connectingText.Text = "";
+            });
 
             // Send to the Tcp Handler to let the Desktop know we are doing this!
             TcpHandler._sharedPasscode = password;
-            Task.Run(async () => await TcpHandler.StartConversation(encrypted + "<BEG>"));           
+            await TcpHandler.StartConversation(encrypted + "<BEG>");
         }
 
         private void _ShowModalWithPassword(string password)

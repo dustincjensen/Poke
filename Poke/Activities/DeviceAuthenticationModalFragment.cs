@@ -10,10 +10,14 @@ namespace Poke.Activities
         public string DeviceAuthenicationPassword { get; set; }
         public ProgressBar DeviceAuthenticationTimeLimitProgressBar { get; set; }
 
-
         private TextView _passwordTextView;
         private TextView _instructionsTextView;
 
+        /// <summary>
+        /// TODO stop the dialog from closing when pressing the back button or handle it gracefully.
+        /// </summary>
+        /// <param name="savedInstanceState"></param>
+        /// <returns></returns>
         public override Dialog OnCreateDialog(Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
@@ -36,20 +40,25 @@ namespace Poke.Activities
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
             builder.SetView(content)
-                .SetNegativeButton(Resource.String.Cancel, ((sender, args) =>
+                .SetNegativeButton(Resource.String.Cancel, (sender, args) =>
                 {
                     Dialog.Dismiss();
-                }));
+                });
 
             // Get the number of seconds our timer should wait before the authentication expires.
             var numberOfSeconds = Resources.GetInteger(Resource.Integer.DeviceAuthenticationTimeoutSeconds);
             var timer = new DeviceAuthenticationTimer(numberOfSeconds * 1000, 100, progressBar, _TimerRunOut);
 
             // Delay starting the timer for 1 second so the modal can appear.
-            new Handler().PostDelayed(() => { timer.Start(); }, 1000);
+            new Handler().PostDelayed(() => { timer.Start(); }, 1000);            
 
             // Create the modal.
-            return builder.Create();
+            var alertDialog = builder.Create();
+
+            // Stop the dialog from being dismissed unless they press cancel specifically...
+            alertDialog.SetCanceledOnTouchOutside(false);
+
+            return alertDialog;
         }
 
         private void _TimerRunOut()

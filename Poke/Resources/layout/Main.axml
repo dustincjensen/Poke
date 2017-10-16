@@ -4,13 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-  <!-- Debug button for sen -->
-  <Button
-    android:id="@+id/SendTestMessageButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/TestButton"/>
-
   <!-- Header for the list view -->
   <TextView
     android:layout_width="match_parent"
@@ -40,4 +33,24 @@
     android:gravity="center"
     android:text="@string/NoDevicesListening"/>
 
+  <LinearLayout
+    android:id="@+id/ConnectingLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <ProgressBar
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="5dp"
+      android:indeterminateTint="@color/Crimson"/>
+    <TextView
+      android:id="@+id/ConnectingText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="20sp"/>
+  </LinearLayout>
+  
 </LinearLayout>

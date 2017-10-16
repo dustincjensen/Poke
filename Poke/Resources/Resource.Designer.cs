@@ -565,6 +565,12 @@ namespace Poke
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f070008
+			public const int ConnectingLayout = 2131165192;
+			
+			// aapt resource value: 0x7f070009
+			public const int ConnectingText = 2131165193;
+			
 			// aapt resource value: 0x7f070000
 			public const int DeviceAuthenticationInstructions = 2131165184;
 			
@@ -583,14 +589,11 @@ namespace Poke
 			// aapt resource value: 0x7f070005
 			public const int DevicePort = 2131165189;
 			
-			// aapt resource value: 0x7f070008
-			public const int EmptyListenerDevices = 2131165192;
-			
 			// aapt resource value: 0x7f070007
-			public const int PossibleListenerDevices = 2131165191;
+			public const int EmptyListenerDevices = 2131165191;
 			
 			// aapt resource value: 0x7f070006
-			public const int SendTestMessageButton = 2131165190;
+			public const int PossibleListenerDevices = 2131165190;
 			
 			static Id()
 			{

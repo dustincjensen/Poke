@@ -131,8 +131,11 @@ namespace Poke.Util
                 WholeMessage = null;
 
                 // Start receiving again
-                Tcp.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length,
-                    SocketFlags.None, ReceiveCallback, null);
+                if (Tcp.Client != null)
+                {
+                    Tcp.Client.BeginReceive(ReceiveBuffer, 0, ReceiveBuffer.Length,
+                        SocketFlags.None, ReceiveCallback, null);
+                }                
             }
         }
     }
