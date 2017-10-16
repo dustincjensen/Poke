@@ -9,9 +9,11 @@ BETA
 // TODO udp broadcast to discover devices.
 // TODO Get Contact List
 // TODO fix slow public/private key generation on android and make the UI better
-// TODO notifications
+// REOCCURRED fix electron disconnecting TCP server
+//   - Maybe the phone is disconnecting now instead of electron.
 
-// DONE fix electron disconnecting TCP server
+// DONE icon shake on new message received to better call out the new message.
+// DONE notifications
 // DONE fix electron UI locking up
 // DONE Hook up 5 digit pin handshake on Android and Electron
 

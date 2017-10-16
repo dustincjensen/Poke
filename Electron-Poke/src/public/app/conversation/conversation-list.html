@@ -4,7 +4,11 @@
             <li class="start-new-conversation-list-item margin-top-10 margin-bottom-10">
                 <button (click)="loadContacts()" class="start-new-conversation-button"></button>
             </li>
-            <li *ngFor="let conversation of conversations" class="conversation-list-item margin-top-10 margin-bottom-10" [style.background]="conversation.color" [attr.sudo-attention]="conversation.newMessages">
+            <li *ngFor="let conversation of conversations" 
+                class="conversation-list-item margin-top-10 margin-bottom-10" 
+                [ngClass]="{'animated bounce': conversation.newMessages}" 
+                [style.background]="conversation.color" 
+                [attr.sudo-attention]="conversation.newMessages">
                 <button (click)="selectConversation(conversation)" class="conversation-list-button">
                     {{ conversation.display }}
                 </button>

@@ -377,3 +377,47 @@ $arrowWingsTransitionSpeed: 0.1s;
         @include arrow-wing-transformed(-45deg);
     }
 }
+
+
+// animate.css
+.animated {
+    animation-duration: 2s;
+    animation-fill-mode: both;
+
+    &.infinite {
+        animation-iteration-count: infinite;
+    }
+    
+    &.animate-twice {
+        animation-iteration-count: 2;
+    }
+}
+
+// animate.css
+@keyframes bounce {
+    from, 10%, 26.5%, 40%, 50%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0,0,0);
+    }
+
+    20%, 21.5% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -15px, 0);
+    }
+
+    35% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -7.5px, 0);
+    }
+
+    45% {
+        transform: translate3d(0,-2px,0);
+    }
+}
+
+// animate.css
+.bounce {
+    animation-name: bounce;
+    transform-origin: center bottom;
+}
+  
