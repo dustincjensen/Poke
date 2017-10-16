@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import { PublicPrivate } from './publicPrivate';
 import { Symmetric } from './symmetric';
 import { Conversations } from './conversations';
+import { Contacts } from './contacts';
 
 export class TcpServer {
 
@@ -103,6 +104,16 @@ export class TcpServer {
         if (body.endsWith('<BEG>')) {
             let encrypted = body.replace('<BEG>', '');
             TcpServer._encryptedStartMessage = encrypted;
+        }
+
+        // TMP
+        // Handle the contact list
+        if (body.endsWith('<TAC>')) {
+            let decrypted = Symmetric.decryptIV(body.replace('<TAC>', ''),
+                TcpServer._sharedSymmetricKey.key, TcpServer._sharedSymmetricKey.iv);
+            let obj = JSON.parse(decrypted);
+            Contacts.handleIncomingContactList(obj);
+            body = '';
         }
 
         // This is the end of the passcode / public / private key exchange.

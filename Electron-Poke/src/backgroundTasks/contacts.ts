@@ -1,4 +1,6 @@
 import { IContact } from '../shared/interfaces';
+import { TcpServer } from './tcpServer';
+import { ipcRenderer } from 'electron';
 //import { ColorUtil } from './colorUtil';
 
 export class Contacts {
@@ -19,8 +21,50 @@ export class Contacts {
         ];
     }
 
-    public static getContactList(): IContact[] {
-        return Contacts.contacts;
+    // public static getContactList(): IContact[] {
+    //     return Contacts.contacts;
+    // }
+
+    public static getContactList(): void {
+        if (Contacts.contacts.length === 0) {
+            TcpServer.writeOnOpenSocket('<TAC>');
+        } else {
+            ipcRenderer.send('background-contact-list-retrieved', Contacts.contacts);
+        }
+    }
+
+    public static handleIncomingContactList(json: any) {
+        console.log(json);
+
+        for (let i = 0; i < json.length; i++) {
+            let contact = json[i];
+            Contacts.contacts.push({
+                id: contact.id,
+                name: contact.name,
+                phoneNumber: contact.phoneNumber,
+                display: Contacts._determineDisplayName(contact.name)
+            })
+        }
+
+        Contacts.contacts.sort(Contacts._sortContacts);
+        ipcRenderer.send('background-contact-list-retrieved', Contacts.contacts);
+    }
+
+    private static _sortContacts(contact: IContact, other: IContact): number {
+        if (contact.name < other.name) return -1;
+        if (contact.name > other.name) return 1;
+        return 0;
+    }
+
+    // TODO this already exists in conversations...
+    private static _determineDisplayName(name: string): string {
+        let split = name.split(' ');
+        if (split.length === 2) {
+            return split[0][0].toUpperCase() + split[1][0].toUpperCase();
+        }
+        else {
+            return name[0].toUpperCase();
+        }
     }
 
     public static getContact(id: number): IContact {

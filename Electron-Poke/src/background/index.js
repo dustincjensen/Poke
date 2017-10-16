@@ -8,8 +8,11 @@ class BackgroundTaskWindow {
     constructor() {
         // Initialize background task external classes
         TcpServer.createServer();
-        Conversations.setupConversations();
-        Contacts.setupContacts();
+
+        // Since we can now add our own contacts this doesn't
+        // need to be there for the next build
+        //Conversations.setupConversations();
+        //Contacts.setupContacts();
 
         window.onload = () => {
             this._setupTaskListeners();
@@ -56,8 +59,13 @@ class BackgroundTaskWindow {
 
     // Retrieve the contact list
     _getContactList(event, args) {
-        let contactList = Contacts.getContactList();
-        ipcRenderer.send('background-contact-list-retrieved', contactList);
+        //let contactList = Contacts.getContactList();
+        //ipcRenderer.send('background-contact-list-retrieved', contactList);
+
+        // TODO revisit this.
+        // This now will send ipcRenderer calls on it's own
+        // depending on whether or not it needs to wait on TCP contact list.
+        Contacts.getContactList();
     }
 }
 new BackgroundTaskWindow();

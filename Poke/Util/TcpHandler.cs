@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Org.Json;
 using Poke.Activities;
 using Poke.Models;
+using Android.Content;
 
 namespace Poke.Util
 {
@@ -12,16 +13,21 @@ namespace Poke.Util
         public static TcpClient Tcp;
         public static bool HasTcpConnection => Tcp != null && Tcp.Connected;
 
+        private static Context _context = null;
+
         // TODO handle messages larger than buffer.
         private static readonly byte[] ReceiveBuffer = new byte[8192];
         private static string WholeMessage = null;
         public static string _sharedPasscode = null;
         private static AesKeyIV _sharedSymmetricKey = null;
 
-        public static void SetupTcpConnection(string ipAddress, int portNumber)
+        public static void SetupTcpConnection(string ipAddress, int portNumber, Context context)
         {
             // Close the tcp connection gracefully before setting up the new one.
             Tcp?.Close();
+
+            // Store the main activity context so we can query contacts later.
+            _context = context;
 
             // Setup the new Tcp connection.
             Tcp = new TcpClient(ipAddress, portNumber);
@@ -95,6 +101,18 @@ namespace Poke.Util
                     var encryptedWithTheirPublicKey = Crypto.EncryptWithPublicKey(
                         publicKey.ToRsaParameters(), System.Text.Encoding.UTF8.GetBytes(_sharedSymmetricKey.ToJson().ToString()));
                     Task.Run(async () => await StartConversation(Convert.ToBase64String(encryptedWithTheirPublicKey) + "<END>"));
+
+                    WholeMessage = null;
+                }
+                else if (WholeMessage.EndsWith("<TAC>"))
+                {
+                    // The computer asked for the client list...
+                    // we shall send it to them encrypted!
+                    var contacts = Contact.GetAllContacts(_context);
+                    var jsonArray = ContactInfo.ToJsonArray(contacts);
+                    var encrypted = Crypto.EncryptWithAesKeyIV(jsonArray.ToString(), _sharedSymmetricKey);
+                    var msg = System.Text.Encoding.UTF8.GetBytes(encrypted + "<TAC>");
+                    Task.Run(async () => await Tcp.Client.SendAsync(new ArraySegment<byte>(msg), SocketFlags.None));
 
                     WholeMessage = null;
                 }

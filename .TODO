@@ -4,14 +4,21 @@
 //  - What does the 2nd handshake look like?
 // TODO Privacy Mode
 // TODO Emoji's?
+// TODO handle cancelling / disconnecting tcp...
+
+// REFACTOR
+// - android app should be binding based...
+// - android app should handle async/await better
+// - electron app should not have the background task in a .js file. (need to write import/export for commonjs without needing webpack or systemjs)
+// - electron app should review it's use of ipcMain-><-ipcRenderer communication through the intercommunication file.
 
 BETA
 // TODO udp broadcast to discover devices.
-// TODO Get Contact List
-// TODO fix slow public/private key generation on android and make the UI better
 // REOCCURRED fix electron disconnecting TCP server
 //   - Maybe the phone is disconnecting now instead of electron.
 
+// DONE Get Contact List
+// DONE fix slow public/private key generation on android and make the UI better
 // DONE icon shake on new message received to better call out the new message.
 // DONE notifications
 // DONE fix electron UI locking up

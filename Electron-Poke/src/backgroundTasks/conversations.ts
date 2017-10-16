@@ -155,7 +155,7 @@ export class Conversations {
             return split[0][0].toUpperCase() + split[1][0].toUpperCase();
         }
         else {
-            return '??';
+            return name[0].toUpperCase();
         }
     }
 

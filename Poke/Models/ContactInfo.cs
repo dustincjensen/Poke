@@ -1,4 +1,5 @@
 using Org.Json;
+using System.Collections.Generic;
 
 namespace Poke.Models
 {
@@ -7,6 +8,18 @@ namespace Poke.Models
         public string ID { get; set; }
         public string PhoneNumber { get; set; }
         public string Name { get; set; }
+
+        // TODO is the number mobile...
+
+        public static JSONArray ToJsonArray(IEnumerable<ContactInfo> contacts)
+        {
+            var jsonArray = new JSONArray();
+            foreach(var obj in contacts)
+            {
+                jsonArray.Put(obj.ToJson());
+            }
+            return jsonArray;
+        }
 
         public JSONObject ToJson()
         {

@@ -82,7 +82,7 @@ namespace Poke.Activities
 
             // Set the Tcp Connection up. That way you don't actually need to wait
             // for a message to be sent to start sending messages from the "server".
-            TcpHandler.SetupTcpConnection(item.IpAddress, item.Port);
+            TcpHandler.SetupTcpConnection(item.IpAddress, item.Port, ApplicationContext);
 
 
             RunOnUiThread(() =>
