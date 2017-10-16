@@ -56,8 +56,23 @@ export class TcpServer {
             // Socket will never timeout
             socket.setTimeout(0);
 
+            // Keep the socket alive.
+            socket.setKeepAlive(true, 0);
+
             // Receive the data on the socket
             socket.on('data', TcpServer._receiveDataOnSocket);
+
+            // TODO contemplate
+            // Socket error?
+            socket.on('error', error => {
+                console.log('Socket Error', error);
+            });
+
+            // TODO contemplate
+            // Testing socket timeout...
+            socket.on('timeout', () => {
+                console.log('Socket has timed out...');
+            });
 
             // Keep a reference to the socket.
             if (TcpServer._openSocket) {
