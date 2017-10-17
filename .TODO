@@ -8,7 +8,8 @@
 // TODO url's in messages
 // TODO strings that are long and do not have a break point will go outside the bubble in Electron-Poke
 // TODO MMS messages on Android should be captured, both images and super long text messages.
-
+// TODO settings icon in the bottom left
+// TODO reorder list of contacts based on last message received.
 
 // REFACTOR
 // - android app should be binding based...
@@ -18,9 +19,11 @@
 
 BETA
 // TODO udp broadcast to discover devices.
+// TODO contact list needs a search bar.
 
 // TEST fixed android disconnecting TCP server by moving tcp into a service.
 //   - The phone definitely was disconnecting. When tested with a phone that didn't sleep, tcp connection never died.
+// TEST contact list would sometimes not load, this was because node was not handling the data packets and would drop half of large payloads sometimes.
 // DONE Get Contact List
 // DONE fix slow public/private key generation on android and make the UI better
 // DONE icon shake on new message received to better call out the new message.
