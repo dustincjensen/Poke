@@ -2,6 +2,7 @@
 // TODO Create message contract so encryption/keep alive/messages can be passed between the 2 devices.
 //  - What does the initial handshake look like?
 //  - What does the 2nd handshake look like?
+// TODO re-exchange symmetric key's after X minutes for the phone and computer.
 // TODO Privacy Mode
 // TODO Emoji's?
 // TODO handle cancelling / disconnecting tcp...
@@ -9,7 +10,26 @@
 // TODO strings that are long and do not have a break point will go outside the bubble in Electron-Poke
 // TODO MMS messages on Android should be captured, both images and super long text messages.
 // TODO settings icon in the bottom left
+//     - possible settings...
+//     - minimize electron to windows tray (instead of closing).
+//     - enable/disable conversation history (also retrieving from the phone, means longer history)
+//       -- last x messages (500 or so and instead of storing them locally, they just get retrieved from the phone).
+//     - Privacy
+//       -- privacy on notifications (so it just says new message)
+//       -- privacy on the window so it is obfuscated if you are not hovering over the window with your mouse.
+// TODO conversation search (search conversations for key words)
 // TODO reorder list of contacts based on last message received.
+// TODO hamburger icon in the top left to show the extended version of the left column.
+//     - this includes the plus button showing "New Conversation"
+//     - Settings gear icon showing "Settings"
+//     - All conversations should show their full name if possible.
+// TODO windows icon flash 
+//    - win = new BrowserWindow()
+//    - win.once('focus', () => win.flashFrame(false))
+//    - win.flashFrame(true)
+//    - https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md
+// TODO conversations icon https://github.com/electron/electron/issues/3148
+// TODO windows tray (so electron-poke stays open even if you close it)
 
 // REFACTOR
 // - android app should be binding based...
@@ -20,6 +40,7 @@
 BETA
 // TODO udp broadcast to discover devices.
 // TODO contact list needs a search bar.
+// maybe... TODO bug reports?
 
 // TEST fixed android disconnecting TCP server by moving tcp into a service.
 //   - The phone definitely was disconnecting. When tested with a phone that didn't sleep, tcp connection never died.
