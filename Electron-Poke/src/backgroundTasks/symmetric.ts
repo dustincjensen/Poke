@@ -71,6 +71,7 @@ export class Symmetric {
     }
 
     private static _decrypt(encryptedString: string, decipher: crypto.Decipher): string {
+        console.log('Encrypted String Length:', encryptedString.length);
         let decrypted = decipher.update(encryptedString, 'base64', 'utf8');
         decrypted += decipher.final('utf8');
         return decrypted;

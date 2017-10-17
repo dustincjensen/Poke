@@ -12,6 +12,7 @@ export class TcpServer {
     private static _server: net.Server;
     private static _address: string;
     private static _port: number;
+    private static _incomingData: string;
 
     // TMP
     // Need to find a better way to handle this.
@@ -79,6 +80,7 @@ export class TcpServer {
                 console.log('Closing Old Socket');
                 TcpServer._openSocket.end();
             }
+            TcpServer._incomingData = '';
             TcpServer._openSocket = socket;
         });
     }
@@ -101,42 +103,51 @@ export class TcpServer {
         }
     }
 
+    // TODO consider using indexOf _incomingData
+    // otherwise what would happen if you receive another "event"
+    // while doing this one? You might get the scenario of...
+    // 231231231<TAC>12308123012<EOF> then it would fail.
     private static _receiveDataOnSocket(data: Buffer): void {
-        let body: string = '';
-        body += data;
+        TcpServer._incomingData += data;
 
         // This is a message that is encrypted
         // This will fail if we don't have a symmetric key.
-        if (body.endsWith('<EOF>')) {
-            let decrypted = Symmetric.decryptIV(body.replace('<EOF>', ''),
+        if (TcpServer._incomingData.endsWith('<EOF>')) {
+            let decrypted = Symmetric.decryptIV(TcpServer._incomingData.replace('<EOF>', ''),
                 TcpServer._sharedSymmetricKey.key, TcpServer._sharedSymmetricKey.iv);
             let obj = JSON.parse(decrypted);
             Conversations.handleIncomingMessage(obj);
-            body = '';
+            TcpServer._incomingData = '';
         }
 
         // This is the start of the passcode / public / private key exchange
-        if (body.endsWith('<BEG>')) {
-            let encrypted = body.replace('<BEG>', '');
+        else if (TcpServer._incomingData.endsWith('<BEG>')) {
+            let encrypted = TcpServer._incomingData.replace('<BEG>', '');
             TcpServer._encryptedStartMessage = encrypted;
+            TcpServer._incomingData = '';
         }
 
         // TMP
         // Handle the contact list
-        if (body.endsWith('<TAC>')) {
-            let decrypted = Symmetric.decryptIV(body.replace('<TAC>', ''),
+        else if (TcpServer._incomingData.endsWith('<TAC>')) {
+            let decrypted = Symmetric.decryptIV(TcpServer._incomingData.replace('<TAC>', ''),
                 TcpServer._sharedSymmetricKey.key, TcpServer._sharedSymmetricKey.iv);
             let obj = JSON.parse(decrypted);
             Contacts.handleIncomingContactList(obj);
-            body = '';
+            TcpServer._incomingData = '';
         }
 
         // This is the end of the passcode / public / private key exchange.
         // We are receiving the shared symmetric key we will be encrypting with.
-        if (body.endsWith('<END>')) {
-            let encrypted = body.replace('<END>', '');
+        else if (TcpServer._incomingData.endsWith('<END>')) {
+            let encrypted = TcpServer._incomingData.replace('<END>', '');
             TcpServer._sharedSymmetricKey = JSON.parse(
                 PublicPrivate.decryptWithPrivateKey(TcpServer._ourPrivate, encrypted));
+            TcpServer._incomingData = '';
+        }
+
+        else {
+            console.log('No <> message.', data.length);
         }
     }
 
