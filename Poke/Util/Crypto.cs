@@ -114,7 +114,7 @@ namespace Poke.Util
                 var cs = new CryptoStream(stream, encryptor, CryptoStreamMode.Write);
                 cs.Write(jsonBytes, 0, jsonBytes.Length);
                 cs.Close();
-                return Hex.FromByteArray(stream.ToArray());
+                return Convert.ToBase64String(stream.ToArray());
             }
         }
 
@@ -131,7 +131,7 @@ namespace Poke.Util
                 Key = aesKeyIV.Key,
                 Mode = CipherMode.CBC
             };
-            var encryptedBytes = Hex.ToByteArray(encryptedString);
+            var encryptedBytes = Convert.FromBase64String(encryptedString);
             using (var decryptor = aes.CreateDecryptor())
             {
                 var stream = new MemoryStream();

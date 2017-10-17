@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+  <Button
+    android:id="@+id/DisconnectButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/DisconnectFromDevice"
+    android:visibility="gone"/>
+  
   <!-- Header for the list view -->
   <TextView
     android:layout_width="match_parent"

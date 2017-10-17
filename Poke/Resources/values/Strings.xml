@@ -12,4 +12,5 @@
   <string name="DeviceAuthenticationInstructionsTimedOut">The authentication code is no longer valid. Reconnect to get a new code.</string>
   <string name="DeviceAuthenticationPasswordTimedOut">-----</string>
   <string name="Cancel">Cancel</string>
+  <string name="DisconnectFromDevice">Disconnect</string>
 </resources>

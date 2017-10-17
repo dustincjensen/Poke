@@ -72,12 +72,12 @@
     <Compile Include="Receivers\IncomingSms.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TcpService.cs" />
     <Compile Include="Util\Contact.cs" />
     <Compile Include="Util\Crypto.cs" />
     <Compile Include="Util\DeviceAuthenticationTimer.cs" />
     <Compile Include="Util\Hex.cs" />
     <Compile Include="Util\Sms.cs" />
-    <Compile Include="Util\TcpHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />

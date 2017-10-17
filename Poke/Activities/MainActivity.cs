@@ -11,19 +11,21 @@ using Android.OS;
 using Org.Json;
 using Poke.Models;
 using Poke.Util;
+using Android.Content;
+using Poke.Services;
 
 namespace Poke.Activities
 {
     [Activity(Label = "Poke", MainLauncher = true, Icon = "@drawable/stick")]
     public class MainActivity : Activity
     {
-        private Button _sendtestMessageButton;
         private ListView _possibleListenerDevices;
         private TextView _emptyListenerDevices;
         private DeviceAuthenticationModalFragment _deviceAuthenticationModalFragment;
 
         private LinearLayout _connectingToDevice;
         private TextView _connectingText;
+        private Button _disconnectButton;
 
         // TODO this needs to stored somewhere else...
         public static RSAParameters _privateKey;
@@ -50,6 +52,15 @@ namespace Poke.Activities
             _connectingToDevice = FindViewById<LinearLayout>(Resource.Id.ConnectingLayout);
             _connectingText = FindViewById<TextView>(Resource.Id.ConnectingText);
 
+            // Find the disconnect button
+            _disconnectButton = FindViewById<Button>(Resource.Id.DisconnectButton);
+            _disconnectButton.Click += _HandleDisconnectClick;
+            // if the tcp server has a connection when we setup the activity... we should show the button
+            if (TcpService.HasTcpConnection)
+            {
+                _disconnectButton.Visibility = Android.Views.ViewStates.Visible;
+            }
+
             // Add Adapter to the Listenr Devices
             _possibleListenerDevices = FindViewById<ListView>(Resource.Id.PossibleListenerDevices);
             _possibleListenerDevices.Adapter = new DeviceRowAdapter(this, new List<Device>());
@@ -58,6 +69,12 @@ namespace Poke.Activities
 
             // TODO this should come from a broadcast of somekind.
             _SetupDebugDevice();
+        }
+
+        private void _HandleDisconnectClick(object sender, EventArgs eventArgs)
+        {
+            var intent = new Intent(this, typeof(TcpService));
+            StopService(intent);
         }
 
         private void _HandleListClick(object sender, AdapterView.ItemClickEventArgs args)
@@ -82,7 +99,7 @@ namespace Poke.Activities
 
             // Set the Tcp Connection up. That way you don't actually need to wait
             // for a message to be sent to start sending messages from the "server".
-            TcpHandler.SetupTcpConnection(item.IpAddress, item.Port, ApplicationContext);
+            _StartConnectionIntent(item.IpAddress, item.Port);
 
 
             RunOnUiThread(() =>
@@ -105,6 +122,7 @@ namespace Poke.Activities
                 _ShowModalWithPassword(password);
 
                 // Turn off the loading... symbol.
+                _disconnectButton.Visibility = Android.Views.ViewStates.Visible;
                 _possibleListenerDevices.Visibility = Android.Views.ViewStates.Visible;
                 _emptyListenerDevices.Visibility = Android.Views.ViewStates.Visible;
                 _connectingToDevice.Visibility = Android.Views.ViewStates.Gone;
@@ -112,8 +130,25 @@ namespace Poke.Activities
             });
 
             // Send to the Tcp Handler to let the Desktop know we are doing this!
-            TcpHandler._sharedPasscode = password;
-            await TcpHandler.StartConversation(encrypted + "<BEG>");
+            _SendSharedPasscodeAndStartConversationIntent(password, encrypted + "<BEG>");
+        }
+
+        private void _StartConnectionIntent(string ipAddress, int port)
+        {
+            var intent = new Intent(this, typeof(TcpService));
+            intent.SetAction(TcpService.ACTION_START);
+            intent.PutExtra("ipAddress", ipAddress);
+            intent.PutExtra("portNumber", port);
+            StartService(intent);
+        }
+
+        private void _SendSharedPasscodeAndStartConversationIntent(string passcode, string encryptedMessage)
+        {
+            var intent = new Intent(this, typeof(TcpService));
+            intent.SetAction(TcpService.ACTION_SET_PASSCODE_AND_START_CONVERSATION);
+            intent.PutExtra("passcode", passcode);
+            intent.PutExtra("encryptedMessage", encryptedMessage);
+            StartService(intent);
         }
 
         private void _ShowModalWithPassword(string password)

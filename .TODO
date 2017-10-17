@@ -5,6 +5,10 @@
 // TODO Privacy Mode
 // TODO Emoji's?
 // TODO handle cancelling / disconnecting tcp...
+// TODO url's in messages
+// TODO strings that are long and do not have a break point will go outside the bubble in Electron-Poke
+// TODO MMS messages on Android should be captured, both images and super long text messages.
+
 
 // REFACTOR
 // - android app should be binding based...
@@ -14,9 +18,9 @@
 
 BETA
 // TODO udp broadcast to discover devices.
-// REOCCURRED fix electron disconnecting TCP server
-//   - Maybe the phone is disconnecting now instead of electron.
 
+// TEST fixed android disconnecting TCP server by moving tcp into a service.
+//   - The phone definitely was disconnecting. When tested with a phone that didn't sleep, tcp connection never died.
 // DONE Get Contact List
 // DONE fix slow public/private key generation on android and make the UI better
 // DONE icon shake on new message received to better call out the new message.

@@ -35,8 +35,8 @@ export class Symmetric {
     }
 
     private static _encrypt(text: string, cipher: crypto.Cipher): string {
-        let encrypted = cipher.update(text, 'utf8', 'hex');
-        encrypted += cipher.final('hex');
+        let encrypted = cipher.update(text, 'utf8', 'base64');
+        encrypted += cipher.final('base64');
         return encrypted;
     }
 
@@ -71,7 +71,7 @@ export class Symmetric {
     }
 
     private static _decrypt(encryptedString: string, decipher: crypto.Decipher): string {
-        let decrypted = decipher.update(encryptedString, 'hex', 'utf8');
+        let decrypted = decipher.update(encryptedString, 'base64', 'utf8');
         decrypted += decipher.final('utf8');
         return decrypted;
     }

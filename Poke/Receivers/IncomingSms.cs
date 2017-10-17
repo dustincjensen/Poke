@@ -7,6 +7,7 @@ using Android.Telephony;
 using Android.Widget;
 using Poke.Models;
 using Poke.Util;
+using Poke.Services;
 
 namespace Poke.Receivers
 {
@@ -21,7 +22,7 @@ namespace Poke.Receivers
         {
             // If we don't have a connection we aren't storing messages
             // to send at a later date, so just jump out.
-            if (!TcpHandler.HasTcpConnection) return;
+            if (!TcpService.HasTcpConnection) return;
 
             // Retrieves a map of extended data from the intent.
             var bundle = intent.Extras;
@@ -73,10 +74,10 @@ namespace Poke.Receivers
                     if (tcpPayload.Contact.PhoneNumber != null &&
                         !string.IsNullOrWhiteSpace(tcpPayload.Message))
                     {
-                        Task.Run(async () =>
-                        {
-                            await TcpHandler.SendToListeningDevice(tcpPayload);
-                        });
+                        var outgoingIntent = new Intent(context, typeof(TcpService));
+                        outgoingIntent.SetAction(TcpService.ACTION_SEND_MESSAGE);
+                        outgoingIntent.PutExtra("payload", tcpPayload.ToJson().ToString());
+                        context.StartService(outgoingIntent);
                     }
                     else
                     {
