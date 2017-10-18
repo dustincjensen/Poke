@@ -1,8 +1,8 @@
 $sides-list: '' '-left' '-right' '-top' '-bottom';
 
 // Creates margin and padding from 10 through 50
-@for $i from 1 through 5 {
-    $value: 10 * $i;
+@for $i from 1 through 10 {
+    $value: 5 * $i;
 
     // Loop through the sides of the list    
     @each $side in $sides-list {
@@ -15,9 +15,9 @@ $sides-list: '' '-left' '-right' '-top' '-bottom';
                 padding#{$side}: unquote($value + 'px');
 
                 // pad-left-10-responsive-0
-                @for $k from 0 through 5 {
+                @for $k from 0 through 10 {
                     @if $k != $i {
-                        $responsivePadding: 10 * $k;
+                        $responsivePadding: 5 * $k;
                         &-responsive-#{$responsivePadding} {
                             @extend .pad#{$side}-#{$value};
                             @media only screen and (max-width: $responsive) {
@@ -45,9 +45,9 @@ $sides-list: '' '-left' '-right' '-top' '-bottom';
                 margin#{$side}: unquote($value + 'px');
 
                 // margin-left-10-responsive-0
-                @for $k from 0 through 5 {
+                @for $k from 0 through 10 {
                     @if $k != $i {
-                        $responsiveMargin: 10 * $k;
+                        $responsiveMargin: 5 * $k;
                         &-responsive-#{$responsiveMargin} {
                             @extend .margin#{$side}-#{$value};
                             @media only screen and (max-width: $responsive) {

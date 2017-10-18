@@ -4,7 +4,7 @@
         {{ conversation?.name }}
     </div>
 
-    <div *ngIf="conversation?.messages.length > 0" #scrollConversation class="conversation-content">
+    <div *ngIf="conversation?.messages.length > 0" #scrollConversation class="conversation-content scroll-bar-styled">
         <ul>
             <li *ngFor="let message of conversation.messages" class="grid margin-10">
                 <div class="grid-columns" [ngClass]="{'grid-columns-align-right-horizontally': message.isSelf, 'grid-columns-align-left-horizontally': !message.isSelf}">

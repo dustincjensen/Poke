@@ -40,12 +40,12 @@
 
 BETA
 // TODO udp broadcast to discover devices.
-// TODO contact list needs a search bar.
 // maybe... TODO bug reports?
 
-// TEST fixed android disconnecting TCP server by moving tcp into a service.
+// DONE contact list needs a search bar.
+// DONE fixed android disconnecting TCP server by moving tcp into a service.
 //   - The phone definitely was disconnecting. When tested with a phone that didn't sleep, tcp connection never died.
-// TEST contact list would sometimes not load, this was because node was not handling the data packets and would drop half of large payloads sometimes.
+// DONE contact list would sometimes not load, this was because node was not handling the data packets and would drop half of large payloads sometimes.
 // DONE Get Contact List
 // DONE fix slow public/private key generation on android and make the UI better
 // DONE icon shake on new message received to better call out the new message.

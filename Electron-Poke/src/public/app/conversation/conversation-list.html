@@ -1,11 +1,9 @@
 <div class="grid-columns">
-    <div class="conversation-list-column" [style.borderColor]="selectedConversation?.color">
-        <ul style="margin:5px;">
-            <li class="start-new-conversation-list-item margin-top-10 margin-bottom-10">
-                <button (click)="loadContacts()" class="start-new-conversation-button"></button>
-            </li>
+    <div class="grid conversation-list-column" [style.borderColor]="selectedConversation?.color">
+        <!-- These are the converstaions currently open -->
+        <ul class="col-star-1 scroll-bar-hidden margin-left-5 margin-right-5">
             <li *ngFor="let conversation of conversations" 
-                class="conversation-list-item margin-top-10 margin-bottom-10" 
+                class="conversation-list-item margin-top-10" 
                 [ngClass]="{'animated bounce': conversation.newMessages}" 
                 [style.background]="conversation.color" 
                 [attr.sudo-attention]="conversation.newMessages">
@@ -13,6 +11,21 @@
                     {{ conversation.display }}
                 </button>
             </li>
+        </ul>
+
+        <!-- The bottom section will have the settings, new contact list and the hamburger -->
+        <ul class="margin-5">
+            <!-- Start New Conversation... -->
+            <li class="start-new-conversation-list-item">
+                <button (click)="loadContacts()" class="start-new-conversation-button"></button>
+            </li>
+
+            <!-- Hamburger menu option -->
+            <button class="hamburger-menu">
+                <div></div>
+                <div></div>
+                <div></div>
+            </button>
         </ul>
     </div>
     <div class="col-star-1">
