@@ -9,9 +9,13 @@
 
     <!-- List of contacts -->
     <div class="contact-content">
-        <div class="pad-left-20 pad-right-20">
-            <div *ngFor="let contact of contacts" class="contact-row pad-20" (click)="contactSelected(contact)">
-                {{ contact.name }}
+        <div class="pad-left-20 pad-right-20 pad-top-20">
+            <div class="margin-bottom-10">
+                <input type="text" placeholder="Search" class="search-control" [(ngModel)]="searchText"/>
+            </div>            
+            <div *ngFor="let contact of filteredContacts" class="contact-row pad-20" (click)="contactSelected(contact)">
+                <div>{{ contact.name }}</div>
+                <div class="contact-phone-number">{{ contact.phoneNumber }}</div>
             </div>
         </div>
     </div>

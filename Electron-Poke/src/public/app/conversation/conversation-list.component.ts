@@ -123,6 +123,14 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         if (index >= 0) {
             let conversation = this.conversations[index];
             conversation.newMessages = false;
+
+            // When we have "read" a conversation we most likely
+            // clicked it and indeed that is what happens on the server.
+            // So if we haven't selected the conversation, let's do so.
+            // TODO this is a bit obtuse... this could be refactored and simplified.
+            if (this.selectedConversation !== conversation) {
+                this.selectedConversation = conversation;
+            }
         }
     }
 

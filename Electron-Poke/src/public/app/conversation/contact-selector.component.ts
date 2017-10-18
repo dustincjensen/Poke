@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 import { ConversationService } from './conversation.service';
@@ -12,9 +12,13 @@ import { IContact } from '../../../shared/interfaces';
 })
 export class ContactSelectorComponent extends ElectronComponent implements OnInit {
 
-    contacts: IContact[];
+    private _contacts: IContact[];
+    private _searchText: string;
+
+    filteredContacts: IContact[];
 
     constructor(
+        private _route: ActivatedRoute,
         private _router: Router,
         private _internal: ConversationService,
         electron: ElectronService,
@@ -30,12 +34,19 @@ export class ContactSelectorComponent extends ElectronComponent implements OnIni
      * TODO create a refresh contact list button.
      */
     public async ngOnInit() {
+        // This lets us know when we have been navigated too...
+        // whenever we are "fresh" we should clear out the search.
+        this._route.url.subscribe(urls => {
+            this.searchText = null;
+        });
+
         this.registerIpcRendererMethod('contactListRetrieved', this._handleContactsLoaded);
         this._electron.ipcRenderer.send('getContactList');
     }
 
     private _handleContactsLoaded(event, args): void {
-        this.contacts = args.sort(this._sortByName);
+        this._contacts = args.sort(this._sortByName);
+        this.filteredContacts = this._contacts;
     }
 
     private _sortByName(x: any, y: any): number {
@@ -53,5 +64,35 @@ export class ContactSelectorComponent extends ElectronComponent implements OnIni
      */
     public cancelContactSelection(): void {
         this._router.navigateByUrl('/conversations');
+    }
+
+    public get searchText(): string {
+        return this._searchText;
+    }
+    public set searchText(text: string) {
+        this._searchText = text;
+        this._search();
+    }
+
+    private _search(): void {
+        let searchTerms = this._searchText
+            ? this._searchText.toLowerCase().split(' ')
+            : null;
+
+        if (searchTerms) {
+            this.filteredContacts = this._contacts.filter(value => {
+                let found = false;
+                for (let i = 0; i < searchTerms.length; i++) {
+                    if (searchTerms[i] === '') continue;
+                    if (value.name.toLowerCase().indexOf(searchTerms[i]) >= 0) {
+                        found = true;
+                        break;
+                    }
+                };
+                return found;
+            });
+        } else {
+            this.filteredContacts = this._contacts;
+        }
     }
 }

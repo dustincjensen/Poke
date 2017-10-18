@@ -35,10 +35,16 @@ export class ConversationComponent extends ElectronComponent implements AfterVie
         this.registerIpcRendererMethod('conversationRetrieved', this._handleConversationRetrieved);
         this.registerIpcRendererMethod('newMessageReceived', this._handleNewMessage);
 
-        this._route.params.subscribe(params => {
+        // TODO review...
+        // Instead of subscribing to parameter changes...
+        // look for the url change and get the param out of it.
+        // This lets us always reload the data instead of waiting
+        // for the parameter to change. This fixes a few issues.
+        this._route.url.subscribe(urls => {
+            let param = +urls[1];
             this._subscriptionCountAskedFor++;
             this._electron.ipcRenderer.send('getConversation', {
-                id: +params.id,
+                id: param,
                 subscriptionCount: this._subscriptionCountAskedFor
             });
         });

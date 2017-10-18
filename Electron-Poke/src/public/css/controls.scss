@@ -12,6 +12,18 @@
     }
 }
 
+.search-control {
+    border: 1px solid $primaryTextColor;
+    border-radius: 10px;
+    height: 40px;
+    font-size: 24px;
+    outline: none;
+    width: 100%;
+    background: $primaryTextColor;
+    color: $secondaryTextColor;
+    text-indent: 10px;
+}
+
 .btn {
     border: none;
     height: 40px;

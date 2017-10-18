@@ -215,6 +215,11 @@ body {
     }
 }
 
+.contact-phone-number {
+    font-size: 16px;
+    color: darken($primaryTextColor, 25%);
+}
+
 @mixin x-cross-left-bottom($width, $top, $bottom, $color) {
     content: " ";
     position: absolute;
