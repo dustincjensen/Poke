@@ -18,6 +18,7 @@ body {
     background: $secondaryColor;
     height: 100%;
     overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .scroll-bar-styled {
@@ -53,7 +54,16 @@ body {
 }
 
 .conversation-list-column {
+    width: 60px;
     border-right: solid 1px $primaryColor;
+    transition: width 0.5s ease;
+
+    // Do no let this get pushed aside when really small.
+    flex-shrink: 0;
+}
+
+.menu-slide {
+    width: 300px;
 }
 
 .start-new-conversation-list-item {
@@ -85,6 +95,10 @@ body {
 
     &:hover div {
         background-color: $primaryTextColor;
+    }
+
+    &[sudo-selected=true] div {
+        background-color: $primaryColor;
     }
 }
 
@@ -152,6 +166,26 @@ body {
         background: $primaryTextColor;
         border-radius: 50%;
     }
+}
+
+.conversation-list-name {
+    font-size: 20px;
+
+    position: absolute;
+    top: 50%;
+    left: 65px;
+    transform: translate(0, -50%);
+    // because 300px minus the margin
+    width: 290px - 65px;
+}
+
+.relative-parent-container {
+    position: relative;
+}
+
+.overflow-hidden {
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .conversation-list-button {

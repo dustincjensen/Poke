@@ -15,6 +15,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     conversations: IConversation[];
     selectedConversation: IConversation;
+    menuOpen: boolean;
     private _newConversationSubscription: any;
 
     constructor(
@@ -142,5 +143,9 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     public loadContacts(): void {
         this.selectedConversation = null;
         this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['contacts'] } }]);
+    }
+
+    public openMenu(): void {
+        this.menuOpen = !this.menuOpen;
     }
 }
