@@ -21,6 +21,10 @@ body {
     overflow-x: hidden;
 }
 
+button {
+    cursor: pointer;
+}
+
 .scroll-bar-styled {
     &::-webkit-scrollbar {
         width: 12px;
@@ -93,12 +97,16 @@ body {
         margin: 2.5px 0;
     }
 
-    &:hover div {
+    &:hover > div {
         background-color: $primaryTextColor;
     }
 
-    &[sudo-selected=true] div {
+    &[sudo-selected=true] > div {
         background-color: $primaryColor;
+    }
+
+    &[sudo-selected=true]:hover > div {
+        background-color: $primaryTextColor;
     }
 }
 
@@ -170,17 +178,28 @@ body {
 
 .conversation-list-name {
     font-size: 20px;
-
     position: absolute;
-    top: 50%;
-    left: 65px;
-    transform: translate(0, -50%);
+    top: 0;
+    left: 55px;
+    padding-left: 10px;
+
     // because 300px minus the margin
     width: 290px - 65px;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .relative-parent-container {
     position: relative;
+}
+
+.side-bar-selectable {
+    cursor: pointer;
+}
+
+.side-bar-special-icons-group {
+    flex-shrink: 0;
 }
 
 .overflow-hidden {
@@ -196,7 +215,6 @@ body {
     color: $primaryTextColor;
     border: none;
     border-radius: 50%;
-    outline: none;
 }
 
 .conversation-list-no-conversations-watermark {

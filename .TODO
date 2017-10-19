@@ -23,7 +23,7 @@
 // TODO conversations icon https://github.com/electron/electron/issues/3148
 // TODO windows tray (so electron-poke stays open even if you close it)
 // TODO bug reports?
-// BUG regarding bottom icons shrinking (because of the overflow: hidden needed);
+
 
 
 // REFACTOR
@@ -40,11 +40,13 @@ BETA
 //    - win.flashFrame(true)
 //    - https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md
 // FIX Messages from a person whose number you do not have in your contact list.
-// TEST hamburger icon in the top left to show the extended version of the left column.
-//     + this includes the plus button showing "New Conversation"
-//     - Settings gear icon showing "Settings"
-//     + All conversations should show their full name if possible.
+// TODO Settings gear icon showing "Settings"
+// TODO hover styles for menu bar...
 
+// DONE hamburger icon in the top left to show the extended version of the left column.
+//     + this includes the plus button showing "New Conversation"
+//     + All conversations should show their full name if possible.
+// DONE regarding bottom icons shrinking (because of the overflow: hidden needed);
 // DONE contact list needs a search bar.
 // DONE fixed android disconnecting TCP server by moving tcp into a service.
 //   - The phone definitely was disconnecting. When tested with a phone that didn't sleep, tcp connection never died.

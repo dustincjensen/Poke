@@ -1,17 +1,18 @@
 <div class="grid-columns">
     <div class="grid conversation-list-column" [style.borderColor]="selectedConversation?.color" 
         [ngClass]="{'menu-slide' : menuOpen}">
-        <!-- These are the converstaions currently open -->
+        <!-- These are the conversations currently open -->
         <ul class="col-star-1 scroll-bar-hidden margin-left-5 margin-right-5">
             <li *ngFor="let conversation of conversations" 
-                class="relative-parent-container margin-top-10">
+                class="relative-parent-container margin-top-10 side-bar-selectable"
+                (click)="selectConversation(conversation)">
                 <div class="conversation-list-item"
                     [ngClass]="{'animated bounce': conversation.newMessages}" 
                     [style.background]="conversation.color" 
                     [attr.sudo-attention]="conversation.newMessages">
-                    <button (click)="selectConversation(conversation)" class="conversation-list-button">
+                    <div class="conversation-list-button">
                         {{ conversation.display }}
-                    </button>
+                    </div>
                 </div>                
                 <div class="conversation-list-name">
                     {{ conversation.name }}
@@ -22,12 +23,12 @@
         <!-- The bottom section will have the settings, new contact list and the hamburger -->
         <!-- TODO overflow-hidden causes the 2 bottom icons to shrink when i don't want them to -->
         <!--      but the current layout needs to overflow hide the names of the icons on the left. -->
-        <ul class="margin-5 overflow-hidden">
+        <div class="margin-5 overflow-hidden side-bar-special-icons-group">
             <!-- Start New Conversation... -->
-            <div class="relative-parent-container">
-                <li class="start-new-conversation-list-item">
-                    <button (click)="loadContacts()" class="start-new-conversation-button"></button>
-                </li>
+            <div class="relative-parent-container side-bar-selectable" (click)="loadContacts()">
+                <div class="start-new-conversation-list-item">
+                    <button class="start-new-conversation-button"></button>
+                </div>
                 <div class="conversation-list-name">
                     New Conversation
                 </div>
@@ -40,11 +41,8 @@
                     <div></div>
                     <div></div>
                 </button>
-                <div class="conversation-list-name">
-                    Poke
-                </div>
             </div>            
-        </ul>
+        </div>
     </div>
     <div class="col-star-1">
         <router-outlet name="conversationListOutlet"></router-outlet>
