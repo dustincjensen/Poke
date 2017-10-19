@@ -20,17 +20,11 @@
 //       -- privacy on the window so it is obfuscated if you are not hovering over the window with your mouse.
 // TODO conversation search (search conversations for key words)
 // TODO reorder list of contacts based on last message received.
-// TODO hamburger icon in the top left to show the extended version of the left column.
-//     - this includes the plus button showing "New Conversation"
-//     - Settings gear icon showing "Settings"
-//     - All conversations should show their full name if possible.
-// TODO windows icon flash 
-//    - win = new BrowserWindow()
-//    - win.once('focus', () => win.flashFrame(false))
-//    - win.flashFrame(true)
-//    - https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md
 // TODO conversations icon https://github.com/electron/electron/issues/3148
 // TODO windows tray (so electron-poke stays open even if you close it)
+// TODO bug reports?
+// BUG regarding bottom icons shrinking (because of the overflow: hidden needed);
+
 
 // REFACTOR
 // - android app should be binding based...
@@ -40,7 +34,16 @@
 
 BETA
 // TODO udp broadcast to discover devices.
-// maybe... TODO bug reports?
+// TODO windows icon flash 
+//    - win = new BrowserWindow()
+//    - win.once('focus', () => win.flashFrame(false))
+//    - win.flashFrame(true)
+//    - https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md
+// FIX Messages from a person whose number you do not have in your contact list.
+// TEST hamburger icon in the top left to show the extended version of the left column.
+//     + this includes the plus button showing "New Conversation"
+//     - Settings gear icon showing "Settings"
+//     + All conversations should show their full name if possible.
 
 // DONE contact list needs a search bar.
 // DONE fixed android disconnecting TCP server by moving tcp into a service.
