@@ -84,6 +84,9 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     private _sendNotificationIfNotFocused(name: string, message: string, conversation: IConversation): void {
         if (!document.hasFocus()) {
+            // Tell the window to flash.
+            this._electron.remote.getCurrentWindow().flashFrame(true);
+
             // Send a notification that we received a new message.
             // We give them a function to call which will select
             // the conversation if they click on the notification.

@@ -18,6 +18,7 @@
 //     - Privacy
 //       -- privacy on notifications (so it just says new message)
 //       -- privacy on the window so it is obfuscated if you are not hovering over the window with your mouse.
+//     - option for no notifications
 // TODO conversation search (search conversations for key words)
 // TODO reorder list of contacts based on last message received.
 // TODO conversations icon https://github.com/electron/electron/issues/3148

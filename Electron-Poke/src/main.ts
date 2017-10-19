@@ -97,7 +97,12 @@ export class MainElectron {
             MainElectron.background = null;
         });
 
-
+        // Whenever the window focuses it will remove the flash
+        // frame that may have been put on the icon by the
+        // notification paradigm.
+        MainElectron._win.once('focus', () => {
+            MainElectron._win.flashFrame(false);
+        });
 
         // Create the background window to handle work for us.
         MainElectron.background = new BrowserWindow();
