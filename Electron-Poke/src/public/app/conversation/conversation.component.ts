@@ -41,7 +41,9 @@ export class ConversationComponent extends ElectronComponent implements AfterVie
         // This lets us always reload the data instead of waiting
         // for the parameter to change. This fixes a few issues.
         this._route.url.subscribe(urls => {
-            let param = +urls[1];
+            // We do not cast it to a number incase it is a random string
+            // in the case of numbers we do not know.
+            let param = urls[1].path;
             this._subscriptionCountAskedFor++;
             this._electron.ipcRenderer.send('getConversation', {
                 id: param,

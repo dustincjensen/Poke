@@ -3,6 +3,7 @@ import { TcpServer } from './tcpServer';
 import { IConversation, IMessage, IContact } from '../shared/interfaces';
 import { Contacts } from './contacts';
 import { ColorUtil } from './colorUtil';
+import { Util } from './util';
 
 export class Conversations {
 
@@ -109,6 +110,14 @@ export class Conversations {
             return value.id === obj.contact.id;
         });
 
+        // We didn't find it... but we should also check the list again
+        // because it might be a non-contact.
+        if (index === -1) {
+            index = Conversations.conversations.findIndex(value => {
+                return value.phoneNumber === obj.contact.phoneNumber;
+            });
+        }
+
         // If there is a conversation go ahead and add to the existing
         // conversation.
         if (index >= 0) {
@@ -122,16 +131,18 @@ export class Conversations {
 
             // Since we might be on the conversation send a new message
             let contactMessage = {
-                conversationId: obj.contact.id,
+                conversationId: Conversations.conversations[index].id,
                 message: newMessage
             };
             ipcRenderer.send('background-new-message-received', contactMessage);
         } else {
             let conversation: IConversation = {
-                id: obj.contact.id,
+                id: obj.contact.id != -1 ? obj.contact.id : Util.generateRandomId(),
                 phoneNumber: obj.contact.phoneNumber,
-                name: obj.contact.name,
-                display: Conversations._determineDisplayName(obj.contact.name),
+                name: obj.contact.id != -1 ? obj.contact.name : obj.contact.phoneNumber,
+                display: obj.contact.id != -1
+                    ? Conversations._determineDisplayName(obj.contact.name)
+                    : '??',
                 color: ColorUtil.getRandomColor(),
                 newMessages: true,
                 messages: [

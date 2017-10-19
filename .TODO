@@ -11,7 +11,7 @@
 // TODO url's in messages
 // TODO strings that are long and do not have a break point will go outside the bubble in Electron-Poke
 // TODO MMS messages on Android should be captured, both images and super long text messages.
-// TODO settings icon in the bottom left
+// TODO Settings gear icon showing "Settings"
 //     - possible settings...
 //     - minimize electron to windows tray (instead of closing).
 //     - include / exclude colors for the randomization
@@ -26,6 +26,7 @@
 // TODO conversations icon https://github.com/electron/electron/issues/3148
 // TODO windows tray (so electron-poke stays open even if you close it)
 // TODO bug reports?
+// TODO contact list is only retrieved once, but put a hard refresh button in incase they add a contact while they are using Poke
 
 
 
@@ -37,11 +38,9 @@
 
 BETA
 // TODO udp broadcast to discover devices.
-
-// FIX Messages from a person whose number you do not have in your contact list.
-// TODO Settings gear icon showing "Settings"
 // TODO hover styles for menu bar...
 
+// DONE Messages from a person whose number you do not have in your contact list.
 // DONE windows icon flash 
 //    - win = new BrowserWindow()
 //    - win.once('focus', () => win.flashFrame(false))
