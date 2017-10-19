@@ -5,10 +5,11 @@
             <div class="grid-columns">
                 <div class="col-star-1">Contacts</div>
                 <button class="close-button" (click)="cancelContactSelection()"></button>
-            </div>            
+            </div>
         </div>
         <div class="grid">
-            <input type="text" placeholder="Search" class="search-control" [(ngModel)]="searchText"/>
+            <input type="text" placeholder="Search" class="search-control" [(ngModel)]="searchText" [attr.sudo-has-value]="searchText.length > 0"
+            />
         </div>
     </div>
 

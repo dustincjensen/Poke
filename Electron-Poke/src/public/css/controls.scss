@@ -28,7 +28,10 @@
     margin-top: 10px;
     transition: all 0.3s ease;
 
-    &:focus {
+    // If the control is focused or if it has a value
+    // in the sudo-has-value attribute then show it
+    // in a different state.
+    &:focus, &[sudo-has-value=true] {
         margin-left: 0;
         margin-right: 0;
         margin-top: 0;

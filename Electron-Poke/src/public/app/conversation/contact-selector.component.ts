@@ -37,7 +37,8 @@ export class ContactSelectorComponent extends ElectronComponent implements OnIni
         // This lets us know when we have been navigated too...
         // whenever we are "fresh" we should clear out the search.
         this._route.url.subscribe(urls => {
-            this.searchText = null;
+            // We make it empty string so we can do .length on it.
+            this.searchText = '';
         });
 
         this.registerIpcRendererMethod('contactListRetrieved', this._handleContactsLoaded);
