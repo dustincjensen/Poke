@@ -1,18 +1,20 @@
 <div class="grid">
 
-    <div class="contacts-header pad-20">
-        <div class="grid-columns">
-            <div class="col-star-1">Contacts</div>
-            <button class="close-button" (click)="cancelContactSelection()"></button>
+    <div class="contacts-header">
+        <div class="pad-20">
+            <div class="grid-columns">
+                <div class="col-star-1">Contacts</div>
+                <button class="close-button" (click)="cancelContactSelection()"></button>
+            </div>            
+        </div>
+        <div class="grid">
+            <input type="text" placeholder="Search" class="search-control" [(ngModel)]="searchText"/>
         </div>
     </div>
 
     <!-- List of contacts -->
     <div class="contact-content scroll-bar-styled">
-        <div class="pad-left-20 pad-right-20 pad-top-20">
-            <div class="margin-bottom-10">
-                <input type="text" placeholder="Search" class="search-control" [(ngModel)]="searchText"/>
-            </div>            
+        <div class="pad-left-20 pad-right-20">
             <div *ngFor="let contact of filteredContacts" class="contact-row pad-20" (click)="contactSelected(contact)">
                 <div>{{ contact.name }}</div>
                 <div class="contact-phone-number">{{ contact.phoneNumber }}</div>

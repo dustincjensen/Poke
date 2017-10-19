@@ -14,14 +14,31 @@
 
 .search-control {
     border: 1px solid $primaryTextColor;
-    border-radius: 10px;
+    border-radius: 5px;
     height: 40px;
-    font-size: 24px;
+    font-size: 20px;
     outline: none;
-    width: 100%;
+    width: inherit;
     background: $primaryTextColor;
     color: $secondaryTextColor;
     text-indent: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+
+    &:focus {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        font-size: 24px;
+        border-radius: 0;
+        text-indent: 30px;
+    }
 }
 
 .btn {
