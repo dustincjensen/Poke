@@ -1,3 +1,5 @@
+// TODO investigate other desktop integrations
+//    - https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md
 // TODO learn more about component parent/child data relationships in Angular 2
 // TODO Create message contract so encryption/keep alive/messages can be passed between the 2 devices.
 //  - What does the initial handshake look like?
@@ -35,15 +37,15 @@
 
 BETA
 // TODO udp broadcast to discover devices.
-// TODO windows icon flash 
-//    - win = new BrowserWindow()
-//    - win.once('focus', () => win.flashFrame(false))
-//    - win.flashFrame(true)
-//    - https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md
+
 // FIX Messages from a person whose number you do not have in your contact list.
 // TODO Settings gear icon showing "Settings"
 // TODO hover styles for menu bar...
 
+// DONE windows icon flash 
+//    - win = new BrowserWindow()
+//    - win.once('focus', () => win.flashFrame(false))
+//    - win.flashFrame(true)
 // DONE hamburger icon in the top left to show the extended version of the left column.
 //     + this includes the plus button showing "New Conversation"
 //     + All conversations should show their full name if possible.
