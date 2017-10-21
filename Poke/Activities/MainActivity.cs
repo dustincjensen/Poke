@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Resources;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Android.App;
@@ -13,6 +12,8 @@ using Poke.Models;
 using Poke.Util;
 using Android.Content;
 using Poke.Services;
+using System.Net.Sockets;
+using System.Net;
 
 namespace Poke.Activities
 {
@@ -26,6 +27,7 @@ namespace Poke.Activities
         private LinearLayout _connectingToDevice;
         private TextView _connectingText;
         private Button _disconnectButton;
+        private Button _findDevicesButton;
 
         // TODO this needs to stored somewhere else...
         public static RSAParameters _privateKey;
@@ -61,14 +63,14 @@ namespace Poke.Activities
                 _disconnectButton.Visibility = Android.Views.ViewStates.Visible;
             }
 
+            _findDevicesButton = FindViewById<Button>(Resource.Id.FindDeviceButton);
+            _findDevicesButton.Click += _FindDevices;
+
             // Add Adapter to the Listenr Devices
             _possibleListenerDevices = FindViewById<ListView>(Resource.Id.PossibleListenerDevices);
             _possibleListenerDevices.Adapter = new DeviceRowAdapter(this, new List<Device>());
             _possibleListenerDevices.EmptyView = _emptyListenerDevices;
-            _possibleListenerDevices.ItemClick += _HandleListClick;                        
-
-            // TODO this should come from a broadcast of somekind.
-            _SetupDebugDevice();
+            _possibleListenerDevices.ItemClick += _HandleListClick;
         }
 
         private void _HandleDisconnectClick(object sender, EventArgs eventArgs)
@@ -170,30 +172,83 @@ namespace Poke.Activities
             _deviceAuthenticationModalFragment.Show(transaction, "deviceAuthenticationModal");
         }
 
-        private void _SetupDebugDevice()
+        private void _FindDevices(object sender, EventArgs eventArgs)
         {
-            var devices = new List<Device> {
-                new Device
-                {
-                    Name = "Work",
-                    IpAddress = "192.168.3.178",
-                    Port = 7102
-                },
-                new Device
-                {
-                    Name = "PC",
-                    IpAddress = "192.168.1.12",
-                    Port = 8971
-                },
-                new Device
-                {
-                    Name = "Laptop",
-                    IpAddress = "192.168.1.11",
-                    Port = 8971
-                }
-            };
+            ((DeviceRowAdapter)_possibleListenerDevices.Adapter).Clear();
+            Task.Run(async () => await _FindDevicesAsync());
+        }
 
-            ((DeviceRowAdapter)_possibleListenerDevices.Adapter).AddAll(devices);
+        private async Task _FindDevicesAsync()
+        {
+            var udp = new UdpClient(11000, AddressFamily.InterNetwork)
+            {
+                EnableBroadcast = true
+            };
+            udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 5000);
+
+            Task.Run(async () => await _StartReceivingUdp(udp));
+
+            var msg = System.Text.Encoding.UTF8.GetBytes("This is the message from android.");
+
+            for (var i = 0; i < 10; i++)
+            {
+                await udp.SendAsync(msg, msg.Length, new IPEndPoint(IPAddress.Broadcast, 5555));
+                await Task.Delay(300);
+            }
+        }
+
+        private async Task _StartReceivingUdp(UdpClient udp)
+        {
+            var devices = new List<Device>();
+            var timespan = TimeSpan.FromSeconds(5);
+            var datetime = DateTime.Now;
+            var remoteEP = new IPEndPoint(IPAddress.Any, 11000);
+
+            while (DateTime.Now <= datetime + timespan)
+            {
+                var asyncResult = udp.BeginReceive(null, null);
+                asyncResult.AsyncWaitHandle.WaitOne(500);
+                
+                if (asyncResult.IsCompleted)
+                {
+                    try
+                    {
+                        var data = udp.EndReceive(asyncResult, ref remoteEP);
+                        var json = System.Text.Encoding.UTF8.GetString(data);
+                        var obj = new JSONObject(json);
+
+                        var ip = obj.GetString("ipAddress");
+                        var name = obj.GetString("name");
+                        var port = obj.GetInt("port");
+
+                        if (!devices.Any(x => x.IpAddress == ip))
+                        {
+                            devices.Add(new Device()
+                            {
+                                Name = name,
+                                IpAddress = ip,
+                                Port = port
+                            });
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+            }
+
+            
+            RunOnUiThread(() =>
+            {
+                if (devices.Any())
+                {
+                    ((DeviceRowAdapter)_possibleListenerDevices.Adapter).AddAll(devices);
+                }
+            });                
+            
+            udp.Close();
+            udp.Dispose();
         }
     }
 }

@@ -50,6 +50,13 @@ export class TcpServer {
             // the connection from previous times.            
             console.log('Client Connected', socket.remoteAddress, socket.remotePort);
 
+            // Reject clients because we already have one.
+            if (TcpServer._openSocket) {
+                socket.end();
+                console.log('Client rejected, socket already exists.');
+                return;
+            }
+
             // A new connection was received...
             // Let the UI know about it.
             ipcRenderer.send('background-tcp-connected', true);
@@ -76,10 +83,6 @@ export class TcpServer {
             });
 
             // Keep a reference to the socket.
-            if (TcpServer._openSocket) {
-                console.log('Closing Old Socket');
-                TcpServer._openSocket.end();
-            }
             TcpServer._incomingData = '';
             TcpServer._openSocket = socket;
         });
@@ -94,7 +97,7 @@ export class TcpServer {
                 let element = x[i];
                 if (element.address.startsWith('192')) {
                     TcpServer._address = element.address;
-                    TcpServer._port = 8971;
+                    TcpServer._port = 7102;
                     addressFound = true;
                     break;
                 }

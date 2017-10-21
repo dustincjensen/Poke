@@ -1,13 +1,18 @@
 'use strict';
 const { ipcRenderer } = require('electron');
 const { TcpServer } = require('../backgroundTasks/tcpServer');
+const { UdpServer } = require('../backgroundTasks/udpServer');
 const { Conversations } = require('../backgroundTasks/conversations');
 const { Contacts } = require('../backgroundTasks/contacts');
 
 class BackgroundTaskWindow {
+
     constructor() {
         // Initialize background task external classes
         TcpServer.createServer();
+
+        // Start up the udp server to listen to udp requests.
+        let udp = new UdpServer();
 
         // Since we can now add our own contacts this doesn't
         // need to be there for the next build

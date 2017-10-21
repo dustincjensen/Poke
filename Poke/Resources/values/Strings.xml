@@ -13,4 +13,5 @@
   <string name="DeviceAuthenticationPasswordTimedOut">-----</string>
   <string name="Cancel">Cancel</string>
   <string name="DisconnectFromDevice">Disconnect</string>
+  <string name="FindDevices">Find Devices</string>
 </resources>

@@ -24,6 +24,12 @@
     android:textStyle="bold"
     android:background="@color/Crimson"/>
   
+  <Button
+    android:id="@+id/FindDeviceButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/FindDevices"/>
+  
   <!-- List of possible devices to connect -->
   <!-- and send messages to. -->
   <ListView
