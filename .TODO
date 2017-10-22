@@ -27,7 +27,7 @@
 // TODO windows tray (so electron-poke stays open even if you close it)
 // TODO bug reports?
 // TODO contact list is only retrieved once, but put a hard refresh button in incase they add a contact while they are using Poke
-
+// TODO udp needs a second pass to solidify it.
 
 
 // REFACTOR
@@ -37,9 +37,9 @@
 // - electron app should review it's use of ipcMain-><-ipcRenderer communication through the intercommunication file.
 
 BETA
-// TODO udp broadcast to discover devices.
 // TODO hover styles for menu bar...
 
+// DONE udp broadcast to discover devices.
 // DONE Messages from a person whose number you do not have in your contact list.
 // DONE windows icon flash 
 //    - win = new BrowserWindow()
