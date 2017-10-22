@@ -7,6 +7,7 @@
     "dev": "SET NODE_ENV=development && concurrently \"grunt watch-task\" \"electron ./dist/main.js\"",
     "grunt": "grunt"
   },
+  "homepage": "https://github.com/dustincjensen/Poke",
   "author": "Dustin Jensen",
   "devDependencies": {
     "@types/node-rsa": "^0.4.0",
