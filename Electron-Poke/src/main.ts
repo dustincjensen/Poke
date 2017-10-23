@@ -60,7 +60,7 @@ export class MainElectron {
             height: 900,
             minHeight: 300,
             backgroundColor: '#333333',
-            icon: path.join(__dirname, '../../Icons/Stick.png')
+            icon: path.join(__dirname, 'assets/Stick.png')
         };
 
         // if (MainElectron.__DARWIN__) {
@@ -80,7 +80,7 @@ export class MainElectron {
         }));
 
         // Open the DevTools.
-        MainElectron._win.webContents.openDevTools();
+        //MainElectron._win.webContents.openDevTools();
 
         // Stop the window from changing it's title
         // TODO remove when we have a custom title bar.
@@ -95,6 +95,9 @@ export class MainElectron {
 
             // Dereference the background window too.
             MainElectron.background = null;
+
+            // If you don't do this poke keeps running forever.
+            app.quit();
         });
 
         // Whenever the window focuses it will remove the flash
@@ -105,13 +108,13 @@ export class MainElectron {
         });
 
         // Create the background window to handle work for us.
-        MainElectron.background = new BrowserWindow();
+        MainElectron.background = new BrowserWindow({ show: false });
         MainElectron.background.loadURL(url.format({
             pathname: path.join(__dirname, './background/index.html'),
             protocol: 'file:',
             slashes: true
         }));
-        MainElectron.background.webContents.openDevTools();
+        //MainElectron.background.webContents.openDevTools();
     }
 
     // public static __DARWIN__ = process.platform === 'darwin';

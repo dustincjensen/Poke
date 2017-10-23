@@ -3,7 +3,7 @@ import { ElectronService } from 'ngx-electron';
 
 @Injectable()
 export class NotificationService {
-    public static iconPath: string = __dirname + '/../../../../../Icons/Stick.png';
+    public static iconPath: string = __dirname + '/../../../assets/Stick.png';
 
     constructor(
         private _electron: ElectronService) {

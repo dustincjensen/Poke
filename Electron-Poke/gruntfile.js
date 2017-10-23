@@ -1,5 +1,6 @@
 let electronPackager = require('electron-packager');
 let electronWindowsInstaller = require('electron-winstaller');
+let path = require('path');
 
 module.exports = function (grunt) {
     "use strict";
@@ -41,6 +42,16 @@ module.exports = function (grunt) {
                             "!**/*.scss"
                         ],
                         dest: "./dist/background"
+                    },
+                    {
+                        expand: true,
+                        cwd: "./src/assets",
+                        src: [
+                            "**/*",
+                            "!**/*.ts",
+                            "!**/*.scss"
+                        ],
+                        dest: "./dist/assets"
                     }
                 ]
             },
@@ -228,7 +239,8 @@ module.exports = function (grunt) {
             name: 'Poke',
             platform: 'win32',
             arch: 'x64',
-            out: './build'
+            out: './build',
+            icon: path.join(__dirname, 'src/assets/Stick.ico')
         })
             .then(appPaths => {
                 grunt.log.writeln('Built Packages:', appPaths);
@@ -236,7 +248,8 @@ module.exports = function (grunt) {
                     appDirectory: appPaths[0],
                     outputDirectory: './build/installer',
                     authors: 'Dustin Jensen',
-                    exe: 'Poke.exe'
+                    exe: 'Poke.exe',
+                    iconUrl: path.join(__dirname, 'src/assets/Stick.ico')
                 });
             })
             .then(() => {
