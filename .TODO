@@ -28,6 +28,7 @@
 // TODO bug reports?
 // TODO contact list is only retrieved once, but put a hard refresh button in incase they add a contact while they are using Poke
 // TODO udp needs a second pass to solidify it.
+// TODO right click on the text bubbles for copy and stuff.
 
 
 // REFACTOR
