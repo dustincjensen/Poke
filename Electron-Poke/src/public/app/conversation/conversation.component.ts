@@ -94,7 +94,10 @@ export class ConversationComponent extends ElectronComponent implements AfterVie
         }
     }
 
-    public async onMessageEntered() {
+    // Make it non-async because I believe it is the cause of the issues
+    // I was seeing where the "messageToAndroid" would not clear out of
+    // the box when pressing enter.
+    public onMessageEntered() {
         // The message needs to be valid and not empty.
         let message = this.messageToAndroid;
         if (message === null || message === undefined) {
