@@ -244,6 +244,7 @@ button {
     flex: 1 1 auto;
     position: relative;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .conversation-no-messages-watermark {
@@ -265,6 +266,13 @@ button {
 
 .message-bubble {
     max-width: 70%;
+
+    // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+    // This notes the use of word-break: break-word and by itself is all I need. The documentation
+    // around this is practically non-existant and even VS Code doesn't recognize it as a valid
+    // option for word-break, but it definitely works exactly how you'd expect where as
+    // overflow-wrap: break-word doesn't work and word-break: break-all is far too aggressive.
+    word-break: break-word;
 
     &-default {
         border-radius: 10px;

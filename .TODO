@@ -9,7 +9,6 @@
 // TODO Emoji's?
 // TODO handle cancelling / disconnecting tcp...
 // TODO url's in messages
-// TODO strings that are long and do not have a break point will go outside the bubble in Electron-Poke
 // TODO MMS messages on Android should be captured, both images and super long text messages.
 // TODO Settings gear icon showing "Settings"
 //     - possible settings...
@@ -39,7 +38,8 @@
 // - electron app should not have the background task in a .js file. (need to write import/export for commonjs without needing webpack or systemjs)
 // - electron app should review it's use of ipcMain-><-ipcRenderer communication through the intercommunication file.
 
-BETA
+
+// BETA 2
 // TODO hover styles for menu bar...
 // TODO delete conversations
 // TODO investigate some phones returning more than 1 contact per person.
@@ -48,7 +48,10 @@ BETA
 // TODO group messages into streaks and only show the time of the last one unless the time is more than 5 minutes difference than the last message. (work on this to determine what is best)
 //     - make messages selectable to see the time? Think about this.
 // TEST text not being removed on pressing enter (is it the fact that the method is async?)
+// DONE Long strings that have no naturl break point no longer go outside the "message bubble". Urls and such should be wrapped instead of stretching.
 
+
+// BETA 1
 // DONE udp broadcast to discover devices.
 // DONE Messages from a person whose number you do not have in your contact list.
 // DONE windows icon flash 
