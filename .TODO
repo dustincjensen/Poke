@@ -21,6 +21,7 @@
 // TODO investigate Google Hangouts integration
 // TODO investigate Facebook Messenger integration
 // TODO searchable settings (that way you don't have to scroll if the list gets long).
+// TODO red line for incorrectly spelt words (spell check)
 
 
 // REFACTOR
@@ -31,13 +32,13 @@
 
 
 // BETA 2
-// TODO hover styles for menu bar...
 // TODO delete conversations
-// TODO investigate some phones returning more than 1 contact per person.
-// TODO investigate shift+enter for multi line messages.
 // TODO replace "waiting for a device connection" with simple instructions on what to do (aka connect from your mobile)
 // TODO group messages into streaks and only show the time of the last one unless the time is more than 5 minutes difference than the last message. (work on this to determine what is best)
 //     - make messages selectable to see the time? Think about this.
+// TODO investigate shift+enter for multi line messages.
+// TODO investigate some phones returning more than 1 contact per person.
+// TODO hover styles for menu bar...
 
 // The settings menu has been put in, but everything will be disabled for v0.3-beta
 // TODO Settings gear icon showing "Settings"
