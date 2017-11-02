@@ -110,6 +110,58 @@ button {
     }
 }
 
+.settings-gear {
+    height: 50px;
+    width: 50px;
+    position: relative;
+
+    & .center {
+        position: absolute;
+        top: 12px;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        border-radius: 50%;
+        border: solid 6px $tertiaryColor;
+        background: $secondaryColor;
+    }
+
+    &:hover .center {
+        border-color: $primaryTextColor;
+    }
+
+    & .tooth {
+        background: $tertiaryColor;
+        position: absolute;
+        top: 7px;
+        bottom: 7px;
+        width: 5px;
+        left: 50%;
+        border-radius: 5px;
+        border: solid 1px $tertiaryColor;
+    }
+
+    &:hover .tooth {
+        background: $primaryTextColor;
+        border-color: $primaryTextColor;
+    }
+
+    .tooth:nth-child(1) {
+        transform: translateX(-50%);
+    }
+
+    .tooth:nth-child(2) {
+        transform: translateX(-50%) rotate(45deg);
+    }
+
+    .tooth:nth-child(3) {
+        transform: translateX(-50%) rotate(90deg);
+    }
+    .tooth:nth-child(4) {
+        transform: translateX(-50%) rotate(135deg);
+    }
+}
+
 // Creates a + button
 .start-new-conversation-button {
     position: relative;
