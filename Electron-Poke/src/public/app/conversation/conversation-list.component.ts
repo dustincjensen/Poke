@@ -148,6 +148,11 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['contacts'] } }]);
     }
 
+    public loadSettings(): void {
+        this.selectedConversation = null;
+        this._router.navigate(['conversations', { outlets: { conversationListOutlet: ['settings'] } }]);
+    }
+
     public openMenu(): void {
         this.menuOpen = !this.menuOpen;
     }

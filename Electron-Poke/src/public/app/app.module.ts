@@ -12,6 +12,7 @@ import { VerificationComponent } from './waiting/verification.component';
 import { ConversationListComponent } from './conversation/conversation-list.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { ContactSelectorComponent } from './conversation/contact-selector.component';
+import { SettingsComponent } from './conversation/settings.component';
 import { ConversationService } from './conversation/conversation.service';
 import { NotificationService } from './services/notificationService';
 
@@ -24,7 +25,8 @@ const appRoutes = RouterModule.forRoot(
             component: ConversationListComponent,
             children: [
                 { path: 'conversation/:id', component: ConversationComponent, outlet: 'conversationListOutlet' },
-                { path: 'contacts', component: ContactSelectorComponent, outlet: 'conversationListOutlet' }
+                { path: 'contacts', component: ContactSelectorComponent, outlet: 'conversationListOutlet' },
+                { path: 'settings', component: SettingsComponent, outlet: 'conversationListOutlet' }
             ]
         },
         { path: '', redirectTo: 'waiting', pathMatch: 'full' }
@@ -51,7 +53,8 @@ const appRoutes = RouterModule.forRoot(
         VerificationComponent,
         ConversationListComponent,
         ConversationComponent,
-        ContactSelectorComponent
+        ContactSelectorComponent,
+        SettingsComponent
     ],
     providers: [
         // This uses the custom route strategy and makes it so the
