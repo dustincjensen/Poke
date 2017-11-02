@@ -7,4 +7,90 @@
             </div>
         </div>
     </div>
+
+    <!-- Settings-content and the scroll bar make the whole bottom section -->
+    <!-- scrollable. Next the grid-columns allows us to center the content -->
+    <!-- inside of it and since we have limited it to a max-width of 700px -->
+    <!-- when we are big and need a scroll bar the scroll bar will be on the -->
+    <!-- outside edge instead in the middle of the view. -->
+    <div class="settings-content scroll-bar-styled">
+        <div class="grid-columns grid-columns-center-horizontally">
+            <div class="settings-inner-content">
+                <!-- General -->
+                <!-- <div class="pad-20">
+                    <div class="inner-settings-header">
+                        General
+                    </div>
+                    <div class="pad-top-20">
+                        <input id="minimizeToTray" type="checkbox" class="check-box-with-explanation" [(ngModel)]="minimizeToTray" [disabled]="true">
+                        <label for="minimizeToTray">Minimize to tray (Possible Feature)</label>
+                        <div class="explanation pad-left-40">
+                            When you minimize the window, Poke will continue to run in the background by placing itself in the system tray.
+                            To re-open Poke, you will select the icon from the system tray.
+                        </div>
+                    </div>
+                </div> -->
+            
+                <!-- Privacy -->
+                <div class="pad-20">
+                    <div class="inner-settings-header">
+                        Privacy
+                    </div>
+            
+                    <!-- Privacy Blur -->
+                    <div class="pad-top-20">
+                        <input id="privacyBlur" type="checkbox" class="check-box-with-explanation" [(ngModel)]="privacyBlur" [disabled]="true">
+                        <label for="privacyBlur">Privacy Blur (Coming Soon)</label>
+                        <div class="explanation pad-left-40">
+                            If you leave your conversation window in plain sight, you may want to enable
+                            the privacy blur. This will blur the contents of the Poke window while
+                            it is not focused or hovered over with your mouse.
+                        </div>
+                    </div>
+            
+                    <!-- Notifications -->
+                    <div class="pad-top-20">
+                        <input id="notificationsEnabled" type="checkbox" class="check-box-with-explanation" [(ngModel)]="notificationsEnabled" [disabled]="true">
+                        <label for="notificationsEnabled">Notifications (Coming Soon)</label>
+                        <div class="explanation pad-left-40">
+                            When a new message is received, a notification will be displayed with the contact's name
+                            and a short excerpt from the message.
+                        </div>
+                    </div>
+            
+                    <!-- Anonymous Notifications -->
+                    <div class="pad-left-40 pad-top-20">
+                        <!-- [disabled]="!notificationsEnabled" -->
+                        <input id="anonymousNotifications" type="checkbox" class="check-box-with-explanation" 
+                               [disabled]="true" [(ngModel)]="anonymousNotifications">
+                        <label for="anonymousNotifications">Anonymous Notifications (Coming Soon)</label>
+                        <div class="explanation pad-left-40">
+                            Instead of showing the contact's name and the content of the message,
+                            show a generic message.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version -->
+                <div class="pad-20">
+                    <div class="inner-settings-header">
+                        Version
+                    </div>
+        
+                    <div class="version-number pad-top-20 pad-left-40">
+                        {{ versionNumber }}
+                    </div>
+                </div>
+
+                <!-- Open github button -->
+                <div class="pad-20">
+                    <button class="btn btn-primary btn-auto-size" (click)="openGithub()">
+                        Open Github
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
 </div>

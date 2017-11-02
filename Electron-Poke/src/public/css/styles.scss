@@ -578,3 +578,23 @@ $arrowWingsTransitionSpeed: 0.1s;
     transform-origin: center bottom;
 }
   
+.inner-settings-header {
+    font-size: 24px;
+    color: $primaryTextColor;
+}
+
+.settings-content {
+    flex: 1 1 auto;
+    position: relative;
+    overflow-y: auto;    
+}
+
+.settings-inner-content {
+    max-width: 800px;
+}
+
+.version-number {
+    font-size: 18px;
+    font-weight: bold;
+    color: $tertiaryColor;
+}

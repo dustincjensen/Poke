@@ -46,6 +46,7 @@
 
 .btn {
     border: none;
+    outline: none;
     height: 40px;
     font-size: 18px;
     width: 100px;
@@ -53,6 +54,12 @@
     &-primary {
         background: $primaryColor;
         color: $primaryTextColor;
+    }
+
+    &-auto-size {
+        width: auto;
+        height: auto;
+        padding: 10px;
     }
 }
 
@@ -82,4 +89,78 @@ $spinnerAnimationDuration: 1.5s;
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+.check-box {
+    // Hide the checkbox...
+    display: none;
+    
+    & + label::before {
+        content: '';
+        cursor: pointer;
+        width: 22px;
+        height: 22px;
+        border: solid 3px $tertiaryColor;
+        border-radius: 10%;
+        transition: border 0.5s;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    & + label {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+        font-size: 18px;
+        min-height: 22px;
+        color: $primaryTextColor;
+        transition: color 0.5s;
+        padding: 10px 0px 10px 40px;
+    }
+
+    & + label:hover::before, &:checked + label::before {
+        border-color: $primaryColor;
+    }
+
+    &:disabled + label {
+        color: $tertiaryColor;
+        cursor: not-allowed;
+    }
+    &:disabled + label:hover::before {
+        border-color: $tertiaryColor;
+        cursor: not-allowed;
+    }
+    &:disabled:checked + label:hover::before {
+        border-color: $primaryColor;
+        cursor: not-allowed;
+    }
+
+    &:checked + label::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 12px;
+        height: 12px;
+        background: $primaryColor;
+        // translate x is equal to 
+        // (width of checkbox - the width of the inner contents) / 2
+        transform: translate(8px, -50%) rotate(45deg);
+    }
+}
+
+.check-box-with-explanation {
+    @extend .check-box;
+
+    & ~ .explanation {
+        color: $tertiaryColor;
+        transition: color 0.5s;
+    }
+
+    &:checked ~ .explanation {
+        color: $primaryColor;
+    }
 }
