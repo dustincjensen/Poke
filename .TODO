@@ -39,6 +39,7 @@
 // TODO investigate shift+enter for multi line messages.
 // TODO investigate some phones returning more than 1 contact per person.
 // TODO hover styles for menu bar...
+// TODO? https://jsfiddle.net/d1on9phz/1/ (material icons)
 
 // The settings menu has been put in, but everything will be disabled for v0.3-beta
 // TODO Settings gear icon showing "Settings"
