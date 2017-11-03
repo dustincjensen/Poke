@@ -1,5 +1,5 @@
-import { Component, OnDestroy, AfterViewChecked, NgZone, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnDestroy, AfterViewChecked, NgZone, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 import { Observable } from 'rxjs/Observable';
@@ -19,11 +19,13 @@ export class ConversationComponent extends ElectronComponent implements AfterVie
     private _subscriptionCountAskedFor = 0;
     private _oldMessageCount: number;
 
-    conversation: IConversation;
-    messageToAndroid: string;
+    public conversation: IConversation;
+    public messageToAndroid: string;
+    public optionsClicked: boolean;
 
     constructor(
         private _route: ActivatedRoute,
+        private _router: Router,
         electron: ElectronService,
         ngZone: NgZone
     ) {
@@ -124,5 +126,29 @@ export class ConversationComponent extends ElectronComponent implements AfterVie
             message: messageObj
         };
         this._electron.ipcRenderer.send('newMessageForAndroid', sendMessage);
+    }
+
+    public removeConversation(): void {
+        this._electron.ipcRenderer.send('removeConversation', this.conversation.id);
+        this._router.navigateByUrl('/conversations');
+    }
+
+    /**
+     * This listens to the document for clicks.
+     * If something other than the more-options
+     * button is clicked... then we hide the options flag.
+     * TODO investigate how this clashes with other context menus.
+     * @param event the click event.
+     */
+    @HostListener('document:click', ['$event'])
+    public documentClick(event: Event): void {
+        // If they click on an option, it will fire it's click first.
+        // If they click on anything else, this will just close the menu.
+        let target = (event.target as Element);
+        if (!target.classList.contains('more-options')) {
+            let parent = (target.parentElement as Element);
+            if (!parent || !parent.classList.contains('more-options'))
+                this.optionsClicked = false;
+        }
     }
 }

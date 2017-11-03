@@ -29,6 +29,7 @@ class BackgroundTaskWindow {
         ipcRenderer.on('backgroundNewMessageForAndroid', this._newMessageForAndroid);
         ipcRenderer.on('backgroundGetConversationList', this._getConversationList);
         ipcRenderer.on('backgroundGetConversation', this._getConversation);
+        ipcRenderer.on('backgroundRemoveConversation', this._removeConversation);
         ipcRenderer.on('backgroundGetContactList', this._getContactList);
         ipcRenderer.on('backgroundGetSettings', this._getSettings);
     }
@@ -61,6 +62,11 @@ class BackgroundTaskWindow {
             conversation: conversation,
             subscriptionCount: args.subscriptionCount
         });
+    }
+
+    _removeConversation(event, id) {
+        Conversations.removeConversation(id);
+        ipcRenderer.send('background-conversation-removed', id);
     }
 
     // Retrieve the contact list

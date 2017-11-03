@@ -223,4 +223,16 @@ export class Conversations {
         // Return the conversation that we just created.
         return conversation;
     }
+
+    public static removeConversation(id: number): any {
+        let index = Conversations.conversations.findIndex(value => {
+            // Sometimes the id is a string so... triple equals would fail.
+            return value.id == id;
+        });
+
+        // Is more than 1 a possibility?
+        if (index >= 0) {
+            Conversations.conversations.splice(index, 1);
+        }
+    }
 }

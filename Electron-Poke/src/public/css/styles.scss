@@ -205,6 +205,65 @@ button {
     }
 }
 
+.more-options {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    & div {
+        width: 5px;
+        height: 5px;
+        background-color: $primaryTextColor;
+        margin: 2.5px 0;
+    }
+}
+
+// Requires structure of
+// <div class="context-menu">
+//   <ul>
+//     <li></li>
+//   </ul>
+// </div>
+.context-menu {
+    position: relative;
+    float: right;
+
+    & ul {
+        display: none;
+        position: absolute;
+        top: 110%;
+        right: 5px;
+        list-style: none;
+        background: $primaryTextColor;
+        color: $secondaryTextColor;
+        font-size: 18px;
+    }
+
+    & ul li {
+        width: 200px;
+        padding: 10px;
+    }
+
+    & ul li:hover {
+        cursor: pointer;
+        color: $primaryTextColor;
+        background: $tertiaryColor;
+    }
+
+    // Since the display is none...
+    // when you turn it into display: block
+    // it re-appears.
+    &[sudo-focused=true] ul {
+        display: block;
+    }
+}
+
 .conversation-list-item {
     position: relative;
     background: $primaryColor;

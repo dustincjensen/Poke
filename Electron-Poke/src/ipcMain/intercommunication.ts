@@ -29,6 +29,10 @@ export class Intercommunication {
             MainElectron.background.webContents.send('backgroundGetContactList', args);
         });
 
+        ipcMain.on('removeConversation', (event, args) => {
+            MainElectron.background.webContents.send('backgroundRemoveConversation', args);
+        })
+
         ipcMain.on('getSettings', (event, args) => {
             MainElectron.background.webContents.send('backgroundGetSettings', args);
         });
@@ -71,6 +75,10 @@ export class Intercommunication {
 
         ipcMain.on('background-conversation-retrieved', (event, args) => {
             MainElectron.sendMessageToMainContents('conversationRetrieved', args);
+        });
+
+        ipcMain.on('background-conversation-removed', (event, id) => {
+            MainElectron.sendMessageToMainContents('conversationRemoved', id);
         });
 
         ipcMain.on('background-contact-list-retrieved', (event, args) => {

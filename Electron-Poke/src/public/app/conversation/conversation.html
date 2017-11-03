@@ -1,7 +1,27 @@
 <div class="grid">
 
     <div class="conversation-header pad-20" [style.background]="conversation?.color">
-        {{ conversation?.name }}
+        <div class="grid-columns">
+            <div class="col-star-1">{{ conversation?.name }}</div>
+            
+            <button class="more-options" (click)="optionsClicked = true">
+                <div></div>
+                <div></div>
+                <div></div>
+            </button>
+
+            <!-- When the button above is clicked it sets the optionsClicked -->
+            <!-- to true. In the component we have a listener for all clicks in -->
+            <!-- the document that will close the context menu when anything -->
+            <!-- is clicked on. -->
+            <!-- TODO does the click listener affect things outside of the component?
+                      ex) is it going to affect other context menus. -->
+            <div class="context-menu" [attr.sudo-focused]="optionsClicked">
+                <ul>
+                    <li (click)="removeConversation()">Remove Conversation</li>
+                </ul>                    
+            </div>
+        </div>
     </div>
 
     <div *ngIf="conversation?.messages.length > 0" #scrollConversation class="conversation-content scroll-bar-styled">

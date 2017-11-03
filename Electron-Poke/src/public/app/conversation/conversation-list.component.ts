@@ -40,6 +40,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         this.registerIpcRendererMethod('newMessageReceived', this._handleNewMessageReceived);
         this.registerIpcRendererMethod('newConversationStarted', this._handleNewConversationStarted);
         this.registerIpcRendererMethod('conversationRead', this._handleConversationRead);
+        this.registerIpcRendererMethod('conversationRemoved', this._handleConversationRemoved);
         this._electron.ipcRenderer.send('getConversationList');
     }
 
@@ -64,6 +65,18 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
         this._sendNotificationIfNotFocused(
             conversation.name, conversation.messages[0].message, conversation);
+    }
+
+    private _handleConversationRemoved(event, id) {
+        let conversationIndex = this.conversations.findIndex(c => {
+            return c.id === id;
+        });
+
+        if (conversationIndex !== -1) {
+            this.conversations.splice(conversationIndex, 1);
+        }
+
+        this.selectedConversation = null;
     }
 
     private _handleNewMessageReceived(event, newMessage) {
