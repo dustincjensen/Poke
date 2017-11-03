@@ -15,6 +15,7 @@ import { ContactSelectorComponent } from './conversation/contact-selector.compon
 import { SettingsComponent } from './conversation/settings.component';
 import { ConversationService } from './conversation/conversation.service';
 import { NotificationService } from './services/notificationService';
+import { SettingsService } from './conversation/settings.service';
 
 const appRoutes = RouterModule.forRoot(
     [
@@ -63,6 +64,7 @@ const appRoutes = RouterModule.forRoot(
         // or UI issues where variables are not set.
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
         ConversationService,
+        SettingsService,
         NotificationService
     ],
     bootstrap: [AppComponent],

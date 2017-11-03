@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
+import { SettingsService } from './settings.service';
 
 @Component({
     moduleId: module.id,
@@ -11,24 +12,36 @@ import { ElectronComponent } from '../base/electron.component';
 export class SettingsComponent extends ElectronComponent implements OnInit {
 
     public versionNumber: string;
-
     public minimizeToTray: boolean;
     public privacyBlur: boolean;
     private _notificationsEnabled: boolean;
     public anonymousNotifications: boolean;
 
+    private _settingsSubscription: any;
+
     constructor(
         private _router: Router,
+        private _settingsService: SettingsService,
         electron: ElectronService,
-        ngZone: NgZone
+        ngZone: NgZone,
     ) {
         super(electron, ngZone);
     }
 
     public async ngOnInit() {
-        // TODO all the settings values...
-        this.versionNumber = 'v0.3-beta';
-        this._notificationsEnabled = true;
+        // We don't "load" because it will be so fast...
+        this._settingsSubscription =
+            this._settingsService.settings.subscribe(settings => {
+                this.versionNumber = settings.versionNumber;
+                this.privacyBlur = settings.privacyBlur;
+                this._notificationsEnabled = settings.notificationsEnabled;
+                this.anonymousNotifications = settings.anonymousNotifications;
+            });
+        this._settingsService.getSettings();
+    }
+
+    public async ngOnDestroy() {
+        this._settingsSubscription.unsubscribe();
     }
 
     public get notificationsEnabled() {

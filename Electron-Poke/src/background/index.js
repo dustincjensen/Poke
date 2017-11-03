@@ -30,6 +30,7 @@ class BackgroundTaskWindow {
         ipcRenderer.on('backgroundGetConversationList', this._getConversationList);
         ipcRenderer.on('backgroundGetConversation', this._getConversation);
         ipcRenderer.on('backgroundGetContactList', this._getContactList);
+        ipcRenderer.on('backgroundGetSettings', this._getSettings);
     }
 
     _passcodeEntered(event, passcode) {
@@ -71,6 +72,17 @@ class BackgroundTaskWindow {
         // This now will send ipcRenderer calls on it's own
         // depending on whether or not it needs to wait on TCP contact list.
         Contacts.getContactList();
+    }
+
+    // Retrieve the settings...
+    _getSettings(event, args) {
+        ipcRenderer.send('background-settings-retrieved', {
+            versionNumber: 'v0.3-beta',
+            minimizeToTray: false,
+            privacyBlur: false,
+            notificationsEnabled: true,
+            anonymousNotifications: false
+        });
     }
 }
 new BackgroundTaskWindow();
