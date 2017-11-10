@@ -657,3 +657,31 @@ $arrowWingsTransitionSpeed: 0.1s;
     font-weight: bold;
     color: $tertiaryColor;
 }
+
+.waiting-title-header {
+    font-size: 72px;
+    user-select: none;
+    cursor: default;
+}
+
+.waiting-title-sub-header {
+    font-size: 24px;
+    color: $primaryColor;
+    user-select: none;
+    cursor: default;
+}
+
+.waiting-how-to-connect {
+    color: $tertiaryColor;
+    font-size: 18px;
+    user-select: none;
+    cursor: default;
+
+    & > ol {
+        padding-left: 20px;
+    }
+}
+
+.italic {
+    font-style: italic;
+}
