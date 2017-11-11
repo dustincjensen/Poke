@@ -10,6 +10,22 @@
         background: $secondaryColor;
         padding-left: 5px;
     }
+
+    // This is used for the conversation entering message
+    // textarea. It resizes automatically using the angular
+    // directive.
+    &-textarea-resize {
+        border:none;
+        outline: none;
+        width: 100%;
+        font-size: 20px;
+        color: $primaryTextColor;
+        background: $secondaryColor;        
+        padding-left: 5px;
+        resize: none;
+        line-height: 1.35;
+        max-height: 80px;
+    }
 }
 
 .search-control {

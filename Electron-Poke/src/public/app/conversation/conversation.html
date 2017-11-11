@@ -31,12 +31,8 @@
                     <div class="message-bubble">
 
                         <!-- TODO do this better, I can't find documentation on how to leave a default value -->
-                        <div *ngIf="message.isSelf" class="message-bubble-default pad-10">
-                            {{ message.message }}
-                        </div>
-                        <div *ngIf="!message.isSelf" class="message-bubble-default pad-10" [style.background]="conversation?.color">
-                            {{ message.message }}
-                        </div>
+                        <div *ngIf="message.isSelf" class="message-bubble-default pad-10">{{ message.message }}</div>
+                        <div *ngIf="!message.isSelf" class="message-bubble-default pad-10" [style.background]="conversation?.color">{{ message.message }}</div>
                         <!-- TODO do this better, I can't find documentation on how to leave a default value -->
 
                         <div [ngClass]="{'message-bubble-time-user': message.isSelf, 'message-bubble-time-other': !message.isSelf}">
@@ -54,12 +50,16 @@
 
     <div class="conversation-footer pad-10" [style.borderColor]="conversation?.color">
         <div class="grid-columns">
-            <div class="col-star-1 margin-right-10">
-                <input type="text" class="form-control-input" (keyup.enter)="onMessageEntered()" [(ngModel)]="messageToAndroid" placeholder="Enter message..."
-                />
+            <div class="col-star-1">
+                <div class="grid">
+                    <div class="grid-columns grid-columns-vertically-align-center">
+                        <textarea autosize class="form-control-textarea-resize scroll-bar-styled" placeholder="Enter message..."
+                            [(ngModel)]="messageToAndroid" (keyup.enter)="onMessageEntered()"></textarea>
+                    </div>                    
+                </div>                
             </div>
-            <div>
-                <button class="btn btn-primary" (click)="onMessageEntered()">Send</button>
+            <div class="margin-left-10">
+                <button class="btn btn-primary send-button-height" (click)="onMessageEntered()">Send</button>
             </div>
         </div>
     </div>

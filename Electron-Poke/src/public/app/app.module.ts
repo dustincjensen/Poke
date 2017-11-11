@@ -16,6 +16,7 @@ import { SettingsComponent } from './conversation/settings.component';
 import { ConversationService } from './conversation/conversation.service';
 import { NotificationService } from './services/notificationService';
 import { SettingsService } from './conversation/settings.service';
+import { Autosize } from './conversation/autosize.directive';
 
 const appRoutes = RouterModule.forRoot(
     [
@@ -55,7 +56,8 @@ const appRoutes = RouterModule.forRoot(
         ConversationListComponent,
         ConversationComponent,
         ContactSelectorComponent,
-        SettingsComponent
+        SettingsComponent,
+        Autosize
     ],
     providers: [
         // This uses the custom route strategy and makes it so the

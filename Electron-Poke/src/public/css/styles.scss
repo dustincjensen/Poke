@@ -388,6 +388,9 @@ button {
     &-default {
         border-radius: 10px;
         background: lighten($secondaryColor, 10%);
+
+        // Without pre-line it will not accept newline characters.
+        white-space: pre-line;
     }
 
     &-time-user {
@@ -684,4 +687,10 @@ $arrowWingsTransitionSpeed: 0.1s;
 
 .italic {
     font-style: italic;
+}
+
+// The height of the button in the conversation
+// message sending.
+.send-button-height {
+    height: 40px;
 }
