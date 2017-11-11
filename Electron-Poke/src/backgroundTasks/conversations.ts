@@ -43,6 +43,16 @@ export class Conversations {
                         isSelf: false,
                         message: 'How about we get together and jam?',
                         time: Date.now() - (29 * 60 * 1000)
+                    },
+                    {
+                        isSelf: false,
+                        message: 'I have all the equipment here still from last time we got together and played.',
+                        time: Date.now() - (29 * 60 * 1000)
+                    },
+                    {
+                        isSelf: false,
+                        message: 'Why don\'t you grab some food on your way over? Does pizza sound good?',
+                        time: Date.now() - (29 * 60 * 1000)
                     }
                 ] as IMessage[]
             },
