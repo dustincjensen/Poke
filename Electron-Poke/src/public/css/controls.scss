@@ -67,6 +67,12 @@
     font-size: 18px;
     width: 100px;
 
+    &:disabled {
+        background: $tertiaryColor;
+        color: $secondaryTextColor;
+        cursor: not-allowed;
+    }
+
     &-primary {
         background: $primaryColor;
         color: $primaryTextColor;

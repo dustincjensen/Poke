@@ -16,7 +16,7 @@ export class NotificationService {
         func: Function
     ) {
         title = privacyMode ? 'New Message' : title;
-        body = privacyMode ? null : body;
+        body = privacyMode ? 'Open Poke to see your new message.' : body;
 
         let notificationOptions: any = {
             icon: NotificationService.iconPath

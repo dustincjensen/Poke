@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 import { SettingsService } from './settings.service';
+import { NotificationService } from '../services/notificationService';
 import { ISettings } from '../../../shared/interfaces';
 
 @Component({
@@ -23,6 +24,7 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     constructor(
         private _router: Router,
         private _settingsService: SettingsService,
+        private _notificationService: NotificationService,
         electron: ElectronService,
         ngZone: NgZone,
     ) {
@@ -88,6 +90,20 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     public set anonymousNotifications(value: boolean) {
         this._anonymousNotifications = value;
         this._settingsService.setSettings(this._currentSettings);
+    }
+
+    public sendTestNotification() {
+        // Can't send a notification...
+        if (!this._notificationsEnabled) { return; }
+
+        // Anonymous or not?
+        if (this._anonymousNotifications) {
+            this._notificationService.sendNewMessageReceivedNotification(
+                'New Message (Test Message)', 'Open Poke to see your new message.', true, () => { });
+        } else {
+            this._notificationService.sendNewMessageReceivedNotification(
+                'Sarah (Test Message)', 'Hey, how is it going?', false, () => { });
+        }
     }
 
     public openGithub() {

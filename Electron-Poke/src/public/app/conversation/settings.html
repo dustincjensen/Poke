@@ -50,8 +50,8 @@
             
                     <!-- Notifications -->
                     <div class="pad-top-20">
-                        <input id="notificationsEnabled" type="checkbox" class="check-box-with-explanation" [(ngModel)]="notificationsEnabled" [disabled]="true">
-                        <label for="notificationsEnabled">Notifications (Coming Soon)</label>
+                        <input id="notificationsEnabled" type="checkbox" class="check-box-with-explanation" [(ngModel)]="notificationsEnabled">
+                        <label for="notificationsEnabled">Notifications</label>
                         <div class="explanation pad-left-40">
                             When a new message is received, a notification will be displayed with the contact's name
                             and a short excerpt from the message.
@@ -60,14 +60,21 @@
             
                     <!-- Anonymous Notifications -->
                     <div class="pad-left-40 pad-top-20">
-                        <!-- [disabled]="!notificationsEnabled" -->
                         <input id="anonymousNotifications" type="checkbox" class="check-box-with-explanation" 
-                               [disabled]="true" [(ngModel)]="anonymousNotifications">
-                        <label for="anonymousNotifications">Anonymous Notifications (Coming Soon)</label>
+                            [disabled]="!notificationsEnabled" [(ngModel)]="anonymousNotifications">
+                        <label for="anonymousNotifications">Anonymous Notifications</label>
                         <div class="explanation pad-left-40">
                             Instead of showing the contact's name and the content of the message,
                             show a generic message.
                         </div>
+                    </div>
+
+                    <!-- Send Test Notification button -->
+                    <div class="pad-top-20">
+                        <button class="btn btn-primary btn-auto-size" (click)="sendTestNotification()"
+                            [disabled]="!notificationsEnabled">
+                            Send Test Notification
+                        </button>
                     </div>
                 </div>
 
