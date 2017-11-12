@@ -37,6 +37,10 @@ export class Intercommunication {
             MainElectron.background.webContents.send('backgroundGetSettings', args);
         });
 
+        ipcMain.on('updateSettings', (event, args) => {
+            MainElectron.background.webContents.send('backgroundUpdateSettings', args);
+        });
+
         // ========================================================================================
         // background communicating to public renderer
         // ========================================================================================
@@ -88,5 +92,9 @@ export class Intercommunication {
         ipcMain.on('background-settings-retrieved', (event, args) => {
             MainElectron.sendMessageToMainContents('settingsRetrieved', args);
         });
+
+        ipcMain.on('background-settings-updated', (event, args) => {
+            MainElectron.sendMessageToMainContents('settingsUpdated', null);
+        })
     }
 }

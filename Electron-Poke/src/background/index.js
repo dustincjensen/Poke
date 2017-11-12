@@ -4,10 +4,14 @@ const { TcpServer } = require('../backgroundTasks/tcpServer');
 const { UdpServer } = require('../backgroundTasks/udpServer');
 const { Conversations } = require('../backgroundTasks/conversations');
 const { Contacts } = require('../backgroundTasks/contacts');
+const { Settings } = require('../backgroundTasks/settings');
 
 class BackgroundTaskWindow {
 
     constructor() {
+        // Set up the settings...
+        Settings.initializeSettings();
+
         // Initialize background task external classes
         TcpServer.createServer();
 
@@ -32,6 +36,7 @@ class BackgroundTaskWindow {
         ipcRenderer.on('backgroundRemoveConversation', this._removeConversation);
         ipcRenderer.on('backgroundGetContactList', this._getContactList);
         ipcRenderer.on('backgroundGetSettings', this._getSettings);
+        ipcRenderer.on('backgroundUpdateSettings', this._setSettings);
     }
 
     _passcodeEntered(event, passcode) {
@@ -82,13 +87,14 @@ class BackgroundTaskWindow {
 
     // Retrieve the settings...
     _getSettings(event, args) {
-        ipcRenderer.send('background-settings-retrieved', {
-            versionNumber: 'v0.3-beta',
-            minimizeToTray: false,
-            privacyBlur: false,
-            notificationsEnabled: true,
-            anonymousNotifications: false
-        });
+        ipcRenderer.send('background-settings-retrieved',
+            Settings.getSettings());
+    }
+
+    // Update the settings
+    _setSettings(event, args) {
+        Settings.setSettings(args);
+        ipcRenderer.send('background-settings-updated');
     }
 }
 new BackgroundTaskWindow();

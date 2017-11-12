@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 import { SettingsService } from './settings.service';
+import { ISettings } from '../../../shared/interfaces';
 
 @Component({
     moduleId: module.id,
@@ -12,12 +13,12 @@ import { SettingsService } from './settings.service';
 export class SettingsComponent extends ElectronComponent implements OnInit {
 
     public versionNumber: string;
-    public minimizeToTray: boolean;
-    public privacyBlur: boolean;
+    private _privacyBlur: boolean;
     private _notificationsEnabled: boolean;
-    public anonymousNotifications: boolean;
+    private _anonymousNotifications: boolean;
 
     private _settingsSubscription: any;
+    private _saveSettingsSubscription: any;
 
     constructor(
         private _router: Router,
@@ -33,15 +34,41 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
         this._settingsSubscription =
             this._settingsService.settings.subscribe(settings => {
                 this.versionNumber = settings.versionNumber;
-                this.privacyBlur = settings.privacyBlur;
+                this._privacyBlur = settings.privacyBlur;
                 this._notificationsEnabled = settings.notificationsEnabled;
-                this.anonymousNotifications = settings.anonymousNotifications;
+                this._anonymousNotifications = settings.anonymousNotifications;
             });
+
+        this._saveSettingsSubscription =
+            this._settingsService.save.subscribe(saved => {
+                // TODO what should we do with the "saved" message.
+            });
+
+        // Retrieve the settings that we have
+        // setup our subscription to receive.
         this._settingsService.getSettings();
     }
 
     public async ngOnDestroy() {
         this._settingsSubscription.unsubscribe();
+        this._saveSettingsSubscription.unsubscribe();
+    }
+
+    private get _currentSettings(): ISettings {
+        return {
+            versionNumber: this.versionNumber,
+            privacyBlur: this._privacyBlur,
+            notificationsEnabled: this._notificationsEnabled,
+            anonymousNotifications: this._anonymousNotifications
+        };
+    }
+
+    public get privacyBlur(): boolean {
+        return this._privacyBlur;
+    }
+    public set privacyBlur(blur: boolean) {
+        this._privacyBlur = blur;
+        this._settingsService.setSettings(this._currentSettings);
     }
 
     public get notificationsEnabled() {
@@ -50,8 +77,17 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     public set notificationsEnabled(value: boolean) {
         this._notificationsEnabled = value;
         if (!this._notificationsEnabled) {
-            this.anonymousNotifications = false;
+            this._anonymousNotifications = false;
         }
+        this._settingsService.setSettings(this._currentSettings);
+    }
+
+    public get anonymousNotifications(): boolean {
+        return this._anonymousNotifications;
+    }
+    public set anonymousNotifications(value: boolean) {
+        this._anonymousNotifications = value;
+        this._settingsService.setSettings(this._currentSettings);
     }
 
     public openGithub() {

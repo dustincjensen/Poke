@@ -20,3 +20,10 @@ export interface IContact {
     name: string;
     display: string;
 }
+
+export interface ISettings {
+    versionNumber: string;
+    privacyBlur: boolean;
+    notificationsEnabled: boolean;
+    anonymousNotifications: boolean;
+}
