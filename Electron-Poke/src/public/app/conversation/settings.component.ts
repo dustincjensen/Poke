@@ -18,7 +18,6 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     private _notificationsEnabled: boolean;
     private _anonymousNotifications: boolean;
 
-    private _settingsSubscription: any;
     private _saveSettingsSubscription: any;
 
     constructor(
@@ -32,15 +31,6 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     }
 
     public async ngOnInit() {
-        // We don't "load" because it will be so fast...
-        this._settingsSubscription =
-            this._settingsService.settings.subscribe(settings => {
-                this.versionNumber = settings.versionNumber;
-                this._privacyBlur = settings.privacyBlur;
-                this._notificationsEnabled = settings.notificationsEnabled;
-                this._anonymousNotifications = settings.anonymousNotifications;
-            });
-
         this._saveSettingsSubscription =
             this._settingsService.save.subscribe(saved => {
                 // TODO what should we do with the "saved" message.
@@ -48,11 +38,14 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
 
         // Retrieve the settings that we have
         // setup our subscription to receive.
-        this._settingsService.getSettings();
+        let cs = await this._settingsService.getSettings();
+        this.versionNumber = cs.versionNumber;
+        this._privacyBlur = cs.privacyBlur;
+        this._notificationsEnabled = cs.notificationsEnabled;
+        this._anonymousNotifications = cs.anonymousNotifications;
     }
 
     public async ngOnDestroy() {
-        this._settingsSubscription.unsubscribe();
         this._saveSettingsSubscription.unsubscribe();
     }
 

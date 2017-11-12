@@ -20,4 +20,18 @@ export abstract class ElectronComponent {
             });
         });
     }
+
+    /**
+     * Registers a method on the ipc renderer that will be called in the context of angular.
+     * Once a message has been received on this listener it is automatically disposed of.
+     * @param type The message to listen on the ipc renderer.
+     * @param method The method to run when the event is fired.
+     */
+    protected registerIpcRendererMethodOneTime(type: string, method: (event, args) => void) {
+        this._electron.ipcRenderer.once(type, (event, args) => {
+            this._ngZone.run(() => {
+                method.apply(this, [event, args]);
+            });
+        });
+    }
 }

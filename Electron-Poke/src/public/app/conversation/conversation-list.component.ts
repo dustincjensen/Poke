@@ -4,6 +4,7 @@ import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
 import { ConversationService } from './conversation.service';
 import { NotificationService } from '../services/notificationService';
+import { SettingsService } from './settings.service';
 import { IConversation } from '../../../shared/interfaces';
 
 @Component({
@@ -22,6 +23,7 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         private _router: Router,
         private _internal: ConversationService,
         private _notifications: NotificationService,
+        private _settings: SettingsService,
         electron: ElectronService,
         ngZone: NgZone
     ) {
@@ -97,16 +99,21 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     private _sendNotificationIfNotFocused(name: string, message: string, conversation: IConversation): void {
         if (!document.hasFocus()) {
-            // Tell the window to flash.
-            this._electron.remote.getCurrentWindow().flashFrame(true);
+            this._settings.getSettings()
+                .then(settings => {
+                    if (settings.notificationsEnabled) {
+                        // Tell the window to flash.
+                        this._electron.remote.getCurrentWindow().flashFrame(true);
 
-            // Send a notification that we received a new message.
-            // We give them a function to call which will select
-            // the conversation if they click on the notification.
-            // TODO the boolean should be based on the privacy flag.
-            this._notifications.sendNewMessageReceivedNotification(
-                name, message, false, () => {
-                    this.selectConversation(conversation);
+                        // Send a notification that we received a new message.
+                        // We give them a function to call which will select
+                        // the conversation if they click on the notification.
+                        // TODO the boolean should be based on the privacy flag.
+                        this._notifications.sendNewMessageReceivedNotification(
+                            name, message, settings.anonymousNotifications, () => {
+                                this.selectConversation(conversation);
+                            });
+                    }
                 });
         }
     }
