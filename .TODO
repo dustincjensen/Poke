@@ -29,6 +29,7 @@
 //     - include / exclude colors for the randomization
 //     - enable/disable conversation history (also retrieving from the phone, means longer history)
 //       -- last x messages (500 or so and instead of storing them locally, they just get retrieved from the phone).
+//     - option for gray scale when inactive / opacity 0.2 when inactive
 
 
 // REFACTOR
