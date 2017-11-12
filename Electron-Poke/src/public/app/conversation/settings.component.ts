@@ -18,8 +18,6 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     private _notificationsEnabled: boolean;
     private _anonymousNotifications: boolean;
 
-    private _saveSettingsSubscription: any;
-
     constructor(
         private _router: Router,
         private _settingsService: SettingsService,
@@ -31,11 +29,6 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     }
 
     public async ngOnInit() {
-        this._saveSettingsSubscription =
-            this._settingsService.save.subscribe(saved => {
-                // TODO what should we do with the "saved" message.
-            });
-
         // Retrieve the settings that we have
         // setup our subscription to receive.
         let cs = await this._settingsService.getSettings();
@@ -43,10 +36,6 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
         this._privacyBlur = cs.privacyBlur;
         this._notificationsEnabled = cs.notificationsEnabled;
         this._anonymousNotifications = cs.anonymousNotifications;
-    }
-
-    public async ngOnDestroy() {
-        this._saveSettingsSubscription.unsubscribe();
     }
 
     private get _currentSettings(): ISettings {
@@ -63,7 +52,7 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     }
     public set privacyBlur(blur: boolean) {
         this._privacyBlur = blur;
-        this._settingsService.setSettings(this._currentSettings);
+        this._handleSaving();
     }
 
     public get notificationsEnabled() {
@@ -74,7 +63,7 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
         if (!this._notificationsEnabled) {
             this._anonymousNotifications = false;
         }
-        this._settingsService.setSettings(this._currentSettings);
+        this._handleSaving();
     }
 
     public get anonymousNotifications(): boolean {
@@ -82,7 +71,15 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
     }
     public set anonymousNotifications(value: boolean) {
         this._anonymousNotifications = value;
-        this._settingsService.setSettings(this._currentSettings);
+        this._handleSaving();
+    }
+
+    private async _handleSaving(): Promise<void> {
+        try {
+            await this._settingsService.setSettings(this._currentSettings);
+        } catch (error) {
+            console.log('Save Settings Error', error);
+        }
     }
 
     public sendTestNotification() {
