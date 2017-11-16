@@ -100,11 +100,21 @@ export class MainElectron {
             app.quit();
         });
 
-        // Whenever the window focuses it will remove the flash
-        // frame that may have been put on the icon by the
-        // notification paradigm.
-        MainElectron._win.once('focus', () => {
+        MainElectron._win.on('focus', () => {
+            // Whenever the window focuses it will remove the flash
+            // frame that may have been put on the icon by the
+            // notification paradigm.
             MainElectron._win.flashFrame(false);
+
+            // In addition to turning off the orange flashing frame
+            // we let the window know it now has focus.
+            MainElectron.sendMessageToMainContents('isFocused', true);
+        });
+
+        MainElectron._win.on('blur', () => {
+            // When the window blurs sends a message to the main contents
+            // that the window no longer has focus.
+            MainElectron.sendMessageToMainContents('isFocused', false);
         });
 
         // Create the background window to handle work for us.

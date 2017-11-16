@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { ElectronComponent } from '../base/electron.component';
@@ -7,6 +7,8 @@ import { ISettings } from '../../../shared/interfaces';
 @Injectable()
 export class SettingsService extends ElectronComponent {
 
+    public settingsUpdated = new EventEmitter<ISettings>();
+
     constructor(
         electron: ElectronService,
         ngZone: NgZone
@@ -14,12 +16,13 @@ export class SettingsService extends ElectronComponent {
         super(electron, ngZone);
     }
 
-    public getSettings(): Promise<ISettings> {
-        return this._toPromise('settingsRetrieved', 'getSettings');
+    public async getSettings(): Promise<ISettings> {
+        return await this._toPromise<ISettings>('settingsRetrieved', 'getSettings');
     }
 
-    public setSettings(settings: ISettings): Promise<void> {
-        return this._toPromise('settingsUpdated', 'updateSettings', settings);
+    public async setSettings(settings: ISettings): Promise<void> {
+        await this._toPromise<void>('settingsUpdated', 'updateSettings', settings);
+        this.settingsUpdated.emit(settings);
     }
 
     /**

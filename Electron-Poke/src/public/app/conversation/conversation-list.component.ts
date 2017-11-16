@@ -17,7 +17,10 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
     conversations: IConversation[];
     selectedConversation: IConversation;
     menuOpen: boolean;
+    private _shouldBlur: boolean;
+    private _isFocused: boolean;
     private _newConversationSubscription: any;
+    private _settingsUpdatedSubscription: any;
 
     constructor(
         private _router: Router,
@@ -36,6 +39,15 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         this._newConversationSubscription =
             this._internal.newConversation.subscribe((id) => { this._handleNewConversation(id); });
 
+        // TODO fix this, because it is a wasteful call.
+        let settings = await this._settings.getSettings();
+        this._shouldBlur = settings.privacyBlur;
+
+        // Whenever they update the settings we will be notified
+        // about the changes so we can update our flags.
+        this._settingsUpdatedSubscription =
+            this._settings.settingsUpdated.subscribe(settings => { this._shouldBlur = settings.privacyBlur; });
+
         // Register methods to handle events from the backend of Electron.
         this.registerIpcRendererMethod('conversationListRetrieved', this._handleConversationsLoaded);
         this.registerIpcRendererMethod('newConversationReceived', this._handleNewConversationReceived);
@@ -43,11 +55,13 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
         this.registerIpcRendererMethod('newConversationStarted', this._handleNewConversationStarted);
         this.registerIpcRendererMethod('conversationRead', this._handleConversationRead);
         this.registerIpcRendererMethod('conversationRemoved', this._handleConversationRemoved);
+        this.registerIpcRendererMethod('isFocused', this._handleFocused);
         this._electron.ipcRenderer.send('getConversationList');
     }
 
     public async ngOnDestroy() {
         this._newConversationSubscription.unsubscribe();
+        this._settingsUpdatedSubscription.unsubscribe();
     }
 
     private _handleNewConversation(id: number): void {
@@ -175,5 +189,39 @@ export class ConversationListComponent extends ElectronComponent implements OnIn
 
     public openMenu(): void {
         this.menuOpen = !this.menuOpen;
+    }
+
+    /**
+     * When the electron main receives the focus or blur event
+     * it will let us know through this ipc listener.
+     */
+    private _handleFocused(event, isFocused: boolean): void {
+        this._isFocused = isFocused;
+    }
+
+    private get isFocused(): boolean {
+        if (this._isFocused === undefined) {
+            this._isFocused = this._electron.remote.getCurrentWindow().isFocused();
+        }
+        return this._isFocused;
+    }
+
+    /**
+     * A getter that decides if it should blur the window
+     * or not. This takes into account the focused state
+     * and whether the parameter for "shouldBlur" is set.
+     */
+    public get shouldBlur() {
+        return this._shouldBlur && !this.isFocused;
+    }
+
+    // TODO make an option...
+    public get shouldGrayscale() {
+        return false && !this.isFocused;
+    }
+
+    // TODO make an option...
+    public get shouldOpacity() {
+        return false && !this.isFocused;
     }
 }

@@ -88,11 +88,10 @@ export class SettingsComponent extends ElectronComponent implements OnInit {
 
         // Anonymous or not?
         if (this._anonymousNotifications) {
-            this._notificationService.sendNewMessageReceivedNotification(
-                'New Message (Test Message)', 'Open Poke to see your new message.', true, () => { });
+            this._notificationService.sendNewMessageReceivedNotification(null, null, true, () => { });
         } else {
             this._notificationService.sendNewMessageReceivedNotification(
-                'Sarah (Test Message)', 'Hey, how is it going?', false, () => { });
+                'Sarah', 'Hey, how is it going?', false, () => { });
         }
     }
 

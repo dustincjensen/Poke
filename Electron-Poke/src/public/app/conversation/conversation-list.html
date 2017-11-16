@@ -1,4 +1,4 @@
-<div class="grid-columns">
+<div class="conversation-list-window-div grid-columns" [ngClass]="{'blur': shouldBlur, 'grayscale': shouldGrayscale, 'opacity': shouldOpacity}">
     <div class="grid conversation-list-column" [style.borderColor]="selectedConversation?.color" 
         [ngClass]="{'menu-slide' : menuOpen}">
         <!-- These are the conversations currently open -->

@@ -694,3 +694,31 @@ $arrowWingsTransitionSpeed: 0.1s;
 .send-button-height {
     height: 40px;
 }
+
+
+// A class that is on the controlling div frame
+// for the conversation list. This class allows
+// us to implement blur, grayscale and opacity
+// changes to the whole div window based on our
+// settings.
+.conversation-list-window-div {
+    &.blur {
+        filter: blur(10px);
+    }
+
+    &.grayscale {
+        filter: grayscale(1);
+    }
+
+    &.opacity {
+        filter: opacity(0.2);
+    }
+
+    &.blur.grayscale {
+        filter: blur(10px) grayscale(1);
+    }
+
+    &.blur.opacity {
+        filter: blur(10px) opacity(0.2);
+    }
+}
