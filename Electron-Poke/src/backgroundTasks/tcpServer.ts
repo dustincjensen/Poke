@@ -1,5 +1,5 @@
 import * as net from 'net';
-import * as os from 'os';
+import { Util } from './util';
 import { ipcRenderer } from 'electron';
 import { PublicPrivate } from './publicPrivate';
 import { Symmetric } from './symmetric';
@@ -24,7 +24,11 @@ export class TcpServer {
 
     public static createServer(): void {
         TcpServer._setupServer();
-        TcpServer._determineServerConnectionDetails();
+
+        let hostInfo = Util.getHostingIpAddress();
+        TcpServer._port = hostInfo.port;
+        TcpServer._address = hostInfo.ipAddress;
+
         TcpServer._server.listen(TcpServer._port, TcpServer._address);
     }
 
@@ -86,24 +90,6 @@ export class TcpServer {
             TcpServer._incomingData = '';
             TcpServer._openSocket = socket;
         });
-    }
-
-    private static _determineServerConnectionDetails(): void {
-        let networkInterfaces = os.networkInterfaces();
-        let addressFound: boolean = false;
-        for (let iface in networkInterfaces) {
-            let x = networkInterfaces[iface];
-            for (let i = 0; i < x.length; i++) {
-                let element = x[i];
-                if (element.address.startsWith('192')) {
-                    TcpServer._address = element.address;
-                    TcpServer._port = 7102;
-                    addressFound = true;
-                    break;
-                }
-            }
-            if (addressFound) break;
-        }
     }
 
     // TODO consider using indexOf _incomingData
