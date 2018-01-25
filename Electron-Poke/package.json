@@ -12,7 +12,6 @@
   "devDependencies": {
     "@types/node-rsa": "^0.4.0",
     "concurrently": "^3.5.0",
-    "electron": "1.7.5",
     "electron-packager": "^9.1.0",
     "electron-winstaller": "^2.6.3",
     "grunt": "^1.0.1",
@@ -35,7 +34,7 @@
     "@angular/router": "^4.3.6",
     "@angular/upgrade": "^4.3.6",
     "core-js": "^2.5.0",
-    "electron": "^1.7.5",
+    "electron": "^1.7.11",
     "ngx-electron": "^1.0.3",
     "node-rsa": "^0.4.2",
     "rxjs": "^5.4.3",
