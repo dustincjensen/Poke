@@ -1,6 +1,9 @@
-let electronPackager = require('electron-packager');
-let electronWindowsInstaller = require('electron-winstaller');
-let path = require('path');
+const electronPackager = require('electron-packager');
+const electronWindowsInstaller = require('electron-winstaller');
+const path = require('path');
+const fs = require('fs');
+const process = require('process');
+const { execSync } = require('child_process');
 
 module.exports = function (grunt) {
     "use strict";
@@ -246,6 +249,26 @@ module.exports = function (grunt) {
         "watch"
     ]);
 
+    grunt.registerTask("create-build-for-windows", "Create build for windows.", function () {
+        grunt.log.writeln("Starting build for windows...");
+        grunt.task.run([
+            "full",
+            "copy-package-json",
+            "npm-install-into-dist",
+            "windows-install"
+        ]);
+    });
+
+    grunt.registerTask("copy-package-json", "Copy package.json into dist", function () {
+        fs.copyFileSync("package.json", "./dist/package.json");
+        grunt.log.writeln("Copied package.json to ./dist...");
+    });
+
+    grunt.registerTask("npm-install-into-dist", "npm install the production files into dist", function () {
+        execSync("npm install --production", { cwd: "./dist" });
+        grunt.log.writeln("npm install of production files into ./dist has completed...");
+    });
+
     // Before running this...
     // npm run grunt full (this creates the project in the dist folder)
     // copy package.json into dist
@@ -253,7 +276,8 @@ module.exports = function (grunt) {
     // Now run this...
     // npm run grunt windows-install
     // Double click Setup.exe when it is done!
-    // TODO write a script/grunt task to handle this.
+    // The previous steps are now reflected above in the tasks, "create-build-for-windows",
+    // "copy-package-json", "npm-install-into-dist".
     grunt.registerTask("windows-install", "Create installation for windows.", function () {
         let done = this.async();
 
